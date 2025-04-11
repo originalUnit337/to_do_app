@@ -4,14 +4,25 @@ class AppTheme {
   static ThemeData get appTheme {
     return ThemeData(
       textTheme: const TextTheme(
+        // Large title
         titleLarge: TextStyle(fontSize: 32),
+        // Title
         titleMedium: TextStyle(fontSize: 20),
+        // Button
         titleSmall: TextStyle(fontSize: 14),
+        // Body
         bodyLarge: TextStyle(fontSize: 16),
+        // Subhead
         bodyMedium: TextStyle(fontSize: 14),
       ),
       scaffoldBackgroundColor: const Color.fromARGB(255, 247, 246, 242),
-      //colorScheme: ColorScheme.fromSeed(),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: const Color.fromARGB(255, 0, 122, 255),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      ),
+      iconTheme: const IconThemeData(
+        color: Color.fromARGB(255, 255, 0, 0),
+      ), //colorScheme: ColorScheme.fromSeed(),
     );
   }
 }
