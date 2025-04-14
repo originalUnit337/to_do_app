@@ -1,0 +1,10 @@
+{
+    "language": "English",
+    "@language": {
+        "description": "The current language"
+    },
+    "myNotes": "My notes",
+    "@myNotes": {
+        "description": "AppBar title"
+    }
+}

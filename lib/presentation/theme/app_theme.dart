@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_app/presentation/ui%20kit/pallete/dark.dart';
-import 'package:to_do_app/presentation/ui%20kit/pallete/light.dart';
+import 'package:to_do_app/presentation/ui_kit/palette/dark.dart';
+import 'package:to_do_app/presentation/ui_kit/palette/light.dart';
 
 class AppTheme {
   static ThemeData get lightAppTheme {
@@ -23,7 +23,6 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: palette.backPrimary,
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        //backgroundColor: const Color.fromARGB(255, 0, 122, 255),
         backgroundColor: palette.backElevated,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
@@ -33,16 +32,6 @@ class AppTheme {
       ), //colorScheme: ColorScheme.fromSeed(),
       listTileTheme: ListTileThemeData(tileColor: palette.backSecondary),
       checkboxTheme: CheckboxThemeData(
-        // fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        //   const Set<WidgetState> interactiveStates = <WidgetState>{
-        //     WidgetState.pressed,
-        //     WidgetState.hovered,
-        //     WidgetState.focused,
-        //   };
-        //   if (states.contains(WidgetState.pressed)) {
-        //     return palette.colorGreen;
-        //   }
-        // }),
         fillColor: WidgetStateProperty.fromMap({
           WidgetState.selected: palette.colorGreen,
           WidgetState.hovered: palette.colorWhite,
@@ -74,26 +63,13 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: palette.backPrimary,
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        //backgroundColor: const Color.fromARGB(255, 0, 122, 255),
         backgroundColor: palette.backElevated,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
       appBarTheme: AppBarTheme(backgroundColor: palette.backPrimary),
-      iconTheme: IconThemeData(
-        color: palette.supportSeparator,
-      ), //colorScheme: ColorScheme.fromSeed(),
+      iconTheme: IconThemeData(color: palette.supportSeparator),
       listTileTheme: ListTileThemeData(tileColor: palette.backSecondary),
       checkboxTheme: CheckboxThemeData(
-        // fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        //   const Set<WidgetState> interactiveStates = <WidgetState>{
-        //     WidgetState.pressed,
-        //     WidgetState.hovered,
-        //     WidgetState.focused,
-        //   };
-        //   if (states.contains(WidgetState.pressed)) {
-        //     return palette.colorGreen;
-        //   }
-        // }),
         fillColor: WidgetStateProperty.fromMap({
           WidgetState.selected: palette.colorGreen,
           WidgetState.hovered: palette.colorWhite,
