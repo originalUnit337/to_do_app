@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/domain/model/note.dart';
 import 'package:to_do_app/presentation/ui%20kit/font/app_font_style.dart';
 
@@ -36,7 +37,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
             expandedHeight: 200,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text('Мои дела', style: AppFontStyle.largeTitle),
+              title: Text(
+                AppLocalizations.of(context)!.myNotes,
+                style: AppFontStyle.largeTitle,
+              ),
             ),
           ),
           SliverPadding(
