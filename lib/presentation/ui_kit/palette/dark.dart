@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:to_do_app/presentation/ui%20kit/pallete/palette.dart';
+import 'package:to_do_app/presentation/ui_kit/palette/palette.dart';
 
 class DarkPalette implements Palette {
   @override
