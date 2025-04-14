@@ -20,7 +20,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       supportedLocales: L10n.all,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      locale: const Locale('en'),
+      //locale: const Locale('en'),
       theme: AppTheme.lightAppTheme,
       darkTheme: AppTheme.darkAppTheme,
       //home: Scaffold( body: Center(child: Text('Hello World!'),),),
