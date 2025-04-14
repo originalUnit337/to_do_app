@@ -32,13 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
             expandedHeight: 200,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text('Мои дела'),
-              background: Container(color: Colors.blueAccent),
-            ),
+            flexibleSpace: FlexibleSpaceBar(title: const Text('Мои дела')),
           ),
           SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
+            delegate: SliverChildBuilderDelegate(childCount: 20, (
+              context,
+              index,
+            ) {
               return Dismissible(
                 key: Key(noteItems[index].textNote),
                 background: Container(
@@ -71,13 +71,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               );
-            }, childCount: 20),
+            }),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Color(0x4D000000)),
       ),
     );
   }

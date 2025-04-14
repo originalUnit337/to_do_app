@@ -5,7 +5,7 @@ class AppTheme {
     return ThemeData(
       textTheme: const TextTheme(
         // Large title
-        titleLarge: TextStyle(fontSize: 32),
+        titleLarge: TextStyle(fontSize: 32, height: 38 / 32),
         // Title
         titleMedium: TextStyle(fontSize: 20),
         // Button
@@ -17,7 +17,8 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: const Color.fromARGB(255, 247, 246, 242),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: const Color.fromARGB(255, 0, 122, 255),
+        //backgroundColor: const Color.fromARGB(255, 0, 122, 255),
+        backgroundColor: Color(0xFF007AFF),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
       iconTheme: const IconThemeData(
