@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-abstract interface class Pallete {
+abstract interface class Palette {
   // Support
   Color get supportSeparator => const Color(0x33000000);
   Color get supportOverlay => const Color(0x0F000000);

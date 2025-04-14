@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/domain/model/note.dart';
+import 'package:to_do_app/presentation/ui%20kit/font/app_font_style.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,7 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
             expandedHeight: 200,
-            flexibleSpace: FlexibleSpaceBar(title: const Text('Мои дела')),
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text('Мои дела', style: AppFontStyle.largeTitle),
+            ),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(childCount: 20, (
@@ -62,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     '${noteItems[index].textNote} #$index',
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
+                    style: AppFontStyle.body,
                     //style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   leading: Checkbox(value: false, onChanged: (value) {}),

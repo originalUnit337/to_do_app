@@ -18,7 +18,7 @@ class AppTheme {
       scaffoldBackgroundColor: const Color.fromARGB(255, 247, 246, 242),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         //backgroundColor: const Color.fromARGB(255, 0, 122, 255),
-        backgroundColor: Color(0xFF007AFF),
+        backgroundColor: const Color(0xFF007AFF),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
       iconTheme: const IconThemeData(

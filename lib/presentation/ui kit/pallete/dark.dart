@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:to_do_app/presentation/ui%20kit/pallete/pallete.dart';
+import 'package:to_do_app/presentation/ui%20kit/pallete/palette.dart';
 
-class DarkPallete implements Pallete {
+class DarkPalette implements Palette {
   @override
   Color get backElevated => const Color(0xFF3C3C3F);
 

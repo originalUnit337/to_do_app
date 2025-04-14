@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:to_do_app/presentation/ui%20kit/pallete/pallete.dart';
+import 'package:to_do_app/presentation/ui%20kit/pallete/palette.dart';
 
-class LightPallete implements Pallete {
+class LightPalette implements Palette {
   // Support
   @override
   Color get supportSeparator => const Color(0x33000000);
