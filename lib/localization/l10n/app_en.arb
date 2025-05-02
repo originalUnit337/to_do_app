@@ -10,5 +10,33 @@
     "save": "SAVE",
     "@save": {
         "description": "Use on add_note screen SAVE app bar action textButton"
+    },
+    "what_should_i_do": "What should I do...",
+    "@what_should_i_do": {
+        "description": "TextField hint"
+    },
+    "importance": "Importance",
+    "@importance": {
+        "description": "Importance"
+    },
+    "no": "No",
+    "@no": {
+        "description": "Used with importance (importance - no)"
+    },
+    "low": "Low",
+    "@low": {
+        "description": "Used with importance (importance - low)"
+    },
+    "high": "!! High",
+    "@high": {
+        "description": "Used with importance (importance - high)"
+    },
+    "due_by": "Due by",
+    "@due_by": {
+        "description": "Used in add_note_screen"
+    },
+    "delete": "Delete",
+    "@delete": {
+        "description": "Used in add_note_screen"
     }
 }
