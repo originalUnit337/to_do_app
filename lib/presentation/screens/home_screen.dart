@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
+import 'package:go_router/go_router.dart';
 import 'package:to_do_app/domain/model/note.dart';
+import 'package:to_do_app/navigation/app_routes.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,6 +25,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          GoRouter.of(context).pushNamed(AppRoutes.addNoteName);
+        },
+        child: const Icon(Icons.add),
+      ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -88,10 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
       ),
     );
   }

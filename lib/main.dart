@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/firebase_options.dart';
 import 'package:to_do_app/localization/l10n/l10n.dart';
+import 'package:to_do_app/navigation/app_router.dart';
 import 'package:to_do_app/presentation/screens/home_screen.dart';
 import 'package:to_do_app/presentation/theme/app_theme.dart';
 
@@ -17,12 +18,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       supportedLocales: L10n.all,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       theme: AppTheme.lightAppTheme,
       darkTheme: AppTheme.darkAppTheme,
-      home: const HomeScreen(),
+      routerConfig: AppRouter.router,
+      // routeInformationParser: AppRouter.router.routeInformationParser,
+      // routerDelegate: AppRouter.router.routerDelegate,
     );
   }
 }
