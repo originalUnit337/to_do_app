@@ -6,5 +6,9 @@
     "myNotes": "My notes",
     "@myNotes": {
         "description": "AppBar title"
+    },
+    "save": "SAVE",
+    "@save": {
+        "description": "Use on add_note screen SAVE app bar action textButton"
     }
 }
