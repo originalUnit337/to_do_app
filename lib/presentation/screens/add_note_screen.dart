@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/navigation/app_router.dart';
 import 'package:to_do_app/presentation/theme/app_theme.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
+import 'package:to_do_app/presentation/ui_kit/palette/palette_provider.dart';
 
 class AddNoteScreen extends StatelessWidget {
   const AddNoteScreen({super.key});
@@ -14,6 +15,7 @@ class AddNoteScreen extends StatelessWidget {
       AppLocalizations.of(context)!.low,
       AppLocalizations.of(context)!.high,
     ];
+    final currentPalette = PaletteProvider.of(context)!.palette;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -24,7 +26,12 @@ class AddNoteScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {},
-            child: Text(AppLocalizations.of(context)!.save),
+            child: Text(
+              AppLocalizations.of(context)!.save,
+              style: AppFontStyle.title.copyWith(
+                color: currentPalette.colorBlue,
+              ),
+            ),
           ),
         ],
       ),
@@ -51,7 +58,7 @@ class AddNoteScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   hintText: AppLocalizations.of(context)!.what_should_i_do,
-                  hintStyle: AppFontStyle.title,
+                  hintStyle: AppFontStyle.title.copyWith(color: currentPalette.labelTertiary),
                   fillColor: Colors.white,
                   filled: true,
                 ),

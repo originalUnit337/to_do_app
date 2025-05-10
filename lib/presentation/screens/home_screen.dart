@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:to_do_app/domain/model/note.dart';
 import 'package:to_do_app/navigation/app_routes.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
+import 'package:to_do_app/presentation/ui_kit/palette/palette_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,13 +24,15 @@ class _HomeScreenState extends State<HomeScreen> {
   );
   @override
   Widget build(BuildContext context) {
+    final currentPalette = PaletteProvider.of(context)!.palette;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           GoRouter.of(context).pushNamed(AppRoutes.addNoteName);
         },
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add, color: currentPalette.colorWhite),
+        backgroundColor: currentPalette.colorBlue,
       ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
@@ -53,7 +56,18 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverPadding(
             padding: const EdgeInsets.only(left: 16, right: 16),
             sliver: DecoratedSliver(
-              decoration: const BoxDecoration(),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 2,
+                    offset: const Offset(0, 2),
+                    color: Colors.black.withAlpha(12),
+                  ),
+                  BoxShadow(color: Colors.black.withAlpha(6), blurRadius: 2),
+                ],
+                color: currentPalette.backSecondary,
+                borderRadius: BorderRadius.circular(8),
+              ),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(childCount: 20, (
                   context,
@@ -65,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.green,
                       alignment: Alignment.centerLeft,
                       child: const Padding(
-                        padding: EdgeInsets.only(left: 20),
+                        padding: EdgeInsets.only(left: 24),
                         child: Icon(Icons.check, color: Colors.white),
                       ),
                     ),
@@ -73,21 +87,32 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.red,
                       alignment: Alignment.centerRight,
                       child: const Padding(
-                        padding: EdgeInsets.only(right: 20),
+                        padding: EdgeInsets.only(right: 24),
                         child: Icon(Icons.delete, color: Colors.white),
                       ),
                     ),
-                    child: ListTile(
-                      title: Text(
-                        '${noteItems[index].textNote} #$index',
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppFontStyle.body,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        // ? отнять 8 из-за падинга текста
+                        horizontal: 16-8,
+                        vertical: 12-8,
                       ),
-                      leading: Checkbox(value: false, onChanged: (value) {}),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.info_outline),
-                        onPressed: () {},
+                      child: ListTile(
+                        // ? У текста свой падинг 8 пискелей во все стороны хз откуда
+                        title: Text(
+                          '${noteItems[index].textNote} #$index',
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppFontStyle.body,
+                        ),
+                        leading: Checkbox(value: false, onChanged: (value) {}),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.info_outline,
+                            color: currentPalette.labelTertiary,
+                          ),
+                          onPressed: () {},
+                        ),
                       ),
                     ),
                   );
