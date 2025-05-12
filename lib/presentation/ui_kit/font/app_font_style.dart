@@ -6,7 +6,7 @@ class AppFontStyle {
   static TextStyle get button => const TextStyle(fontSize: 14, height: 24 / 14);
 
   static TextStyle get largeTitle =>
-      const TextStyle(fontSize: 32, height: 38 / 32);
+      const TextStyle(fontSize: 32, height: 38 / 32, fontWeight: FontWeight.w500);
 
   static TextStyle get subhead =>
       const TextStyle(fontSize: 14, height: 20 / 14);
