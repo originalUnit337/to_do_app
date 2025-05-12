@@ -21,7 +21,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentPalette = MediaQuery.of(context).platformBrightness == Brightness.light ? LightPalette() : DarkPalette();
+final currentPalette = MediaQuery.of(context).platformBrightness == Brightness.light ? LightPalette() : DarkPalette();
     return PaletteProvider(
       palette: currentPalette,
       child: MaterialApp.router(

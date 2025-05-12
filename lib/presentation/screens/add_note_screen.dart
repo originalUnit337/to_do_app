@@ -5,6 +5,7 @@ import 'package:to_do_app/presentation/theme/app_theme.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/palette_provider.dart';
 
+
 class AddNoteScreen extends StatelessWidget {
   const AddNoteScreen({super.key});
 
