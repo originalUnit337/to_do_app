@@ -94,8 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         // ? отнять 8 из-за падинга текста
-                        horizontal: 16-8,
-                        vertical: 12-8,
+                        horizontal: 16 - 8,
+                        vertical: 12 - 8,
                       ),
                       child: ListTile(
                         // ? У текста свой падинг 8 пискелей во все стороны хз откуда

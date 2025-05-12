@@ -58,7 +58,9 @@ class AddNoteScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   hintText: AppLocalizations.of(context)!.what_should_i_do,
-                  hintStyle: AppFontStyle.title.copyWith(color: currentPalette.labelTertiary),
+                  hintStyle: AppFontStyle.title.copyWith(
+                    color: currentPalette.labelTertiary,
+                  ),
                   fillColor: Colors.white,
                   filled: true,
                 ),
