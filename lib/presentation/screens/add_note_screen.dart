@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/navigation/app_router.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
-import 'package:to_do_app/presentation/ui_kit/palette/palette_provider.dart';
+import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 import 'package:to_do_app/presentation/widgets/importance_dropdown.dart';
 import 'package:to_do_app/presentation/widgets/switch_data_picker.dart';
 
@@ -16,7 +16,7 @@ class AddNoteScreen extends StatelessWidget {
       AppLocalizations.of(context)!.low,
       AppLocalizations.of(context)!.high,
     ];
-    final currentPalette = PaletteProvider.of(context)!.palette;
+    final currentPalette = AppPalette.of(context);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(

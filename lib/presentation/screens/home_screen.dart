@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:to_do_app/domain/model/note.dart';
 import 'package:to_do_app/navigation/app_routes.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
-import 'package:to_do_app/presentation/ui_kit/palette/palette_provider.dart';
+import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   );
   @override
   Widget build(BuildContext context) {
-    final currentPalette = PaletteProvider.of(context)!.palette;
+    final currentPalette = AppPalette.of(context);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       floatingActionButton: FloatingActionButton(
