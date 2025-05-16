@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/firebase_options.dart';
 import 'package:to_do_app/localization/l10n/l10n.dart';
 import 'package:to_do_app/navigation/app_router.dart';
-import 'package:to_do_app/presentation/screens/home_screen.dart';
 import 'package:to_do_app/presentation/theme/app_theme.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/dark.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/light.dart';

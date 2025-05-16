@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/navigation/app_router.dart';
-import 'package:to_do_app/presentation/theme/app_theme.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/palette_provider.dart';
+import 'package:to_do_app/presentation/widgets/importance_dropdown.dart';
+import 'package:to_do_app/presentation/widgets/switch_data_picker.dart';
 
 class AddNoteScreen extends StatelessWidget {
   const AddNoteScreen({super.key});
@@ -61,33 +62,49 @@ class AddNoteScreen extends StatelessWidget {
                   hintStyle: AppFontStyle.title.copyWith(
                     color: currentPalette.labelTertiary,
                   ),
-                  fillColor: Colors.white,
+                  fillColor: currentPalette.backSecondary,
                   filled: true,
                 ),
                 minLines: 4,
                 maxLines: 6,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               AppLocalizations.of(context)!.importance,
               style: AppFontStyle.title,
             ),
-            DropdownMenu(
-              menuStyle: MenuStyle(),
-              initialSelection: _dropdownMenuEntries.first,
-              dropdownMenuEntries:
-                  _dropdownMenuEntries.map((e) {
-                    return DropdownMenuEntry(value: e, label: e);
-                  }).toList(),
-            ),
-            Divider(),
-            // TODO: switch + data picker
-            Divider(),
+            const ImportanceDropdown(),
+            const SizedBox(height: 20),
+            const Divider(),
+            const SwitchDataPicker(),
+            const SizedBox(height: 20),
+            const Divider(),
+            const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: () {},
-              label: Text(AppLocalizations.of(context)!.delete),
-              icon: Icon(Icons.delete),
+              label: Text(
+                AppLocalizations.of(context)!.delete,
+                style: AppFontStyle.body.copyWith(
+                  color: currentPalette.colorRed,
+                ),
+              ),
+              icon: Icon(
+                Icons.delete,
+                size: 24,
+                color: currentPalette.colorRed,
+              ),
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(
+                  currentPalette.backPrimary,
+                ),
+                elevation: const WidgetStatePropertyAll(0),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
