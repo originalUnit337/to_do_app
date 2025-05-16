@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
-import 'package:to_do_app/presentation/ui_kit/palette/palette_provider.dart';
+import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 
 class ImportanceDropdown extends StatefulWidget {
   const ImportanceDropdown({super.key});
@@ -19,7 +19,7 @@ class _ImportanceDropdownState extends State<ImportanceDropdown> {
       AppLocalizations.of(context)!.low,
       AppLocalizations.of(context)!.high,
     ];
-    final currentPalette = PaletteProvider.of(context)!.palette;
+    final currentPalette = AppPalette.of(context);
     return DropdownMenu(
       onSelected: (value) {
         setState(() {
