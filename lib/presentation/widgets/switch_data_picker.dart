@@ -10,7 +10,7 @@ class SwitchDataPicker extends StatefulWidget {
 }
 
 class _SwitchDataPickerState extends State<SwitchDataPicker> {
-  bool _isSwitched = true;
+  bool _isSwitched = false;
   DateTime? _selectedDate;
 
   Future<void> _selectData(BuildContext context) async {
