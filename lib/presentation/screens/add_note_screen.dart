@@ -29,7 +29,7 @@ class AddNoteScreen extends StatelessWidget {
             onPressed: () {},
             child: Text(
               AppLocalizations.of(context)!.save,
-              style: AppFontStyle.title.copyWith(
+              style: AppFontStyle().title.copyWith(
                 color: currentPalette.colorBlue,
               ),
             ),
@@ -59,7 +59,7 @@ class AddNoteScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   hintText: AppLocalizations.of(context)!.what_should_i_do,
-                  hintStyle: AppFontStyle.title.copyWith(
+                  hintStyle: AppFontStyle().title.copyWith(
                     color: currentPalette.labelTertiary,
                   ),
                   fillColor: currentPalette.backSecondary,
@@ -72,7 +72,7 @@ class AddNoteScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               AppLocalizations.of(context)!.importance,
-              style: AppFontStyle.title,
+              style: AppFontStyle().title,
             ),
             const ImportanceDropdown(),
             const SizedBox(height: 20),
@@ -85,7 +85,7 @@ class AddNoteScreen extends StatelessWidget {
               onPressed: () {},
               label: Text(
                 AppLocalizations.of(context)!.delete,
-                style: AppFontStyle.body.copyWith(
+                style: AppFontStyle().body.copyWith(
                   color: currentPalette.colorRed,
                 ),
               ),

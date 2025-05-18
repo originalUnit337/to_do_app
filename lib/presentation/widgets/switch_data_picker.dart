@@ -36,7 +36,7 @@ class _SwitchDataPickerState extends State<SwitchDataPicker> {
           children: [
             Text(
               AppLocalizations.of(context)!.due_by,
-              style: AppFontStyle.title,
+              style: AppFontStyle().title,
             ),
             Switch(
               value: _isSwitched,
