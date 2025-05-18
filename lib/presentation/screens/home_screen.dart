@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          GoRouter.of(context).pushNamed(AppRoutes.addNoteName);
+          GoRouter.of(context).pushNamed(AppRoutes.addNote.name);
         },
         child: Icon(Icons.add, color: currentPalette.colorWhite),
         backgroundColor: currentPalette.colorBlue,

@@ -7,15 +7,15 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     routes: [
       GoRoute(
-        path: '/',
-        name: AppRoutes.homeRouteName,
+        path: AppRoutes.homeRoute.path,
+        name: AppRoutes.homeRoute.name,
         builder: (context, state) {
           return const HomeScreen();
         },
       ),
       GoRoute(
-        path: '/add_note',
-        name: AppRoutes.addNoteName,
+        path: AppRoutes.addNote.path,
+        name: AppRoutes.addNote.name,
         builder: (context, state) {
           return const AddNoteScreen();
         },
