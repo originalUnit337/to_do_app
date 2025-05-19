@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 AppLocalizations.of(context)!.myNotes,
-                style: AppFontStyle().largeTitle,
+                style: AppFontStyle.largeTitle,
               ),
             ),
           ),
@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           '${noteItems[index].textNote} #$index',
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
-                          style: AppFontStyle().body,
+                          style: AppFontStyle.body,
                         ),
                         leading: Checkbox(value: false, onChanged: (value) {}),
                         trailing: IconButton(
