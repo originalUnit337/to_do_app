@@ -5,12 +5,7 @@ import 'package:to_do_app/presentation/ui_kit/palette/light.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/palette.dart';
 
 class AppPalette {
-  static LightPalette get lightPalette => LightPalette();
-  static DarkPalette get darkPalette => DarkPalette();
   static Palette of(BuildContext context) {
-    return context.isDarkMode ? darkPalette : lightPalette;
+    return context.isDarkMode ? DarkPalette() : LightPalette();
   }
-
-  // ? или просто сделать
-  // ? return context.isDarkMode DarkPalette() : LightPalette();
 }
