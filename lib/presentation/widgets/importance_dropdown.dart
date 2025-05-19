@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
+import 'package:to_do_app/presentation/ui_kit/palette/palette.dart';
 
 class ImportanceDropdown extends StatefulWidget {
   const ImportanceDropdown({super.key});
@@ -12,6 +13,7 @@ class ImportanceDropdown extends StatefulWidget {
 class _ImportanceDropdownState extends State<ImportanceDropdown> {
   String? selectedValue;
   late List<DropdownMenuEntry<String>> dropdownMenuEntries;
+  late Palette currentPalette;
 
   @override
   void didChangeDependencies() {
@@ -30,11 +32,11 @@ class _ImportanceDropdownState extends State<ImportanceDropdown> {
         value: 'high',
       ),
     ];
+    currentPalette = AppPalette.of(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentPalette = AppPalette.of(context);
     return DropdownMenu(
       onSelected: (value) {
         setState(() {
