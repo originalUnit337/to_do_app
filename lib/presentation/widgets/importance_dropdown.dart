@@ -11,14 +11,29 @@ class ImportanceDropdown extends StatefulWidget {
 
 class _ImportanceDropdownState extends State<ImportanceDropdown> {
   String? selectedValue;
+  late List<DropdownMenuEntry<String>> dropdownMenuEntries;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    dropdownMenuEntries = [
+      DropdownMenuEntry(
+        label: AppLocalizations.of(context)?.no ?? 'no',
+        value: 'no',
+      ),
+      DropdownMenuEntry(
+        label: AppLocalizations.of(context)?.low ?? 'low',
+        value: 'low',
+      ),
+      DropdownMenuEntry(
+        label: AppLocalizations.of(context)?.high ?? 'high',
+        value: 'high',
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-    final dropdownMenuEntries = <String>[
-      AppLocalizations.of(context)?.no ?? 'no',
-      AppLocalizations.of(context)?.low ?? 'low',
-      AppLocalizations.of(context)?.high ?? 'high',
-    ];
     final currentPalette = AppPalette.of(context);
     return DropdownMenu(
       onSelected: (value) {
@@ -28,7 +43,7 @@ class _ImportanceDropdownState extends State<ImportanceDropdown> {
       },
       textStyle: TextStyle(
         color:
-            selectedValue == dropdownMenuEntries.last
+            selectedValue == dropdownMenuEntries.last.value
                 ? currentPalette.colorRed
                 : Theme.of(context).textTheme.bodyMedium?.color,
       ),
@@ -39,15 +54,15 @@ class _ImportanceDropdownState extends State<ImportanceDropdown> {
         backgroundColor: WidgetStateProperty.all(currentPalette.backElevated),
         alignment: Alignment.topLeft,
       ),
-      initialSelection: dropdownMenuEntries.first,
+      initialSelection: dropdownMenuEntries.first.value,
       dropdownMenuEntries:
           dropdownMenuEntries.map((e) {
             return DropdownMenuEntry(
-              value: e,
-              label: e,
+              value: e.value,
+              label: e.label,
               style: ButtonStyle(
                 foregroundColor: WidgetStatePropertyAll(
-                  e == dropdownMenuEntries.last
+                  e.value == dropdownMenuEntries.last.value
                       ? currentPalette.colorRed
                       : Theme.of(context).textTheme.bodyMedium?.color,
                 ),
