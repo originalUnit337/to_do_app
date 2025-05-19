@@ -15,9 +15,9 @@ class _ImportanceDropdownState extends State<ImportanceDropdown> {
   @override
   Widget build(BuildContext context) {
     final dropdownMenuEntries = <String>[
-      AppLocalizations.of(context)!.no,
-      AppLocalizations.of(context)!.low,
-      AppLocalizations.of(context)!.high,
+      AppLocalizations.of(context)?.no ?? 'no',
+      AppLocalizations.of(context)?.low ?? 'low',
+      AppLocalizations.of(context)?.high ?? 'high',
     ];
     final currentPalette = AppPalette.of(context);
     return DropdownMenu(
@@ -30,7 +30,7 @@ class _ImportanceDropdownState extends State<ImportanceDropdown> {
         color:
             selectedValue == dropdownMenuEntries.last
                 ? currentPalette.colorRed
-                : Theme.of(context).textTheme.bodyMedium!.color,
+                : Theme.of(context).textTheme.bodyMedium?.color,
       ),
       inputDecorationTheme: const InputDecorationTheme(
         border: InputBorder.none,
@@ -49,7 +49,7 @@ class _ImportanceDropdownState extends State<ImportanceDropdown> {
                 foregroundColor: WidgetStatePropertyAll(
                   e == dropdownMenuEntries.last
                       ? currentPalette.colorRed
-                      : Theme.of(context).textTheme.bodyMedium!.color,
+                      : Theme.of(context).textTheme.bodyMedium?.color,
                 ),
               ),
             );
