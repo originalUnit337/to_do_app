@@ -1,12 +1,42 @@
 {
     "language": "Русский",
+    "@language": {
+        "description": "Текущий язык"
+    },
     "myNotes": "Мои дела",
+    "@myNotes": {
+        "description": "AppBar title"
+    },
     "save": "СОХРАНИТЬ",
+    "@save": {
+        "description": "Используется на add_note screen СОХРАНИТЬ app bar action textButton"
+    },
     "what_should_i_do": "Что надо сделать...",
+    "@what_should_i_do": {
+        "description": "TextField hint"
+    },
     "importance": "Важность",
+    "@importance": {
+        "description": "Важность"
+    },
     "no": "Нет",
+    "@no": {
+        "description": "Используется в важности (важность - нет)"
+    },
     "low": "Низкий",
+    "@low": {
+        "description": "Используется в важности (важность - низкий)"
+    },
     "high": "!! Высокий",
+    "@high": {
+        "description": "Используется в важности (важность - высокий)"
+    },
     "due_by": "Сделать до",
-    "delete": "Удалить"
+    "@due_by": {
+        "description": "Используется в add_note_screen"
+    },
+    "delete": "Удалить",
+    "@delete": {
+        "description": "Используется в add_note_screen"
+    }
 }
