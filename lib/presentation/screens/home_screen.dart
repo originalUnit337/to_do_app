@@ -6,15 +6,10 @@ import 'package:to_do_app/navigation/app_routes.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  List<Note> noteItems = List.generate(
+  final List<Note> noteItems = List.generate(
     20,
     (item) => Note(
       textNote:
@@ -22,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
       importance: '0',
     ),
   );
+
   @override
   Widget build(BuildContext context) {
     final currentPalette = AppPalette.of(context);
@@ -69,36 +65,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(childCount: 20, (
-                  context,
-                  index,
-                ) {
-                  return Dismissible(
-                    key: Key(noteItems[index].textNote),
-                    background: Container(
-                      color: Colors.green,
-                      alignment: Alignment.centerLeft,
-                      child: const Padding(
-                        padding: EdgeInsets.only(left: 24),
-                        child: Icon(Icons.check, color: Colors.white),
+                delegate: SliverChildBuilderDelegate(
+                  childCount: noteItems.length,
+                  (context, index) {
+                    return Dismissible(
+                      key: Key(noteItems[index].textNote),
+                      background: Container(
+                        color: Colors.green,
+                        alignment: Alignment.centerLeft,
+                        child: const Padding(
+                          padding: EdgeInsets.only(left: 24),
+                          child: Icon(Icons.check, color: Colors.white),
+                        ),
                       ),
-                    ),
-                    secondaryBackground: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      child: const Padding(
-                        padding: EdgeInsets.only(right: 24),
-                        child: Icon(Icons.delete, color: Colors.white),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        // ? отнять 8 из-за падинга текста
-                        horizontal: 16 - 8,
-                        vertical: 12 - 8,
+                      secondaryBackground: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        child: const Padding(
+                          padding: EdgeInsets.only(right: 24),
+                          child: Icon(Icons.delete, color: Colors.white),
+                        ),
                       ),
                       child: ListTile(
-                        // ? У текста свой падинг 8 пискелей во все стороны хз откуда
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 4,
+                        ),
                         title: Text(
                           '${noteItems[index].textNote} #$index',
                           maxLines: 3,
@@ -114,9 +106,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {},
                         ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  },
+                ),
               ),
             ),
           ),
