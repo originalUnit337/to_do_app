@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
-import 'package:to_do_app/navigation/app_router.dart';
+import 'package:go_router/go_router.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 import 'package:to_do_app/presentation/widgets/importance_dropdown.dart';
@@ -11,24 +11,19 @@ class AddNoteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _dropdownMenuEntries = <String>[
-      AppLocalizations.of(context)!.no,
-      AppLocalizations.of(context)!.low,
-      AppLocalizations.of(context)!.high,
-    ];
     final currentPalette = AppPalette.of(context);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: AppRouter.router.pop,
+          onPressed: context.pop,
           icon: const Icon(Icons.close),
         ),
         actions: [
           TextButton(
             onPressed: () {},
             child: Text(
-              AppLocalizations.of(context)!.save,
+              AppLocalizations.of(context)?.save ?? 'Save',
               style: AppFontStyle.title.copyWith(
                 color: currentPalette.colorBlue,
               ),
@@ -39,6 +34,7 @@ class AddNoteScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             DecoratedBox(
@@ -58,7 +54,7 @@ class AddNoteScreen extends StatelessWidget {
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  hintText: AppLocalizations.of(context)!.what_should_i_do,
+                  hintText: AppLocalizations.of(context)?.what_should_i_do,
                   hintStyle: AppFontStyle.title.copyWith(
                     color: currentPalette.labelTertiary,
                   ),
@@ -69,22 +65,18 @@ class AddNoteScreen extends StatelessWidget {
                 maxLines: 6,
               ),
             ),
-            const SizedBox(height: 20),
             Text(
-              AppLocalizations.of(context)!.importance,
+              AppLocalizations.of(context)?.importance ?? 'Importance',
               style: AppFontStyle.title,
             ),
             const ImportanceDropdown(),
-            const SizedBox(height: 20),
             const Divider(),
             const SwitchDataPicker(),
-            const SizedBox(height: 20),
             const Divider(),
-            const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: () {},
               label: Text(
-                AppLocalizations.of(context)!.delete,
+                AppLocalizations.of(context)?.delete ?? 'Delete',
                 style: AppFontStyle.body.copyWith(
                   color: currentPalette.colorRed,
                 ),
