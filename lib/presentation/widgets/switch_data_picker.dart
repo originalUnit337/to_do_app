@@ -2,32 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 
-class SwitchDataPicker extends StatefulWidget {
+class SwitchDataPicker extends StatelessWidget {
   const SwitchDataPicker({super.key});
 
   @override
-  State<SwitchDataPicker> createState() => _SwitchDataPickerState();
-}
-
-class _SwitchDataPickerState extends State<SwitchDataPicker> {
-  bool _isSwitched = false;
-  DateTime? _selectedDate;
-
-  Future<void> _selectData(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 10),
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final switchValue = ValueNotifier<bool>(false);
+    final selectedDate = ValueNotifier<DateTime?>(null);
+
+    Future<void> selectData(BuildContext context) async {
+      final picked = await showDatePicker(
+        context: context,
+        firstDate: DateTime.now(),
+        lastDate: DateTime(DateTime.now().year + 10),
+      );
+      if (picked != null && picked != selectedDate.value) {
+        selectedDate.value = picked;
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,28 +28,32 @@ class _SwitchDataPickerState extends State<SwitchDataPicker> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              AppLocalizations.of(context)!.due_by,
+              AppLocalizations.of(context)?.due_by ?? 'Due by',
               style: AppFontStyle.title,
             ),
-            Switch(
-              value: _isSwitched,
-              onChanged: (value) {
-                setState(() {
-                  _isSwitched = value;
-                  if (!_isSwitched) {
-                    _selectedDate = null;
-                  } else {
-                    _selectData(context);
-                  }
-                });
+            ValueListenableBuilder<bool>(
+              valueListenable: switchValue,
+              builder: (context, value, child) {
+                return Switch(
+                  value: value,
+                  onChanged: (newValue) async {
+                    switchValue.value = newValue;
+                    if (!newValue) {
+                      selectedDate.value = null;
+                    } else {
+                      await selectData(context);
+                    }
+                  },
+                );
               },
             ),
           ],
         ),
-        Text(
-          _selectedDate == null
-              ? 'nothing'
-              : _selectedDate!.toLocal().toString(),
+        ValueListenableBuilder<DateTime?>(
+          valueListenable: selectedDate,
+          builder: (context, value, child) {
+            return Text(value == null ? 'nothing' : value.toLocal().toString());
+          },
         ),
       ],
     );
