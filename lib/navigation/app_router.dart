@@ -10,7 +10,7 @@ class AppRouter {
         path: AppRoutes.homeRoute.path,
         name: AppRoutes.homeRoute.name,
         builder: (context, state) {
-          return const HomeScreen();
+          return HomeScreen();
         },
       ),
       GoRoute(
