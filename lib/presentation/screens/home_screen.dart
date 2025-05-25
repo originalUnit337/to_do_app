@@ -9,14 +9,21 @@ import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  final List<Note> noteItems = List.generate(
-    20,
-    (item) => Note(
-      textNote:
-          'Купить что-то, где-то, зачем-то, но зачем не очень понятно, но точно чтобы показать как обрезается текст $item',
-      importance: '0',
-    ),
-  );
+  // final List<Note> noteItems = List.generate(
+  //   20,
+  //   (item) => Note(
+  //     textNote:
+  //         'Купить что-то, где-то, зачем-то, но зачем не очень понятно, но точно чтобы показать как обрезается текст $item',
+  //     importance: '0',
+  //   ),
+  // );
+  final List<Note> noteItems = [
+    Note(textNote: 'Text 1', importance: '0'),
+    Note(textNote: 'Text 2', importance: '0'),
+    Note(textNote: 'Text 3', importance: '0'),
+    Note(textNote: 'Text 4', importance: '0'),
+    Note(textNote: 'Text 5', importance: '0'),
+  ];
 
   final ValueNotifier<bool> showCompleted = ValueNotifier<bool>(true);
 
@@ -43,7 +50,7 @@ class HomeScreen extends StatelessWidget {
                 builder: (context, value, child) {
                   return IconButton(
                     icon: Icon(
-                      value ? Icons.visibility : Icons.visibility_off,
+                      value ? Icons.visibility_off : Icons.visibility,
                       color: currentPalette.colorBlue,
                     ),
                     onPressed: () {
@@ -102,7 +109,10 @@ class HomeScreen extends StatelessWidget {
                           return const SizedBox.shrink();
                         }
                         return Dismissible(
-                          key: Key(noteItems[index].textNote),
+                          //key: Key(noteItems[index].hashCode.toString()),
+                          //key: Key(noteItems[index].textNote),
+                          // Без UniqueKey() ошибки
+                          key: UniqueKey(),
                           background: Container(
                             color: Colors.green,
                             alignment: Alignment.centerLeft,
@@ -111,6 +121,13 @@ class HomeScreen extends StatelessWidget {
                               child: Icon(Icons.check, color: Colors.white),
                             ),
                           ),
+                          onDismissed: (direction) {
+                            if (direction == DismissDirection.startToEnd) {
+                              noteItems[index].isCompleted = true;
+                            } else {
+                              noteItems.removeAt(index);
+                            }
+                          },
                           secondaryBackground: Container(
                             color: Colors.red,
                             alignment: Alignment.centerRight,
@@ -128,10 +145,18 @@ class HomeScreen extends StatelessWidget {
                               '${noteItems[index].textNote} #$index',
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              style: AppFontStyle.body,
+                              style:
+                                  noteItems[index].isCompleted
+                                      ? AppFontStyle.body.copyWith(
+                                        color: currentPalette.labelTertiary,
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationColor: currentPalette.labelTertiary,
+                                      )
+                                      : AppFontStyle.body,
                             ),
                             leading: Checkbox(
-                              value: false,
+                              value:
+                                  noteItems[index].isCompleted ? true : false,
                               onChanged: (value) {},
                             ),
                             trailing: IconButton(
