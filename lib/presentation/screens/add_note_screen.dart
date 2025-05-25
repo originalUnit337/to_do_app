@@ -31,74 +31,76 @@ class AddNoteScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          spacing: 10,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DecoratedBox(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(12),
-                    blurRadius: 2,
-                    offset: const Offset(0, 2),
-                  ),
-                  BoxShadow(color: Colors.black.withAlpha(6), blurRadius: 2),
-                ],
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  hintText: AppLocalizations.of(context)?.what_should_i_do,
-                  hintStyle: AppFontStyle.title.copyWith(
-                    color: currentPalette.labelTertiary,
-                  ),
-                  fillColor: currentPalette.backSecondary,
-                  filled: true,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            spacing: 10,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(12),
+                      blurRadius: 2,
+                      offset: const Offset(0, 2),
+                    ),
+                    BoxShadow(color: Colors.black.withAlpha(6), blurRadius: 2),
+                  ],
                 ),
-                minLines: 4,
-                maxLines: 6,
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    hintText: AppLocalizations.of(context)?.what_should_i_do,
+                    hintStyle: AppFontStyle.title.copyWith(
+                      color: currentPalette.labelTertiary,
+                    ),
+                    fillColor: currentPalette.backSecondary,
+                    filled: true,
+                  ),
+                  minLines: 4,
+                  maxLines: 6,
+                ),
               ),
-            ),
-            Text(
-              AppLocalizations.of(context)?.importance ?? 'Importance',
-              style: AppFontStyle.title,
-            ),
-            const ImportanceDropdown(),
-            const Divider(),
-            const SwitchDataPicker(),
-            const Divider(),
-            ElevatedButton.icon(
-              onPressed: () {},
-              label: Text(
-                AppLocalizations.of(context)?.delete ?? 'Delete',
-                style: AppFontStyle.body.copyWith(
+              Text(
+                AppLocalizations.of(context)?.importance ?? 'Importance',
+                style: AppFontStyle.title,
+              ),
+              const ImportanceDropdown(),
+              const Divider(),
+              const SwitchDataPicker(),
+              const Divider(),
+              ElevatedButton.icon(
+                onPressed: () {},
+                label: Text(
+                  AppLocalizations.of(context)?.delete ?? 'Delete',
+                  style: AppFontStyle.body.copyWith(
+                    color: currentPalette.colorRed,
+                  ),
+                ),
+                icon: Icon(
+                  Icons.delete,
+                  size: 24,
                   color: currentPalette.colorRed,
                 ),
-              ),
-              icon: Icon(
-                Icons.delete,
-                size: 24,
-                color: currentPalette.colorRed,
-              ),
-              style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(
-                  currentPalette.backPrimary,
-                ),
-                elevation: const WidgetStatePropertyAll(0),
-                shape: WidgetStatePropertyAll(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(
+                    currentPalette.backPrimary,
+                  ),
+                  elevation: const WidgetStatePropertyAll(0),
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
