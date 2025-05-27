@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:to_do_app/domain/model/note.dart';
 import 'package:to_do_app/navigation/app_routes.dart';
+import 'package:to_do_app/presentation/screens/info_note_screen.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 
@@ -157,12 +160,37 @@ class _HomeScreenState extends State<HomeScreen> {
                             });
                           },
                         ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      InfoNoteScreen(note: noteItems[index]),
+                            ),
+                          );
+                        },
                         trailing: IconButton(
                           icon: Icon(
                             Icons.info_outline,
                             color: currentPalette.labelTertiary,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            // final noteJson = jsonEncode(
+                            //   noteItems[index].toJson(),
+                            // );
+                            // context.go(
+                            //   '${AppRoutes.infoNote.name}?data=$noteJson',
+                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        InfoNoteScreen(note: noteItems[index]),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     );
