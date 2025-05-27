@@ -6,17 +6,15 @@ import 'package:to_do_app/navigation/app_routes.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   // final List<Note> noteItems = List.generate(
-  //   20,
-  //   (item) => Note(
-  //     textNote:
-  //         'Купить что-то, где-то, зачем-то, но зачем не очень понятно, но точно чтобы показать как обрезается текст $item',
-  //     importance: '0',
-  //   ),
-  // );
   final List<Note> noteItems = [
     Note(textNote: 'Text 1', importance: '0'),
     Note(textNote: 'Text 2', importance: '0'),
@@ -25,7 +23,7 @@ class HomeScreen extends StatelessWidget {
     Note(textNote: 'Text 5', importance: '0'),
   ];
 
-  final ValueNotifier<bool> showCompleted = ValueNotifier<bool>(true);
+  bool showCompleted = true;
 
   @override
   Widget build(BuildContext context) {
@@ -45,18 +43,15 @@ class HomeScreen extends StatelessWidget {
           SliverAppBar(
             pinned: true,
             actions: [
-              ValueListenableBuilder<bool>(
-                valueListenable: showCompleted,
-                builder: (context, value, child) {
-                  return IconButton(
-                    icon: Icon(
-                      value ? Icons.visibility_off : Icons.visibility,
-                      color: currentPalette.colorBlue,
-                    ),
-                    onPressed: () {
-                      showCompleted.value = !value;
-                    },
-                  );
+              IconButton(
+                icon: Icon(
+                  showCompleted ? Icons.visibility_off : Icons.visibility,
+                  color: currentPalette.colorBlue,
+                ),
+                onPressed: () {
+                  setState(() {
+                    showCompleted = !showCompleted;
+                  });
                 },
               ),
             ],
@@ -74,7 +69,9 @@ class HomeScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 24, left: 60),
                 child: Text(
-                  'Выполнено — 5',
+                  'Выполнено — ${noteItems.where((e) {
+                    return e.isCompleted;
+                  }).length}',
                   style: AppFontStyle.body.copyWith(
                     color: currentPalette.labelTertiary,
                   ),
@@ -98,80 +95,79 @@ class HomeScreen extends StatelessWidget {
                 color: currentPalette.backSecondary,
                 borderRadius: BorderRadius.circular(8),
               ),
-              sliver: ValueListenableBuilder<bool>(
-                valueListenable: showCompleted,
-                builder: (context, value, child) {
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      childCount: noteItems.length,
-                      (context, index) {
-                        if (!value && noteItems[index].isCompleted) {
-                          return const SizedBox.shrink();
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  childCount: noteItems.length,
+                  (context, index) {
+                    if (!showCompleted && noteItems[index].isCompleted) {
+                      return const SizedBox.shrink();
+                    }
+                    return Dismissible(
+                      //key: Key(noteItems[index].hashCode.toString()),
+                      //key: Key(noteItems[index].textNote),
+                      // Без UniqueKey() ошибки
+                      key: UniqueKey(),
+                      background: Container(
+                        color: Colors.green,
+                        alignment: Alignment.centerLeft,
+                        child: const Padding(
+                          padding: EdgeInsets.only(left: 24),
+                          child: Icon(Icons.check, color: Colors.white),
+                        ),
+                      ),
+                      onDismissed: (direction) {
+                        if (direction == DismissDirection.startToEnd) {
+                          noteItems[index].isCompleted = true;
+                        } else {
+                          noteItems.removeAt(index);
                         }
-                        return Dismissible(
-                          //key: Key(noteItems[index].hashCode.toString()),
-                          //key: Key(noteItems[index].textNote),
-                          // Без UniqueKey() ошибки
-                          key: UniqueKey(),
-                          background: Container(
-                            color: Colors.green,
-                            alignment: Alignment.centerLeft,
-                            child: const Padding(
-                              padding: EdgeInsets.only(left: 24),
-                              child: Icon(Icons.check, color: Colors.white),
-                            ),
-                          ),
-                          onDismissed: (direction) {
-                            if (direction == DismissDirection.startToEnd) {
-                              noteItems[index].isCompleted = true;
-                            } else {
-                              noteItems.removeAt(index);
-                            }
-                          },
-                          secondaryBackground: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerRight,
-                            child: const Padding(
-                              padding: EdgeInsets.only(right: 24),
-                              child: Icon(Icons.delete, color: Colors.white),
-                            ),
-                          ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 4,
-                              horizontal: 4,
-                            ),
-                            title: Text(
-                              '${noteItems[index].textNote} #$index',
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style:
-                                  noteItems[index].isCompleted
-                                      ? AppFontStyle.body.copyWith(
-                                        color: currentPalette.labelTertiary,
-                                        decoration: TextDecoration.lineThrough,
-                                        decorationColor: currentPalette.labelTertiary,
-                                      )
-                                      : AppFontStyle.body,
-                            ),
-                            leading: Checkbox(
-                              value:
-                                  noteItems[index].isCompleted ? true : false,
-                              onChanged: (value) {},
-                            ),
-                            trailing: IconButton(
-                              icon: Icon(
-                                Icons.info_outline,
-                                color: currentPalette.labelTertiary,
-                              ),
-                              onPressed: () {},
-                            ),
-                          ),
-                        );
                       },
-                    ),
-                  );
-                },
+                      secondaryBackground: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        child: const Padding(
+                          padding: EdgeInsets.only(right: 24),
+                          child: Icon(Icons.delete, color: Colors.white),
+                        ),
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 4,
+                        ),
+                        title: Text(
+                          '${noteItems[index].textNote} #$index',
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              noteItems[index].isCompleted
+                                  ? AppFontStyle.body.copyWith(
+                                    color: currentPalette.labelTertiary,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor:
+                                        currentPalette.labelTertiary,
+                                  )
+                                  : AppFontStyle.body,
+                        ),
+                        leading: Checkbox(
+                          value: noteItems[index].isCompleted ? true : false,
+                          onChanged: (value) {
+                            setState(() {
+                              noteItems[index].isCompleted = value ?? false;
+                            });
+                          },
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.info_outline,
+                            color: currentPalette.labelTertiary,
+                          ),
+                          onPressed: () {},
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
