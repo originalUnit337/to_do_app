@@ -16,17 +16,17 @@ class InfoNoteScreen extends StatefulWidget {
 }
 
 class _InfoNoteScreenState extends State<InfoNoteScreen> {
-  late TextEditingController _textController;
+  late TextEditingController _textNoteController;
 
   @override
   void initState() {
     super.initState();
-    _textController = TextEditingController(text: widget.note?.textNote);
+    _textNoteController = TextEditingController(text: widget.note?.textNote);
   }
 
   @override
   void dispose() {
-    _textController.dispose();
+    _textNoteController.dispose();
     super.dispose();
   }
 
@@ -71,7 +71,7 @@ class _InfoNoteScreenState extends State<InfoNoteScreen> {
                   ],
                 ),
                 child: TextField(
-                  controller: _textController,
+                  controller: _textNoteController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide.none,

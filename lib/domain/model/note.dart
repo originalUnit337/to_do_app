@@ -1,10 +1,17 @@
 class Note {
   final String textNote;
+  // enum
   final String importance;
+  // datetime
   final String? makeBefore;
-  bool isCompleted = false;
+  bool isCompleted;
 
-  Note({required this.textNote, required this.importance, this.makeBefore});
+  Note({
+    required this.textNote,
+    required this.importance,
+    this.makeBefore,
+    this.isCompleted = false,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -20,6 +27,7 @@ class Note {
       textNote: json['textNote'] as String,
       importance: json['importance'] as String,
       makeBefore: json['makeBefore'] as String,
-    )..isCompleted = json['isCompleted'] as bool ?? false;
+      isCompleted: json['isCompleted'] as bool,
+    ); // .. убрать
   }
 }

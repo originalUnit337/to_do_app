@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:go_router/go_router.dart';
@@ -17,13 +15,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // final List<Note> noteItems = List.generate(
   final List<Note> noteItems = [
     Note(textNote: 'Text 1', importance: '0'),
     Note(textNote: 'Text 2', importance: '0'),
-    Note(textNote: 'Text 3', importance: '0'),
-    Note(textNote: 'Text 4', importance: '0'),
-    Note(textNote: 'Text 5', importance: '0'),
+    Note(textNote: 'Text 3', importance: '2'),
+    Note(textNote: 'Text 4', importance: '1'),
+    Note(textNote: 'Text 5', importance: '2'),
   ];
 
   bool showCompleted = true;
@@ -106,10 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       return const SizedBox.shrink();
                     }
                     return Dismissible(
-                      //key: Key(noteItems[index].hashCode.toString()),
-                      //key: Key(noteItems[index].textNote),
-                      // Без UniqueKey() ошибки
                       key: UniqueKey(),
+                      direction:
+                          showCompleted
+                              ? DismissDirection.endToStart
+                              : DismissDirection.horizontal,
                       background: Container(
                         color: Colors.green,
                         alignment: Alignment.centerLeft,
@@ -138,19 +136,39 @@ class _HomeScreenState extends State<HomeScreen> {
                           vertical: 4,
                           horizontal: 4,
                         ),
-                        title: Text(
-                          '${noteItems[index].textNote} #$index',
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style:
-                              noteItems[index].isCompleted
-                                  ? AppFontStyle.body.copyWith(
-                                    color: currentPalette.labelTertiary,
-                                    decoration: TextDecoration.lineThrough,
-                                    decorationColor:
-                                        currentPalette.labelTertiary,
-                                  )
-                                  : AppFontStyle.body,
+                        title: Row(
+                          children: [
+                            if (noteItems[index].importance == '2')
+                              Text(
+                                '!! ',
+                                style: TextStyle(
+                                  color: currentPalette.colorRed,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            if (noteItems[index].importance == '1')
+                              Text(
+                                '↓ ',
+                                style: TextStyle(
+                                  color: currentPalette.colorGray,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            Text(
+                              '${noteItems[index].textNote} #$index',
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style:
+                                  noteItems[index].isCompleted
+                                      ? AppFontStyle.body.copyWith(
+                                        color: currentPalette.labelTertiary,
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationColor:
+                                            currentPalette.labelTertiary,
+                                      )
+                                      : AppFontStyle.body,
+                            ),
+                          ],
                         ),
                         leading: Checkbox(
                           value: noteItems[index].isCompleted ? true : false,
@@ -159,6 +177,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               noteItems[index].isCompleted = value ?? false;
                             });
                           },
+                          side: BorderSide(
+                            color:
+                                noteItems[index].importance == '2'
+                                    ? currentPalette.colorRed
+                                    : currentPalette.supportSeparator,
+                            width: 2,
+                          ),
                         ),
                         onTap: () {
                           Navigator.push(
@@ -176,12 +201,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: currentPalette.labelTertiary,
                           ),
                           onPressed: () {
-                            // final noteJson = jsonEncode(
-                            //   noteItems[index].toJson(),
-                            // );
-                            // context.go(
-                            //   '${AppRoutes.infoNote.name}?data=$noteJson',
-                            // );
                             Navigator.push(
                               context,
                               MaterialPageRoute(
