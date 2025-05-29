@@ -9,7 +9,7 @@ import 'package:to_do_app/presentation/widgets/switch_data_picker.dart';
 
 class InfoNoteScreen extends StatefulWidget {
   final Note? note;
-  const InfoNoteScreen({required this.note, super.key});
+  const InfoNoteScreen({this.note, super.key});
 
   @override
   State<InfoNoteScreen> createState() => _InfoNoteScreenState();

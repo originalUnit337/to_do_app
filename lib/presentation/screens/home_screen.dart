@@ -32,7 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          GoRouter.of(context).pushNamed(AppRoutes.addNote.name);
+          //GoRouter.of(context).pushNamed(AppRoutes.addNote.name);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const InfoNoteScreen();
+              },
+            ),
+          );
         },
         child: Icon(Icons.add, color: currentPalette.colorWhite),
         backgroundColor: currentPalette.colorBlue,
