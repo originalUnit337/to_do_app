@@ -38,5 +38,9 @@
     "delete": "Delete",
     "@delete": {
         "description": "Used in add_note_screen"
+    },
+    "completed": "Completed",
+    "@completed": {
+        "description": "Used in home_screen"
     }
 }

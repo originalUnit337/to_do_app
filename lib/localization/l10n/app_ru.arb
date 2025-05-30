@@ -38,5 +38,9 @@
     "delete": "Удалить",
     "@delete": {
         "description": "Используется в add_note_screen"
+    },
+    "completed": "Выполнено",
+    "@completed": {
+        "description": "Используется в home_screen"
     }
 }

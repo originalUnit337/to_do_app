@@ -16,11 +16,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Note> noteItems = [
-    Note(textNote: 'Text 1', importance: '0'),
-    Note(textNote: 'Text 2', importance: '0'),
-    Note(textNote: 'Text 3', importance: '2'),
-    Note(textNote: 'Text 4', importance: '1'),
-    Note(textNote: 'Text 5', importance: '2'),
+    Note(textNote: 'Need to buy smth', importance: '0'),
+    Note(textNote: 'Visit a doctor', importance: '0'),
+    Note(textNote: 'Check smth', importance: '2'),
+    Note(
+      textNote:
+          'This is a very big note, so it takes a lot of space and nobody even knows how many space this note needs to show itself',
+      importance: '1',
+    ),
+    Note(
+      textNote:
+          'Schedule a meeting with the team for next week to discuss current projects and task distribution.',
+      importance: '2',
+    ),
   ];
 
   bool showCompleted = true;
@@ -66,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             expandedHeight: 140,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                AppLocalizations.of(context)!.myNotes,
+                AppLocalizations.of(context)?.myNotes ?? 'My notes',
                 style: AppFontStyle.largeTitle,
               ),
             ),
@@ -77,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 24, left: 60),
                 child: Text(
-                  'Выполнено — ${noteItems.where((e) {
+                  '${AppLocalizations.of(context)?.completed ?? 'Completed'} — ${noteItems.where((e) {
                     return e.isCompleted;
                   }).length}',
                   style: AppFontStyle.body.copyWith(
@@ -128,7 +136,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (direction == DismissDirection.startToEnd) {
                           noteItems[index].isCompleted = true;
                         } else {
-                          noteItems.removeAt(index);
+                          setState(() {
+                            noteItems.removeAt(index);
+                          });
                         }
                       },
                       secondaryBackground: Container(
@@ -162,19 +172,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            Text(
-                              '${noteItems[index].textNote} #$index',
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style:
-                                  noteItems[index].isCompleted
-                                      ? AppFontStyle.body.copyWith(
-                                        color: currentPalette.labelTertiary,
-                                        decoration: TextDecoration.lineThrough,
-                                        decorationColor:
-                                            currentPalette.labelTertiary,
-                                      )
-                                      : AppFontStyle.body,
+                            Expanded(
+                              child: Text(
+                                noteItems[index].textNote,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style:
+                                    noteItems[index].isCompleted
+                                        ? AppFontStyle.body.copyWith(
+                                          color: currentPalette.labelTertiary,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          decorationColor:
+                                              currentPalette.labelTertiary,
+                                        )
+                                        : AppFontStyle.body,
+                              ),
                             ),
                           ],
                         ),
