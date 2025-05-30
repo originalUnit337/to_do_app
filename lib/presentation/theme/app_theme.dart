@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/dark.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/light.dart';
-import 'package:to_do_app/presentation/ui_kit/palette/palette.dart';
 
 class AppTheme {
   static ThemeData get lightAppTheme {
@@ -39,6 +38,7 @@ class AppTheme {
           WidgetState.focused: palette.colorGrayLight,
           WidgetState.disabled: palette.colorGrayLight,
         }),
+
         side: BorderSide(color: palette.supportSeparator, width: 2),
       ),
     );

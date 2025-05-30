@@ -3,20 +3,27 @@ import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:to_do_app/domain/model/note.dart';
 import 'package:to_do_app/navigation/app_routes.dart';
+import 'package:to_do_app/presentation/screens/info_note_screen.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
-  final List<Note> noteItems = List.generate(
-    20,
-    (item) => Note(
-      textNote:
-          'Купить что-то, где-то, зачем-то, но зачем не очень понятно, но точно чтобы показать как обрезается текст $item',
-      importance: '0',
-    ),
-  );
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<Note> noteItems = [
+    Note(textNote: 'Text 1', importance: '0'),
+    Note(textNote: 'Text 2', importance: '0'),
+    Note(textNote: 'Text 3', importance: '2'),
+    Note(textNote: 'Text 4', importance: '1'),
+    Note(textNote: 'Text 5', importance: '2'),
+  ];
+
+  bool showCompleted = true;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +32,15 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          GoRouter.of(context).pushNamed(AppRoutes.addNote.name);
+          //GoRouter.of(context).pushNamed(AppRoutes.addNote.name);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const InfoNoteScreen();
+              },
+            ),
+          );
         },
         child: Icon(Icons.add, color: currentPalette.colorWhite),
         backgroundColor: currentPalette.colorBlue,
@@ -37,11 +52,18 @@ class HomeScreen extends StatelessWidget {
             pinned: true,
             actions: [
               IconButton(
-                icon: const Icon(Icons.visibility_off),
-                onPressed: () {},
+                icon: Icon(
+                  showCompleted ? Icons.visibility_off : Icons.visibility,
+                  color: currentPalette.colorBlue,
+                ),
+                onPressed: () {
+                  setState(() {
+                    showCompleted = !showCompleted;
+                  });
+                },
               ),
             ],
-            expandedHeight: 200,
+            expandedHeight: 140,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 AppLocalizations.of(context)!.myNotes,
@@ -49,6 +71,23 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 24,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 24, left: 60),
+                child: Text(
+                  'Выполнено — ${noteItems.where((e) {
+                    return e.isCompleted;
+                  }).length}',
+                  style: AppFontStyle.body.copyWith(
+                    color: currentPalette.labelTertiary,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 16)),
           SliverPadding(
             padding: const EdgeInsets.only(left: 16, right: 16),
             sliver: DecoratedSliver(
@@ -68,8 +107,15 @@ class HomeScreen extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                   childCount: noteItems.length,
                   (context, index) {
+                    if (!showCompleted && noteItems[index].isCompleted) {
+                      return const SizedBox.shrink();
+                    }
                     return Dismissible(
-                      key: Key(noteItems[index].textNote),
+                      key: UniqueKey(),
+                      direction:
+                          showCompleted
+                              ? DismissDirection.endToStart
+                              : DismissDirection.horizontal,
                       background: Container(
                         color: Colors.green,
                         alignment: Alignment.centerLeft,
@@ -78,6 +124,13 @@ class HomeScreen extends StatelessWidget {
                           child: Icon(Icons.check, color: Colors.white),
                         ),
                       ),
+                      onDismissed: (direction) {
+                        if (direction == DismissDirection.startToEnd) {
+                          noteItems[index].isCompleted = true;
+                        } else {
+                          noteItems.removeAt(index);
+                        }
+                      },
                       secondaryBackground: Container(
                         color: Colors.red,
                         alignment: Alignment.centerRight,
@@ -91,19 +144,80 @@ class HomeScreen extends StatelessWidget {
                           vertical: 4,
                           horizontal: 4,
                         ),
-                        title: Text(
-                          '${noteItems[index].textNote} #$index',
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppFontStyle.body,
+                        title: Row(
+                          children: [
+                            if (noteItems[index].importance == '2')
+                              Text(
+                                '!! ',
+                                style: TextStyle(
+                                  color: currentPalette.colorRed,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            if (noteItems[index].importance == '1')
+                              Text(
+                                '↓ ',
+                                style: TextStyle(
+                                  color: currentPalette.colorGray,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            Text(
+                              '${noteItems[index].textNote} #$index',
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style:
+                                  noteItems[index].isCompleted
+                                      ? AppFontStyle.body.copyWith(
+                                        color: currentPalette.labelTertiary,
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationColor:
+                                            currentPalette.labelTertiary,
+                                      )
+                                      : AppFontStyle.body,
+                            ),
+                          ],
                         ),
-                        leading: Checkbox(value: false, onChanged: (value) {}),
+                        leading: Checkbox(
+                          value: noteItems[index].isCompleted ? true : false,
+                          onChanged: (value) {
+                            setState(() {
+                              noteItems[index].isCompleted = value ?? false;
+                            });
+                          },
+                          side: BorderSide(
+                            color:
+                                noteItems[index].importance == '2'
+                                    ? currentPalette.colorRed
+                                    : currentPalette.supportSeparator,
+                            width: 2,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      InfoNoteScreen(note: noteItems[index]),
+                            ),
+                          );
+                        },
                         trailing: IconButton(
                           icon: Icon(
                             Icons.info_outline,
                             color: currentPalette.labelTertiary,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        InfoNoteScreen(note: noteItems[index]),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     );
