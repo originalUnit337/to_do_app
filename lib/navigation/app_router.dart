@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:go_router/go_router.dart';
 import 'package:to_do_app/domain/entities/note.dart';
 import 'package:to_do_app/navigation/app_routes.dart';
-import 'package:to_do_app/presentation/screens/home_screen.dart';
-import 'package:to_do_app/presentation/screens/info_note_screen.dart';
+import 'package:to_do_app/presentation/screens/home_screen/home_screen.dart';
+import 'package:to_do_app/presentation/screens/info_note_screen/info_note_screen.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(

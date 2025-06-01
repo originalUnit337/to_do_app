@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:to_do_app/domain/entities/note.dart';
 import 'package:to_do_app/navigation/app_routes.dart';
-import 'package:to_do_app/presentation/screens/info_note_screen.dart';
+import 'package:to_do_app/presentation/screens/info_note_screen/info_note_screen.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 
