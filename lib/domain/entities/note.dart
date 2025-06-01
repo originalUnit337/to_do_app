@@ -1,12 +1,14 @@
-class Note {
+import 'package:equatable/equatable.dart';
+
+class NoteEntity extends Equatable {
   final String textNote;
   // enum
   final String importance;
   // datetime
   final String? makeBefore;
-  bool isCompleted;
+  final bool isCompleted;
 
-  Note({
+  const NoteEntity({
     required this.textNote,
     required this.importance,
     this.makeBefore,
@@ -22,12 +24,15 @@ class Note {
     };
   }
 
-  factory Note.fromJson(Map<String, dynamic> json) {
-    return Note(
+  factory NoteEntity.fromJson(Map<String, dynamic> json) {
+    return NoteEntity(
       textNote: json['textNote'] as String,
       importance: json['importance'] as String,
       makeBefore: json['makeBefore'] as String,
       isCompleted: json['isCompleted'] as bool,
-    ); // .. убрать
+    );
   }
+
+  @override
+  List<Object?> get props => [textNote, importance, makeBefore, isCompleted];
 }

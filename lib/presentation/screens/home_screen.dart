@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:go_router/go_router.dart';
-import 'package:to_do_app/domain/model/note.dart';
+import 'package:to_do_app/domain/entities/note.dart';
 import 'package:to_do_app/navigation/app_routes.dart';
 import 'package:to_do_app/presentation/screens/info_note_screen.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
@@ -15,16 +15,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<Note> noteItems = [
-    Note(textNote: 'Need to buy smth', importance: '0'),
-    Note(textNote: 'Visit a doctor', importance: '0'),
-    Note(textNote: 'Check smth', importance: '2'),
-    Note(
+  final List<NoteEntity> noteItems = [
+    NoteEntity(textNote: 'Need to buy smth', importance: '0'),
+    NoteEntity(textNote: 'Visit a doctor', importance: '0'),
+    NoteEntity(textNote: 'Check smth', importance: '2'),
+    NoteEntity(
       textNote:
           'This is a very big note, so it takes a lot of space and nobody even knows how many space this note needs to show itself',
       importance: '1',
     ),
-    Note(
+    NoteEntity(
       textNote:
           'Schedule a meeting with the team for next week to discuss current projects and task distribution.',
       importance: '2',
@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onDismissed: (direction) {
                         if (direction == DismissDirection.startToEnd) {
-                          noteItems[index].isCompleted = true;
+                          //noteItems[index].isCompleted = true;
                         } else {
                           setState(() {
                             noteItems.removeAt(index);
@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           value: noteItems[index].isCompleted ? true : false,
                           onChanged: (value) {
                             setState(() {
-                              noteItems[index].isCompleted = value ?? false;
+                              //noteItems[index].isCompleted = value ?? false;
                             });
                           },
                           side: BorderSide(

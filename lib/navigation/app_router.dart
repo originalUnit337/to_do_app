@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:go_router/go_router.dart';
-import 'package:to_do_app/domain/model/note.dart';
+import 'package:to_do_app/domain/entities/note.dart';
 import 'package:to_do_app/navigation/app_routes.dart';
 import 'package:to_do_app/presentation/screens/home_screen.dart';
 import 'package:to_do_app/presentation/screens/info_note_screen.dart';
@@ -23,7 +23,9 @@ class AppRouter {
           final noteJson = state.pathParameters['data'];
           final note =
               noteJson != null
-                  ? Note.fromJson(jsonDecode(noteJson) as Map<String, dynamic>)
+                  ? NoteEntity.fromJson(
+                    jsonDecode(noteJson) as Map<String, dynamic>,
+                  )
                   : null;
 
           return InfoNoteScreen(note: note);
