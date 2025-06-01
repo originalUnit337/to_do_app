@@ -10,7 +10,7 @@ part of 'note_api_service.dart';
 
 class _NoteApiService implements NoteApiService {
   _NoteApiService(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://firestore.googleapis.com';
+    baseUrl ??= 'https://firestore.googleapis.com/v1beta1';
   }
 
   final Dio _dio;
@@ -22,7 +22,7 @@ class _NoteApiService implements NoteApiService {
   @override
   Future<HttpResponse<List<NoteModel>>> getAllNotes({String? apiKey}) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'apiKey': apiKey};
+    final queryParameters = <String, dynamic>{r'key': apiKey};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
