@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:go_router/go_router.dart';
-import 'package:to_do_app/domain/model/note.dart';
+import 'package:to_do_app/domain/entities/note.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 import 'package:to_do_app/presentation/widgets/importance_dropdown.dart';
 import 'package:to_do_app/presentation/widgets/switch_data_picker.dart';
 
 class InfoNoteScreen extends StatefulWidget {
-  final Note? note;
+  final NoteEntity? note;
   const InfoNoteScreen({this.note, super.key});
 
   @override
