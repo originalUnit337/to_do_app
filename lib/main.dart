@@ -22,15 +22,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<HomeScreenBloc>(
-      create: (context) => sl()..add(const GetAllNotesEvent()),
-      child: MaterialApp.router(
-        supportedLocales: L10n.all,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        theme: AppTheme.lightAppTheme,
-        darkTheme: AppTheme.darkAppTheme,
-        routerConfig: AppRouter.router,
-      ),
+    return MaterialApp.router(
+      supportedLocales: L10n.all,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      theme: AppTheme.lightAppTheme,
+      darkTheme: AppTheme.darkAppTheme,
+      routerConfig: AppRouter.router,
     );
   }
 }

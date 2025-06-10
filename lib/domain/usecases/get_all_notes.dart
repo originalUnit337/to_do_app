@@ -8,7 +8,7 @@ class GetAllNotesUseCase implements UseCase<DataState<List<NoteEntity>>, void> {
 
   GetAllNotesUseCase(this._noteRepository);
   @override
-  Future<DataState<List<NoteEntity>>> call({void params}) {
+  Future<DataState<List<NoteEntity>>> call({void params}) async {
     return _noteRepository.getAllNotes();
   }
 }

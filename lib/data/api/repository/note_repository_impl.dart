@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:to_do_app/core/constants/constants.dart';
 import 'package:to_do_app/core/resources/data_state.dart';
 import 'package:to_do_app/data/api/model/note_model.dart';
 import 'package:to_do_app/data/data_sources/remote/note_api_service.dart';
@@ -13,7 +12,7 @@ class NoteRepositoryImpl implements NoteRepository {
   @override
   Future<DataState<List<NoteModel>>> getAllNotes() async {
     try {
-      final httpResponse = await _noteApiService.getAllNotes(apiKey: apiKey);
+      final httpResponse = await _noteApiService.getAllNotes();
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return DataSuccess(httpResponse.data);

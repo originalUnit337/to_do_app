@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:to_do_app/domain/entities/note.dart';
 
-abstract class HomeScreenState {
+sealed class HomeScreenState {
   final List<NoteEntity>? notes;
   final DioException? exception;
 
   const HomeScreenState({this.notes, this.exception});
+}
+
+class NotesInitial extends HomeScreenState {
+  const NotesInitial();
 }
 
 class NotesLoading extends HomeScreenState {
