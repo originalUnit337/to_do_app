@@ -6,13 +6,23 @@ import 'package:to_do_app/domain/repository/note_repository.dart';
 import 'package:to_do_app/domain/usecases/get_all_notes.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_bloc.dart';
 
-final sl = GetIt.instance;
+final getIt = GetIt.instance;
 
 Future<void> initializeDependencies() async {
-  sl
-    ..registerSingleton<Dio>(Dio())
-    ..registerSingleton<NoteApiService>(NoteApiService(sl()))
-    ..registerSingleton<NoteRepository>(NoteRepositoryImpl(sl()))
-    ..registerSingleton<GetAllNotesUseCase>(GetAllNotesUseCase(sl()))
-    ..registerFactory<HomeScreenBloc>(() => HomeScreenBloc(sl()));
+  getIt.registerSingleton<Dio>(Dio());
+  _initialServices(getIt);
+  _initialRepositories(getIt);
+  _initialUseCases(getIt);
+}
+
+void _initialServices(GetIt sl) {
+  sl.registerSingleton<NoteApiService>(NoteApiService(sl()));
+}
+
+void _initialRepositories(GetIt sl) {
+  sl.registerSingleton<NoteRepository>(NoteRepositoryImpl(sl()));
+}
+
+void _initialUseCases(GetIt sl) {
+  sl.registerSingleton<GetAllNotesUseCase>(GetAllNotesUseCase(sl()));
 }

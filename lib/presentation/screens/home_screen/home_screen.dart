@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/domain/entities/note.dart' show NoteEntity;
-import 'package:to_do_app/injection_container.dart' show sl;
+import 'package:to_do_app/injection_container.dart' show getIt;
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_bloc.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_event.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_state.dart';
@@ -16,7 +16,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentPalette = AppPalette.of(context);
     return BlocProvider<HomeScreenBloc>(
-      create: (context) => sl()..add(const GetAllNotesEvent()),
+      create:
+          (context) => HomeScreenBloc(getIt())..add(const GetAllNotesEvent()),
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         floatingActionButton: FloatingActionButton(
