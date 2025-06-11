@@ -15,7 +15,9 @@ class NoteRepositoryImpl implements NoteRepository {
       final httpResponse = await _noteApiService.getAllNotes();
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        return DataSuccess(httpResponse.data);
+        final notes =
+            httpResponse.data.documents.map((doc) => doc.fields).toList();
+        return DataSuccess(notes);
       } else {
         return DataFailed(
           DioException(

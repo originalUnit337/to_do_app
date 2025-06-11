@@ -9,18 +9,16 @@ class NoteModel extends NoteEntity {
   });
 
   factory NoteModel.fromJson(Map<String, dynamic> map) {
-    final fields = map['fields'] as Map<String, dynamic>;
     return NoteModel(
       textNote:
-          (fields['textNote'] as Map<String, dynamic>)['stringValue'] as String,
+          (map['textNote'] as Map<String, dynamic>)['stringValue'] as String,
       importance:
-          (fields['importance'] as Map<String, dynamic>)['stringValue']
-              as String,
+          (map['importance'] as Map<String, dynamic>)['stringValue'] as String,
       makeBefore:
-          (fields['makeBefore'] as Map<String, dynamic>?)?['stringValue']
+          (map['makeBefore'] as Map<String, dynamic>?)?['stringValue']
               as String?,
       isCompleted:
-          (fields['isCompleted'] as Map<String, dynamic>?)?['booleanValue']
+          (map['isCompleted'] as Map<String, dynamic>?)?['booleanValue']
               as bool,
     );
   }

@@ -36,16 +36,16 @@ class HomeScreen extends StatelessWidget {
         ),
         body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
           builder: (context, state) {
-            switch (state) {
-              case NotesLoading():
-                return const Center(child: CircularProgressIndicator());
-              case NotesLoaded():
-                return _buildNotesList(context, state.notes);
-              case NotesError():
-                return Center(child: Text(state.exception?.message ?? 'Error'));
-              default:
-                return const Center(child: Text('Default'));
-            }
+            return switch (state) {
+              NotesInitial() => const Center(child: Text('Initial')),
+              NotesLoading() => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              NotesLoaded() => _buildNotesList(context, state.notes),
+              NotesError() => Center(
+                child: Text(state.exception?.message ?? 'Error'),
+              ),
+            };
           },
         ),
       ),
