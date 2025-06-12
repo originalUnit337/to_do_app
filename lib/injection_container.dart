@@ -10,19 +10,19 @@ final getIt = GetIt.instance;
 
 Future<void> initializeDependencies() async {
   getIt.registerSingleton<Dio>(Dio());
-  _initialServices(getIt);
-  _initialRepositories(getIt);
-  _initialUseCases(getIt);
+  _initServices();
+  _initRepositories();
+  _initUseCases();
 }
 
-void _initialServices(GetIt sl) {
-  sl.registerSingleton<NoteApiService>(NoteApiService(sl()));
+void _initServices() {
+  getIt.registerSingleton<NoteApiService>(NoteApiService(getIt()));
 }
 
-void _initialRepositories(GetIt sl) {
-  sl.registerSingleton<NoteRepository>(NoteRepositoryImpl(sl()));
+void _initRepositories() {
+  getIt.registerSingleton<NoteRepository>(NoteRepositoryImpl(getIt()));
 }
 
-void _initialUseCases(GetIt sl) {
-  sl.registerSingleton<GetAllNotesUseCase>(GetAllNotesUseCase(sl()));
+void _initUseCases() {
+  getIt.registerSingleton<GetAllNotesUseCase>(GetAllNotesUseCase(getIt()));
 }

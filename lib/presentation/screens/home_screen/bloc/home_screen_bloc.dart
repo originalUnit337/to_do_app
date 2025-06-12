@@ -14,14 +14,14 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     GetAllNotesEvent event,
     Emitter<HomeScreenState> emit,
   ) async {
-    final dataState = await _getAllNotesUseCase();
+    final notesData = await _getAllNotesUseCase();
 
-    if (dataState is DataSuccess && dataState.data != null) {
-      emit(NotesLoaded(dataState.data!));
+    if (notesData is DataSuccess && notesData.data != null) {
+      emit(NotesLoaded(notesData.data!));
     }
 
-    if (dataState is DataFailed) {
-      emit(NotesError(dataState.exception!));
+    if (notesData is DataFailed) {
+      emit(NotesError(notesData.exception!));
     }
   }
 }
