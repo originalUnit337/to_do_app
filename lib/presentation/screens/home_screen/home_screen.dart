@@ -39,7 +39,9 @@ class HomeScreen extends StatelessWidget {
         body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
           builder: (context, state) {
             return switch (state) {
-              NotesInitial() => const Center(child: Text('Initial')),
+              NotesInitial() => const Center(
+                child: CircularProgressIndicator(),
+              ),
               NotesLoading() => const Center(
                 child: CircularProgressIndicator(),
               ),

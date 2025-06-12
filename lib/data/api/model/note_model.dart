@@ -1,6 +1,7 @@
+import 'package:to_do_app/core/base_model/base_api_model.dart.dart';
 import 'package:to_do_app/domain/entities/note.dart';
 
-class NoteModel extends NoteEntity {
+class NoteModel extends NoteEntity implements BaseApiModel {
   const NoteModel({
     required super.textNote,
     required super.importance,

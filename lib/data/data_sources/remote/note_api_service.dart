@@ -11,7 +11,7 @@ abstract class NoteApiService {
   factory NoteApiService(Dio dio) = _NoteApiService;
 
   @GET(notesCollection)
-  Future<HttpResponse<CollectionModel>> getAllNotes({
+  Future<HttpResponse<CollectionModel<NoteModel>>> getAllNotes({
     @Query('key') String? apiKey = apiKey,
   });
 }

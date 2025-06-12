@@ -20,7 +20,7 @@ class _NoteApiService implements NoteApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<CollectionModel>> getAllNotes({
+  Future<HttpResponse<CollectionModel<NoteModel>>> getAllNotes({
     String? apiKey = apiKey,
   }) async {
     final _extra = <String, dynamic>{};
@@ -28,7 +28,7 @@ class _NoteApiService implements NoteApiService {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<CollectionModel>>(
+    final _options = _setStreamType<HttpResponse<CollectionModel<NoteModel>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -39,9 +39,9 @@ class _NoteApiService implements NoteApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late CollectionModel _value;
+    late CollectionModel<NoteModel> _value;
     try {
-      _value = CollectionModel.fromJson(_result.data!);
+      _value = CollectionModel<NoteModel>.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
