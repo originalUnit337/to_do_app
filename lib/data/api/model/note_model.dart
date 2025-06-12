@@ -8,7 +8,6 @@ class NoteModel extends NoteEntity implements BaseApiModel {
     super.makeBefore,
     super.isCompleted,
   });
-
   factory NoteModel.fromJson(Map<String, dynamic> map) {
     return NoteModel(
       textNote:

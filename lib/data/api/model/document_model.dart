@@ -5,7 +5,7 @@ import 'package:to_do_app/data/api/model/note_model.dart';
 part 'document_model.g.dart';
 
 @JsonSerializable()
-class DocumentModel<T> {
+class DocumentModel<T extends BaseApiModel> {
   final String name;
   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
   final T fields;

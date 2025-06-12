@@ -8,7 +8,7 @@ import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_bloc
 
 final getIt = GetIt.instance;
 
-Future<void> initializeDependencies() async {
+void initializeDependencies() {
   getIt.registerSingleton<Dio>(Dio());
   _initServices();
   _initRepositories();
