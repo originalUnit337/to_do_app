@@ -45,7 +45,10 @@ class HomeScreen extends StatelessWidget {
               NotesLoading() => const Center(
                 child: CircularProgressIndicator(),
               ),
-              NotesLoaded() => BuildNotesList(noteItems: state.notes ?? []),
+              NotesLoaded() => BuildNotesList(
+                noteItems: state.notes ?? [],
+                showCompleted: state.showCompleted,
+              ),
               NotesError() => Center(
                 child: Text(state.exception?.message ?? 'Error'),
               ),

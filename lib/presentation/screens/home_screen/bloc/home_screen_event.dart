@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:to_do_app/domain/entities/note.dart';
 
 sealed class HomeScreenEvent extends Equatable {
   const HomeScreenEvent();
@@ -10,3 +11,10 @@ sealed class HomeScreenEvent extends Equatable {
 class GetAllNotesEvent extends HomeScreenEvent {
   const GetAllNotesEvent();
 }
+
+class ToggleNoteCompletion extends HomeScreenEvent {
+  final NoteEntity note;
+  const ToggleNoteCompletion(this.note);
+}
+
+class ToggleShowCompleted extends HomeScreenEvent {}

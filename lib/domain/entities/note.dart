@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 
 class NoteEntity extends Equatable {
@@ -35,4 +37,18 @@ class NoteEntity extends Equatable {
 
   @override
   List<Object?> get props => [textNote, importance, makeBefore, isCompleted];
+
+  NoteEntity copyWith({
+    String? textNote,
+    String? importance,
+    String? makeBefore,
+    bool? isCompleted,
+  }) {
+    return NoteEntity(
+      textNote: textNote ?? this.textNote,
+      importance: importance ?? this.importance,
+      makeBefore: makeBefore ?? this.makeBefore,
+      isCompleted: isCompleted ?? this.isCompleted,
+    );
+  }
 }

@@ -3,23 +3,25 @@ import 'package:to_do_app/domain/entities/note.dart';
 
 sealed class HomeScreenState {
   final List<NoteEntity>? notes;
+  final bool showCompleted;
   final DioException? exception;
 
-  const HomeScreenState({this.notes, this.exception});
+  HomeScreenState({this.notes, this.exception, this.showCompleted = true});
 }
 
 class NotesInitial extends HomeScreenState {
-  const NotesInitial();
+  NotesInitial();
 }
 
 class NotesLoading extends HomeScreenState {
-  const NotesLoading();
+  NotesLoading();
 }
 
 class NotesLoaded extends HomeScreenState {
-  const NotesLoaded(List<NoteEntity> notes) : super(notes: notes);
+  NotesLoaded(List<NoteEntity> notes, {super.showCompleted})
+    : super(notes: notes);
 }
 
 class NotesError extends HomeScreenState {
-  const NotesError(DioException exception) : super(exception: exception);
+  NotesError(DioException exception) : super(exception: exception);
 }

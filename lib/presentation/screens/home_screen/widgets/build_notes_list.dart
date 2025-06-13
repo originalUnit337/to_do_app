@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/domain/entities/note.dart';
+import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_bloc.dart';
+import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_event.dart';
 import 'package:to_do_app/presentation/screens/info_note_screen/info_note_screen.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 
 class BuildNotesList extends StatelessWidget {
   final List<NoteEntity> noteItems;
-  const BuildNotesList({required this.noteItems, super.key});
+  //final ValueNotifier<bool> showCompletedNotifier = ValueNotifier(true);
+  final bool showCompleted;
+  const BuildNotesList({
+    required this.noteItems,
+    required this.showCompleted,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final currentPalette = AppPalette.of(context);
-    const showCompleted = true;
+    //bool showCompleted = true;
 
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
@@ -25,7 +34,11 @@ class BuildNotesList extends StatelessWidget {
                 showCompleted ? Icons.visibility_off : Icons.visibility,
                 color: currentPalette.colorBlue,
               ),
-              onPressed: () {},
+              onPressed: () {
+                BlocProvider.of<HomeScreenBloc>(
+                  context,
+                ).add(ToggleShowCompleted());
+              },
             ),
           ],
           expandedHeight: 140,
@@ -72,7 +85,7 @@ class BuildNotesList extends StatelessWidget {
               delegate: SliverChildBuilderDelegate(
                 childCount: noteItems.length,
                 (context, index) {
-                  if (!showCompleted && noteItems![index].isCompleted) {
+                  if (!showCompleted && noteItems[index].isCompleted) {
                     return const SizedBox.shrink();
                   }
                   return Dismissible(
@@ -91,6 +104,9 @@ class BuildNotesList extends StatelessWidget {
                     ),
                     onDismissed: (direction) {
                       if (direction == DismissDirection.startToEnd) {
+                        BlocProvider.of<HomeScreenBloc>(
+                          context,
+                        ).add(ToggleNoteCompletion(noteItems[index]));
                         //noteItems[index].isCompleted = true;
                       } else {}
                     },
