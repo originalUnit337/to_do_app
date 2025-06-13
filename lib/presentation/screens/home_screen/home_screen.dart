@@ -18,7 +18,8 @@ class HomeScreen extends StatelessWidget {
     final currentPalette = AppPalette.of(context);
     return BlocProvider<HomeScreenBloc>(
       create:
-          (context) => HomeScreenBloc(getIt())..add(const GetAllNotesEvent()),
+          (context) =>
+              HomeScreenBloc(getIt(), getIt())..add(const GetAllNotesEvent()),
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         floatingActionButton: FloatingActionButton(

@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/domain/entities/note.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_bloc.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_event.dart';
+import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_state.dart';
 import 'package:to_do_app/presentation/screens/info_note_screen/info_note_screen.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
@@ -11,10 +12,12 @@ import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 class BuildNotesList extends StatelessWidget {
   final List<NoteEntity> noteItems;
   //final ValueNotifier<bool> showCompletedNotifier = ValueNotifier(true);
+  final String? message;
   final bool showCompleted;
   const BuildNotesList({
     required this.noteItems,
     required this.showCompleted,
+    this.message,
     super.key,
   });
 
@@ -107,6 +110,30 @@ class BuildNotesList extends StatelessWidget {
                         BlocProvider.of<HomeScreenBloc>(
                           context,
                         ).add(ToggleNoteCompletion(noteItems[index]));
+                        BlocListener<HomeScreenBloc, HomeScreenState>(
+                          listener: (context, state) {
+                            if (state is NotesLoaded) {
+                              if (state.message != null) {
+                                final snackBar = SnackBar(
+                                  //TODO Add localization
+                                  content: Text(
+                                    message ?? 'Something went wrong',
+                                  ),
+                                  duration: const Duration(seconds: 2),
+                                  action: SnackBarAction(
+                                    label: 'Close',
+                                    onPressed: () {},
+                                  ),
+                                );
+
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(snackBar);
+                              }
+                            }
+                          },
+                        );
+
                         //noteItems[index].isCompleted = true;
                       } else {}
                     },

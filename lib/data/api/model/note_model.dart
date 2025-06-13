@@ -3,6 +3,7 @@ import 'package:to_do_app/domain/entities/note.dart';
 
 class NoteModel extends NoteEntity implements BaseApiModel {
   const NoteModel({
+    required super.id,
     required super.textNote,
     required super.importance,
     super.makeBefore,
@@ -10,6 +11,7 @@ class NoteModel extends NoteEntity implements BaseApiModel {
   });
   factory NoteModel.fromJson(Map<String, dynamic> map) {
     return NoteModel(
+      id: map['name'].toString(),
       textNote:
           (map['textNote'] as Map<String, dynamic>)['stringValue'] as String,
       importance:
@@ -21,5 +23,20 @@ class NoteModel extends NoteEntity implements BaseApiModel {
           (map['isCompleted'] as Map<String, dynamic>?)?['booleanValue']
               as bool,
     );
+  }
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'name': id,
+      'fields': {
+        'textNote': {'stringValue': textNote},
+        'importance': {'stringValue': importance},
+        'makeBefore':
+            makeBefore != null
+                ? {'stringValue': makeBefore}
+                : {'nullValue': 'NULL_VALUE'},
+        'isCompleted': {'booleanValue': isCompleted},
+      },
+    };
   }
 }

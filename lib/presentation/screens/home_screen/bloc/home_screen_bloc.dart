@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/core/resources/data_state.dart';
 import 'package:to_do_app/domain/usecases/get_all_notes.dart';
+import 'package:to_do_app/domain/usecases/update_note.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_event.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_state.dart';
 
 class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   final GetAllNotesUseCase _getAllNotesUseCase;
-  HomeScreenBloc(this._getAllNotesUseCase) : super(NotesInitial()) {
+  final UpdateNoteUseCase _updateNoteUseCase;
+  HomeScreenBloc(this._getAllNotesUseCase, this._updateNoteUseCase)
+    : super(NotesInitial()) {
     on<GetAllNotesEvent>(_getAllNotes);
     on<ToggleNoteCompletion>(_toggleNoteCompletion);
     on<ToggleShowCompleted>(_toggleShowCompleted);
@@ -42,8 +45,15 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
             }
             return note;
           }).toList();
+      final response = await _updateNoteUseCase(
+        params: event.note.copyWith(isCompleted: !event.note.isCompleted),
+      );
       emit(
-        NotesLoaded(updatedNotes, showCompleted: currentState.showCompleted),
+        NotesLoaded(
+          updatedNotes,
+          showCompleted: currentState.showCompleted,
+          message: response.data,
+        ),
       );
     }
   }

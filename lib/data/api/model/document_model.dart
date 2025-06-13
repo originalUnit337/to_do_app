@@ -9,11 +9,20 @@ class DocumentModel<T extends BaseApiModel> {
   final String name;
   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
   final T fields;
+  final String createTime;
+  final String updateTime;
 
-  DocumentModel({required this.name, required this.fields});
+  DocumentModel({
+    required this.name,
+    required this.fields,
+    required this.createTime,
+    required this.updateTime,
+  });
 
-  factory DocumentModel.fromJson(Map<String, dynamic> json) =>
-      _$DocumentModelFromJson(json);
+  factory DocumentModel.fromJson(Map<String, dynamic> json) {
+    (json['fields'] as Map<String, dynamic>).addAll({'name': json['name']});
+    return _$DocumentModelFromJson(json);
+  }
   Map<String, dynamic> toJson() => _$DocumentModelToJson(this);
 
   static T _dataFromJson<T>(Map<String, dynamic> json) {

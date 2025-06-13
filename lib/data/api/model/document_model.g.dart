@@ -11,6 +11,8 @@ DocumentModel<T> _$DocumentModelFromJson<T extends BaseApiModel>(
 ) => DocumentModel<T>(
   name: json['name'] as String,
   fields: DocumentModel._dataFromJson(json['fields'] as Map<String, dynamic>),
+  createTime: json['createTime'] as String,
+  updateTime: json['updateTime'] as String,
 );
 
 Map<String, dynamic> _$DocumentModelToJson<T extends BaseApiModel>(
@@ -18,4 +20,6 @@ Map<String, dynamic> _$DocumentModelToJson<T extends BaseApiModel>(
 ) => <String, dynamic>{
   'name': instance.name,
   'fields': DocumentModel._dataToJson(instance.fields),
+  'createTime': instance.createTime,
+  'updateTime': instance.updateTime,
 };

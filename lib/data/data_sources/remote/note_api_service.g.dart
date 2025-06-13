@@ -10,7 +10,7 @@ part of 'note_api_service.dart';
 
 class _NoteApiService implements NoteApiService {
   _NoteApiService(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://firestore.googleapis.com/v1beta1';
+    baseUrl ??= 'https://firestore.googleapis.com/v1beta1/';
   }
 
   final Dio _dio;
@@ -32,7 +32,7 @@ class _NoteApiService implements NoteApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/projects/to-do-app-7c9ee/databases/(default)/documents/notes',
+            'projects/to-do-app-7c9ee/databases/(default)/documents/notes',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -47,6 +47,33 @@ class _NoteApiService implements NoteApiService {
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<void>> updateNote(
+    String id,
+    Map<String, dynamic> note, {
+    String? apiKey = apiKey,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'key': apiKey};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(note);
+    final _options = _setStreamType<HttpResponse<void>>(
+      Options(method: 'PATCH', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'projects/to-do-app-7c9ee/databases/(default)/documents/notes/${id}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<void>(_options);
+    final httpResponse = HttpResponse(null, _result);
     return httpResponse;
   }
 

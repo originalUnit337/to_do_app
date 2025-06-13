@@ -18,7 +18,8 @@ class NotesLoading extends HomeScreenState {
 }
 
 class NotesLoaded extends HomeScreenState {
-  NotesLoaded(List<NoteEntity> notes, {super.showCompleted})
+  String? message;
+  NotesLoaded(List<NoteEntity> notes, {super.showCompleted, this.message})
     : super(notes: notes);
 }
 
