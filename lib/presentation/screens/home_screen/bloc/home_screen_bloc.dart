@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/core/resources/data_state.dart';
 import 'package:to_do_app/domain/usecases/get_all_notes.dart';
@@ -12,7 +11,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   final GetAllNotesUseCase _getAllNotesUseCase;
   final UpdateNoteUseCase _updateNoteUseCase;
   HomeScreenBloc(this._getAllNotesUseCase, this._updateNoteUseCase)
-    : super(NotesInitial()) {
+    : super(const NotesInitial()) {
     on<GetAllNotesEvent>(_getAllNotes);
     on<ToggleNoteCompletion>(_toggleNoteCompletion);
     on<ToggleShowCompleted>(_toggleShowCompleted);

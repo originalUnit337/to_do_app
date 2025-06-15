@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
+import 'package:go_router/go_router.dart';
 import 'package:to_do_app/domain/entities/note.dart';
+import 'package:to_do_app/navigation/app_routes.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_bloc.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_event.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_state.dart';
@@ -197,13 +199,17 @@ class BuildNotesList extends StatelessWidget {
                           ),
                         ),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                      InfoNoteScreen(note: noteItems[index]),
-                            ),
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder:
+                          //         (context) =>
+                          //             InfoNoteScreen(note: noteItems[index]),
+                          //   ),
+                          // );
+                          GoRouter.of(context).pushNamed(
+                            AppRoutes.infoNote.name,
+                            extra: noteItems[index],
                           );
                         },
                         trailing: IconButton(

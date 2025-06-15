@@ -4,7 +4,11 @@ import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/palette.dart';
 
 class ImportanceDropdown extends StatefulWidget {
-  const ImportanceDropdown({super.key});
+  final ValueNotifier<String?> selectedImportanceNotifier;
+  const ImportanceDropdown({
+    required this.selectedImportanceNotifier,
+    super.key,
+  });
 
   @override
   State<ImportanceDropdown> createState() => _ImportanceDropdownState();
@@ -39,6 +43,7 @@ class _ImportanceDropdownState extends State<ImportanceDropdown> {
   Widget build(BuildContext context) {
     return DropdownMenu(
       onSelected: (value) {
+        widget.selectedImportanceNotifier.value = value;
         setState(() {
           selectedValue = value;
         });
