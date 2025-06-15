@@ -1,59 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:go_router/go_router.dart';
-import 'package:to_do_app/domain/model/note.dart';
+import 'package:to_do_app/domain/entities/note.dart';
 import 'package:to_do_app/navigation/app_routes.dart';
-import 'package:to_do_app/presentation/screens/info_note_screen.dart';
+import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_bloc.dart';
+import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_event.dart';
+import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_state.dart';
+import 'package:to_do_app/presentation/screens/info_note_screen/info_note_screen.dart';
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final List<Note> noteItems = [
-    Note(textNote: 'Need to buy smth', importance: '0'),
-    Note(textNote: 'Visit a doctor', importance: '0'),
-    Note(textNote: 'Check smth', importance: '2'),
-    Note(
-      textNote:
-          'This is a very big note, so it takes a lot of space and nobody even knows how many space this note needs to show itself',
-      importance: '1',
-    ),
-    Note(
-      textNote:
-          'Schedule a meeting with the team for next week to discuss current projects and task distribution.',
-      importance: '2',
-    ),
-  ];
-
-  bool showCompleted = true;
+class BuildNotesList extends StatelessWidget {
+  final List<NoteEntity> noteItems;
+  //final ValueNotifier<bool> showCompletedNotifier = ValueNotifier(true);
+  final String? message;
+  final bool showCompleted;
+  const BuildNotesList({
+    required this.noteItems,
+    required this.showCompleted,
+    this.message,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final currentPalette = AppPalette.of(context);
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //GoRouter.of(context).pushNamed(AppRoutes.addNote.name);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return const InfoNoteScreen();
-              },
-            ),
-          );
-        },
-        child: Icon(Icons.add, color: currentPalette.colorWhite),
-        backgroundColor: currentPalette.colorBlue,
-      ),
-      body: CustomScrollView(
+    //bool showCompleted = true;
+
+    return BlocListener<HomeScreenBloc, HomeScreenState>(
+      listener: (context, state) {
+        if (state is NotesLoaded) {
+          if (state.isUpdated != null) {
+            final snackBar = SnackBar(
+              //TODO Add localization
+              content: Text(
+                state.isUpdated == true
+                    ? 'Successfully updated'
+                    : 'Something went wrong',
+              ),
+              duration: const Duration(seconds: 2),
+              action: SnackBarAction(label: 'Close', onPressed: () {}),
+            );
+
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+        }
+      },
+      child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
@@ -65,9 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: currentPalette.colorBlue,
                 ),
                 onPressed: () {
-                  setState(() {
-                    showCompleted = !showCompleted;
-                  });
+                  context.read<HomeScreenBloc>().add(ToggleShowCompleted());
                 },
               ),
             ],
@@ -134,12 +126,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onDismissed: (direction) {
                         if (direction == DismissDirection.startToEnd) {
-                          noteItems[index].isCompleted = true;
-                        } else {
-                          setState(() {
-                            noteItems.removeAt(index);
-                          });
-                        }
+                          context.read<HomeScreenBloc>().add(
+                            ToggleNoteCompletion(noteItems[index]),
+                          );
+
+                          //noteItems[index].isCompleted = true;
+                        } else {}
                       },
                       secondaryBackground: Container(
                         color: Colors.red,
@@ -194,9 +186,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         leading: Checkbox(
                           value: noteItems[index].isCompleted ? true : false,
                           onChanged: (value) {
-                            setState(() {
-                              noteItems[index].isCompleted = value ?? false;
-                            });
+                            context.read<HomeScreenBloc>().add(
+                              ToggleNoteCompletion(noteItems[index]),
+                            );
                           },
                           side: BorderSide(
                             color:
@@ -207,13 +199,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                      InfoNoteScreen(note: noteItems[index]),
-                            ),
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder:
+                          //         (context) =>
+                          //             InfoNoteScreen(note: noteItems[index]),
+                          //   ),
+                          // );
+                          GoRouter.of(context).pushNamed(
+                            AppRoutes.infoNote.name,
+                            extra: noteItems[index],
                           );
                         },
                         trailing: IconButton(
