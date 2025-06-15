@@ -29,10 +29,14 @@ class BuildNotesList extends StatelessWidget {
     return BlocListener<HomeScreenBloc, HomeScreenState>(
       listener: (context, state) {
         if (state is NotesLoaded) {
-          if (state.message != null) {
+          if (state.isUpdated != null) {
             final snackBar = SnackBar(
               //TODO Add localization
-              content: Text(state.message ?? 'Something went wrong'),
+              content: Text(
+                state.isUpdated == true
+                    ? 'Successfully updated'
+                    : 'Something went wrong',
+              ),
               duration: const Duration(seconds: 2),
               action: SnackBarAction(label: 'Close', onPressed: () {}),
             );
@@ -53,9 +57,7 @@ class BuildNotesList extends StatelessWidget {
                   color: currentPalette.colorBlue,
                 ),
                 onPressed: () {
-                  BlocProvider.of<HomeScreenBloc>(
-                    context,
-                  ).add(ToggleShowCompleted());
+                  context.read<HomeScreenBloc>().add(ToggleShowCompleted());
                 },
               ),
             ],
@@ -122,9 +124,9 @@ class BuildNotesList extends StatelessWidget {
                       ),
                       onDismissed: (direction) {
                         if (direction == DismissDirection.startToEnd) {
-                          BlocProvider.of<HomeScreenBloc>(
-                            context,
-                          ).add(ToggleNoteCompletion(noteItems[index]));
+                          context.read<HomeScreenBloc>().add(
+                            ToggleNoteCompletion(noteItems[index]),
+                          );
 
                           //noteItems[index].isCompleted = true;
                         } else {}
@@ -162,7 +164,7 @@ class BuildNotesList extends StatelessWidget {
                               ),
                             Expanded(
                               child: Text(
-                                noteItems[index].textNote ?? 'Empty',
+                                noteItems[index].textNote,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 style:
@@ -181,7 +183,11 @@ class BuildNotesList extends StatelessWidget {
                         ),
                         leading: Checkbox(
                           value: noteItems[index].isCompleted ? true : false,
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            context.read<HomeScreenBloc>().add(
+                              ToggleNoteCompletion(noteItems[index]),
+                            );
+                          },
                           side: BorderSide(
                             color:
                                 noteItems[index].importance == '2'

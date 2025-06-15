@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:to_do_app/core/resources/data_state.dart';
-import 'package:to_do_app/data/api/model/document_model.dart';
 import 'package:to_do_app/data/api/model/note_model.dart';
 import 'package:to_do_app/data/data_sources/remote/note_api_service.dart';
 import 'package:to_do_app/domain/entities/note.dart';
@@ -36,14 +35,14 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<DataState<String>> updateNote(NoteEntity note) async {
+  Future<DataState<bool>> updateNote(NoteEntity note) async {
     try {
       final httpResponse = await _noteApiService.updateNote(
         note.id.split('/').last,
         note.toJson(),
       );
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        return const DataSuccess('Note has been successfully updated');
+        return const DataSuccess(true);
       } else {
         return DataFailed(
           DioException(

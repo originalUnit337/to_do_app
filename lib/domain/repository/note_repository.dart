@@ -5,5 +5,5 @@ import 'package:to_do_app/domain/entities/note.dart';
 
 abstract class NoteRepository {
   Future<DataState<List<NoteEntity>>> getAllNotes();
-  Future<DataState<String>> updateNote(NoteEntity note);
+  Future<DataState<bool>> updateNote(NoteEntity note);
 }

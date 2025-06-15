@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/core/resources/data_state.dart';
 import 'package:to_do_app/domain/usecases/get_all_notes.dart';
@@ -25,10 +26,10 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
 
     if (notesData is DataSuccess && notesData.data != null) {
       emit(NotesLoaded(notesData.data!));
-    }
-
-    if (notesData is DataFailed) {
-      emit(NotesError(notesData.exception!));
+    } else {
+      if (notesData is DataFailed) {
+        emit(NotesError(notesData.exception!));
+      }
     }
   }
 
@@ -38,23 +39,29 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   ) async {
     final currentState = state;
     if (currentState is NotesLoaded) {
-      final updatedNotes =
-          currentState.notes!.map((note) {
-            if (note == event.note) {
-              return note.copyWith(isCompleted: !note.isCompleted);
-            }
-            return note;
-          }).toList();
       final response = await _updateNoteUseCase(
         params: event.note.copyWith(isCompleted: !event.note.isCompleted),
       );
-      emit(
-        NotesLoaded(
-          updatedNotes,
-          showCompleted: currentState.showCompleted,
-          message: response.data,
-        ),
-      );
+      if (response.data ?? false) {
+        final updatedNotes =
+            currentState.notes?.map((note) {
+              if (note == event.note) {
+                return note.copyWith(isCompleted: !note.isCompleted);
+              }
+              return note;
+            }).toList();
+        if (updatedNotes != null) {
+          emit(
+            NotesLoaded(
+              updatedNotes,
+              showCompleted: currentState.showCompleted,
+              isUpdated: response.data,
+            ),
+          );
+        }
+      } else {
+        throw Exception('updatedNotes is null');
+      }
     }
   }
 
