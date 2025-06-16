@@ -8,8 +8,10 @@ class SwitchDataPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final switchValue = ValueNotifier<bool>(false);
-    final selectedDate = ValueNotifier<DateTime?>(null);
+    final switchValue = ValueNotifier<bool>(
+      selectedDateNotifier.value != null ? true : false,
+    );
+    final selectedDate = ValueNotifier<DateTime?>(selectedDateNotifier.value);
 
     Future<void> selectData(BuildContext context) async {
       final picked = await showDatePicker(

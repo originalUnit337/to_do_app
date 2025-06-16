@@ -18,3 +18,8 @@ class ToggleNoteCompletion extends HomeScreenEvent {
 }
 
 class ToggleShowCompleted extends HomeScreenEvent {}
+
+class RefreshNotesEvent extends HomeScreenEvent {
+  final List<NoteEntity> notes;
+  const RefreshNotesEvent(this.notes);
+}

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:go_router/go_router.dart';
 import 'package:to_do_app/domain/entities/note.dart';
 import 'package:to_do_app/navigation/app_routes.dart';

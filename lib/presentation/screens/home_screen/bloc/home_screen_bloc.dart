@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/core/resources/data_state.dart';
 import 'package:to_do_app/domain/usecases/get_all_notes.dart';
@@ -15,6 +16,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     on<GetAllNotesEvent>(_getAllNotes);
     on<ToggleNoteCompletion>(_toggleNoteCompletion);
     on<ToggleShowCompleted>(_toggleShowCompleted);
+    on<RefreshNotesEvent>(_refreshNoteEvent);
   }
 
   Future<void> _getAllNotes(
@@ -67,9 +69,20 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   FutureOr<void> _toggleShowCompleted(
     ToggleShowCompleted event,
     Emitter<HomeScreenState> emit,
-  ) async {
+  ) {
     if (state is NotesLoaded) {
       emit(NotesLoaded(state.notes ?? [], showCompleted: !state.showCompleted));
+    }
+  }
+
+  FutureOr<void> _refreshNoteEvent(
+    RefreshNotesEvent event,
+    Emitter<HomeScreenState> emit,
+  ) {
+    if (state is NotesLoaded) {
+      emit(const NotesLoading());
+      //emit(NotesError(DioException(requestOptions: RequestOptions())));
+      emit(NotesLoaded(event.notes, showCompleted: state.showCompleted));
     }
   }
 }

@@ -148,7 +148,7 @@ class BuildNotesList extends StatelessWidget {
                         ),
                         title: Row(
                           children: [
-                            if (noteItems[index].importance == '2')
+                            if (noteItems[index].importance == 'high')
                               Text(
                                 '!! ',
                                 style: TextStyle(
@@ -156,7 +156,7 @@ class BuildNotesList extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            if (noteItems[index].importance == '1')
+                            if (noteItems[index].importance == 'low')
                               Text(
                                 '↓ ',
                                 style: TextStyle(
@@ -198,7 +198,7 @@ class BuildNotesList extends StatelessWidget {
                             width: 2,
                           ),
                         ),
-                        onTap: () {
+                        onTap: () async {
                           // Navigator.push(
                           //   context,
                           //   MaterialPageRoute(
@@ -207,10 +207,20 @@ class BuildNotesList extends StatelessWidget {
                           //             InfoNoteScreen(note: noteItems[index]),
                           //   ),
                           // );
-                          GoRouter.of(context).pushNamed(
-                            AppRoutes.infoNote.name,
-                            extra: noteItems[index],
-                          );
+                          final result =
+                              await GoRouter.of(context).pushNamed(
+                                    AppRoutes.infoNote.name,
+                                    extra: noteItems[index],
+                                  )
+                                  as NoteEntity?;
+                          if (result != null) {
+                            noteItems[index] = result;
+                            if (context.mounted) {
+                              context.read<HomeScreenBloc>().add(
+                                RefreshNotesEvent(noteItems),
+                              );
+                            }
+                          }
                         },
                         trailing: IconButton(
                           icon: Icon(

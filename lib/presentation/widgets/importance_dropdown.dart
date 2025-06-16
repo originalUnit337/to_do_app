@@ -61,7 +61,9 @@ class _ImportanceDropdownState extends State<ImportanceDropdown> {
         backgroundColor: WidgetStateProperty.all(currentPalette.backElevated),
         alignment: Alignment.topLeft,
       ),
-      initialSelection: dropdownMenuEntries.first.value,
+      initialSelection:
+          widget.selectedImportanceNotifier.value ??
+          dropdownMenuEntries.first.value,
       dropdownMenuEntries:
           dropdownMenuEntries.map((e) {
             return DropdownMenuEntry(

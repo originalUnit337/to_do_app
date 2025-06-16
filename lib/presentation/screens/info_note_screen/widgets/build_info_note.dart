@@ -15,19 +15,20 @@ class BuildInfoNote extends StatelessWidget {
   final TextEditingController textNoteController;
   final ValueNotifier<String?> selectedImportanceNotifier;
   final ValueNotifier<DateTime?> selectedDateNotifier;
-  final NoteEntity? _note;
+  NoteEntity? note;
 
   BuildInfoNote({
     required this.textNoteController,
-    required NoteEntity? note,
+    this.note,
     ValueNotifier<DateTime?>? selectedDateNotifier,
     ValueNotifier<String?>? selectedImportanceNotifier,
     super.key,
-  }) : _note = note,
-       selectedDateNotifier =
-           selectedDateNotifier ?? ValueNotifier<DateTime?>(null),
+  }) : selectedDateNotifier =
+           selectedDateNotifier ??
+           ValueNotifier<DateTime?>(DateTime.tryParse(note?.makeBefore ?? '')),
        selectedImportanceNotifier =
-           selectedImportanceNotifier ?? ValueNotifier<String?>(null);
+           selectedImportanceNotifier ??
+           ValueNotifier<String?>(note?.importance);
 
   @override
   Widget build(BuildContext context) {
@@ -55,22 +56,29 @@ class BuildInfoNote extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           leading: IconButton(
-            onPressed: context.pop,
+            onPressed: () => context.pop(note),
             icon: const Icon(Icons.close),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                if (_note != null) {
+                if (note != null) {
+                  note = NoteEntity(
+                    id: note!.id,
+                    importance: selectedImportanceNotifier.value ?? '',
+                    makeBefore: selectedDateNotifier.value?.toIso8601String(),
+                    textNote: textNoteController.text,
+                    isCompleted: note!.isCompleted,
+                  );
                   context.read<InfoNoteScreenBloc>().add(
                     SaveNoteEvent(
                       NoteEntity(
-                        id: _note.id,
+                        id: note!.id,
                         importance: selectedImportanceNotifier.value ?? '',
                         makeBefore:
                             selectedDateNotifier.value?.toIso8601String(),
                         textNote: textNoteController.text,
-                        isCompleted: _note.isCompleted,
+                        isCompleted: note!.isCompleted,
                       ),
                     ),
                   );
