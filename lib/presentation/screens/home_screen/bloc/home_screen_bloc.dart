@@ -61,7 +61,15 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
           );
         }
       } else {
-        throw Exception('updatedNotes is null');
+        emit(
+          NotesError(
+            response.exception ??
+                DioException(
+                  requestOptions: RequestOptions(),
+                  error: 'something really went wrong',
+                ),
+          ),
+        );
       }
     }
   }

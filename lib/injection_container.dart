@@ -5,7 +5,6 @@ import 'package:to_do_app/data/data_sources/remote/note_api_service.dart';
 import 'package:to_do_app/domain/repository/note_repository.dart';
 import 'package:to_do_app/domain/usecases/get_all_notes.dart';
 import 'package:to_do_app/domain/usecases/update_note.dart';
-import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_bloc.dart';
 
 final getIt = GetIt.instance;
 

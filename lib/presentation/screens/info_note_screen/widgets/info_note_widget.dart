@@ -11,13 +11,13 @@ import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 import 'package:to_do_app/presentation/widgets/importance_dropdown.dart';
 import 'package:to_do_app/presentation/widgets/switch_data_picker.dart';
 
-class BuildInfoNote extends StatelessWidget {
+class InfoNoteWidget extends StatelessWidget {
   final TextEditingController textNoteController;
   final ValueNotifier<String?> selectedImportanceNotifier;
   final ValueNotifier<DateTime?> selectedDateNotifier;
-  NoteEntity? note;
+  final NoteEntity? note;
 
-  BuildInfoNote({
+  InfoNoteWidget({
     required this.textNoteController,
     this.note,
     ValueNotifier<DateTime?>? selectedDateNotifier,
@@ -63,13 +63,13 @@ class BuildInfoNote extends StatelessWidget {
             TextButton(
               onPressed: () {
                 if (note != null) {
-                  note = NoteEntity(
-                    id: note!.id,
-                    importance: selectedImportanceNotifier.value ?? '',
-                    makeBefore: selectedDateNotifier.value?.toIso8601String(),
-                    textNote: textNoteController.text,
-                    isCompleted: note!.isCompleted,
-                  );
+                  // note = NoteEntity(
+                  //   id: note!.id,
+                  //   importance: selectedImportanceNotifier.value ?? '',
+                  //   makeBefore: selectedDateNotifier.value?.toIso8601String(),
+                  //   textNote: textNoteController.text,
+                  //   isCompleted: note!.isCompleted,
+                  // );
                   context.read<InfoNoteScreenBloc>().add(
                     SaveNoteEvent(
                       NoteEntity(

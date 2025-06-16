@@ -11,12 +11,12 @@ import 'package:to_do_app/presentation/screens/info_note_screen/info_note_screen
 import 'package:to_do_app/presentation/ui_kit/font/app_font_style.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 
-class BuildNotesList extends StatelessWidget {
+class NotesList extends StatelessWidget {
   final List<NoteEntity> noteItems;
   //final ValueNotifier<bool> showCompletedNotifier = ValueNotifier(true);
   final String? message;
   final bool showCompleted;
-  const BuildNotesList({
+  const NotesList({
     required this.noteItems,
     required this.showCompleted,
     this.message,
