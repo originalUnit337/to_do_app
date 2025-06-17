@@ -59,4 +59,48 @@ class NoteRepositoryImpl implements NoteRepository {
       return DataFailed(e);
     }
   }
+
+  @override
+  Future<DataState<NoteEntity>> createNote(NoteEntity note) async {
+    try {
+      final httpResponse = await _noteApiService.createNote('', note.toJson());
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        return DataSuccess(NoteMapper.toEntity(httpResponse.data.fields));
+      } else {
+        return DataFailed(
+          DioException(
+            error: httpResponse.response.statusMessage,
+            response: httpResponse.response,
+            type: DioExceptionType.badResponse,
+            requestOptions: httpResponse.response.requestOptions,
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      return DataFailed(e);
+    }
+  }
+
+  @override
+  Future<DataState<bool>> deleteNote(NoteEntity note) async {
+    try {
+      final httpResponse = await _noteApiService.deleteNote(
+        note.id.split('/').last,
+      );
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        return const DataSuccess(true);
+      } else {
+        return DataFailed(
+          DioException(
+            error: httpResponse.response.statusMessage,
+            response: httpResponse.response,
+            type: DioExceptionType.badResponse,
+            requestOptions: httpResponse.response.requestOptions,
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      return DataFailed(e);
+    }
+  }
 }

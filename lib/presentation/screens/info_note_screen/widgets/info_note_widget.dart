@@ -62,23 +62,31 @@ class InfoNoteWidget extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
+                // ! EDIT CURRENT NOTE
                 if (note != null) {
-                  // note = NoteEntity(
-                  //   id: note!.id,
-                  //   importance: selectedImportanceNotifier.value ?? '',
-                  //   makeBefore: selectedDateNotifier.value?.toIso8601String(),
-                  //   textNote: textNoteController.text,
-                  //   isCompleted: note!.isCompleted,
-                  // );
                   context.read<InfoNoteScreenBloc>().add(
                     SaveNoteEvent(
                       NoteEntity(
                         id: note!.id,
-                        importance: selectedImportanceNotifier.value ?? '',
+                        importance: selectedImportanceNotifier.value ?? 'No',
                         makeBefore:
                             selectedDateNotifier.value?.toIso8601String(),
                         textNote: textNoteController.text,
-                        isCompleted: note!.isCompleted,
+                        isCompleted: note?.isCompleted ?? false,
+                      ),
+                    ),
+                  );
+                }
+                // ! CREATE NEW NOTE
+                else {
+                  context.read<InfoNoteScreenBloc>().add(
+                    CreateNoteEvent(
+                      NoteEntity(
+                        id: '',
+                        textNote: textNoteController.text,
+                        importance: selectedImportanceNotifier.value ?? 'No',
+                        makeBefore:
+                            selectedDateNotifier.value?.toIso8601String(),
                       ),
                     ),
                   );

@@ -13,7 +13,6 @@ import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 
 class NotesList extends StatelessWidget {
   final List<NoteEntity> noteItems;
-  //final ValueNotifier<bool> showCompletedNotifier = ValueNotifier(true);
   final String? message;
   final bool showCompleted;
   const NotesList({
@@ -129,9 +128,11 @@ class NotesList extends StatelessWidget {
                           context.read<HomeScreenBloc>().add(
                             ToggleNoteCompletion(noteItems[index]),
                           );
-
-                          //noteItems[index].isCompleted = true;
-                        } else {}
+                        } else {
+                          context.read<HomeScreenBloc>().add(
+                            DeleteNoteEvent(noteItems[index]),
+                          );
+                        }
                       },
                       secondaryBackground: Container(
                         color: Colors.red,
@@ -199,14 +200,6 @@ class NotesList extends StatelessWidget {
                           ),
                         ),
                         onTap: () async {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder:
-                          //         (context) =>
-                          //             InfoNoteScreen(note: noteItems[index]),
-                          //   ),
-                          // );
                           final result =
                               await GoRouter.of(context).pushNamed(
                                     AppRoutes.infoNote.name,

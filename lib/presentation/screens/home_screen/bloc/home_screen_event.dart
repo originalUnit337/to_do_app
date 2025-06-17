@@ -23,3 +23,9 @@ class RefreshNotesEvent extends HomeScreenEvent {
   final List<NoteEntity> notes;
   const RefreshNotesEvent(this.notes);
 }
+
+class DeleteNoteEvent extends HomeScreenEvent {
+  final NoteEntity note;
+
+  const DeleteNoteEvent(this.note);
+}
