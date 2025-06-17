@@ -30,7 +30,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     Emitter<HomeScreenState> emit,
   ) async {
     final notesData = await _getAllNotesUseCase();
-
+    emit(const NotesLoading());
     if (notesData is DataSuccess && notesData.data != null) {
       emit(NotesLoaded(notesData.data!));
     } else {
