@@ -209,8 +209,11 @@ class NotesList extends StatelessWidget {
                           if (result != null) {
                             noteItems[index] = result;
                             if (context.mounted) {
+                              // context.read<HomeScreenBloc>().add(
+                              //   RefreshNotesEvent(noteItems),
+                              // );
                               context.read<HomeScreenBloc>().add(
-                                RefreshNotesEvent(noteItems),
+                                const GetAllNotesEvent(),
                               );
                             }
                           }

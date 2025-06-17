@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:to_do_app/injection_container.dart' show getIt;
+import 'package:to_do_app/navigation/app_routes.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_bloc.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_event.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_state.dart';
@@ -23,6 +25,7 @@ class HomeScreen extends StatelessWidget {
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
+                await GoRouter.of(context).pushNamed(AppRoutes.infoNote.name);
                 if (context.mounted) {
                   context.read<HomeScreenBloc>().add(const GetAllNotesEvent());
                 }

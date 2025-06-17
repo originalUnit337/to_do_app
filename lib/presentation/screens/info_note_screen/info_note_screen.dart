@@ -32,7 +32,7 @@ class _InfoNoteScreenState extends State<InfoNoteScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<InfoNoteScreenBloc>(
-      create: (context) => InfoNoteScreenBloc(getIt(), getIt()),
+      create: (context) => InfoNoteScreenBloc(getIt(), getIt(), getIt()),
       child: BlocBuilder<InfoNoteScreenBloc, InfoNoteScreenState>(
         builder: (context, state) {
           return Scaffold(
@@ -51,6 +51,9 @@ class _InfoNoteScreenState extends State<InfoNoteScreen> {
               ),
               InfoNoteError() => Center(
                 child: Text(state.exception.toString()),
+              ),
+              InfoNoteDeleted() => const Center(
+                child: CircularProgressIndicator(),
               ),
             },
           );

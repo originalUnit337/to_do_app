@@ -50,6 +50,8 @@ class InfoNoteWidget extends StatelessWidget {
 
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+        } else if (state is InfoNoteDeleted) {
+          context.pop(state.note);
         }
       },
       child: Scaffold(
@@ -151,7 +153,18 @@ class InfoNoteWidget extends StatelessWidget {
                 SwitchDataPicker(selectedDateNotifier: selectedDateNotifier),
                 const Divider(),
                 ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (note != null) {
+                      context.read<InfoNoteScreenBloc>().add(
+                        DeleteNoteEvent(note!),
+                      );
+                      // pop on existing note (means it's saved in db)
+                      //context.pop(note);
+                    } else {
+                      // pop when it's a new note (without saving)
+                      //context.pop();
+                    }
+                  },
                   label: Text(
                     AppLocalizations.of(context)?.delete ?? 'Delete',
                     style: AppFontStyle.body.copyWith(

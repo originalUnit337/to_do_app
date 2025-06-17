@@ -32,3 +32,8 @@ class InfoNoteError extends InfoNoteScreenState {
 
   Exception get exception => _exception;
 }
+
+class InfoNoteDeleted extends InfoNoteScreenState {
+  final NoteEntity note;
+  const InfoNoteDeleted(this.note);
+}

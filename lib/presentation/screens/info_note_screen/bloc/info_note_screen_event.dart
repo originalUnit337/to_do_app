@@ -13,3 +13,8 @@ class CreateNoteEvent extends InfoNoteScreenEvent {
   final NoteEntity note;
   const CreateNoteEvent(this.note);
 }
+
+class DeleteNoteEvent extends InfoNoteScreenEvent {
+  final NoteEntity note;
+  const DeleteNoteEvent(this.note);
+}
