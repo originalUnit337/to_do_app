@@ -53,7 +53,7 @@ class _NoteApiService implements NoteApiService {
   @override
   Future<HttpResponse<void>> updateNote(
     String id,
-    Map<String, dynamic> note, {
+    NoteModel note, {
     String? apiKey = apiKey,
   }) async {
     final _extra = <String, dynamic>{};
@@ -61,7 +61,7 @@ class _NoteApiService implements NoteApiService {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(note);
+    _data.addAll(note.toJson());
     final _options = _setStreamType<HttpResponse<void>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
@@ -80,7 +80,7 @@ class _NoteApiService implements NoteApiService {
   @override
   Future<HttpResponse<DocumentModel<NoteModel>>> createNote(
     String collectionId,
-    Map<String, dynamic> note, {
+    NoteModel note, {
     String? apiKey = apiKey,
   }) async {
     final _extra = <String, dynamic>{};
@@ -88,7 +88,7 @@ class _NoteApiService implements NoteApiService {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(note);
+    _data.addAll(note.toJson());
     final _options = _setStreamType<HttpResponse<DocumentModel<NoteModel>>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(

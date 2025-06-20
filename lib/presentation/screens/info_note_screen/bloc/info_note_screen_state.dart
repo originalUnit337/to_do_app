@@ -25,12 +25,14 @@ class InfoNoteLoaded extends InfoNoteScreenState {
   List<Object?> get props => [note, isUpdated];
 }
 
+enum InfoNoteErrorType { unknown, saveFailed, deleteFailed }
+
 class InfoNoteError extends InfoNoteScreenState {
-  final Exception _exception;
+  final InfoNoteErrorType _exception;
 
   const InfoNoteError(this._exception);
 
-  Exception get exception => _exception;
+  InfoNoteErrorType get exception => _exception;
 }
 
 class InfoNoteDeleted extends InfoNoteScreenState {

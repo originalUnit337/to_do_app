@@ -19,14 +19,14 @@ abstract class NoteApiService {
   @PATCH('$notesCollection/{id}')
   Future<HttpResponse<void>> updateNote(
     @Path('id') String id,
-    @Body() Map<String, dynamic> note, {
+    @Body() NoteModel note, {
     @Query('key') String? apiKey = apiKey,
   });
 
   @POST('$notesCollection/{collectionId}')
   Future<HttpResponse<DocumentModel<NoteModel>>> createNote(
     @Path('collectionId') String collectionId,
-    @Body() Map<String, dynamic> note, {
+    @Body() NoteModel note, {
     @Query('key') String? apiKey = apiKey,
   });
 

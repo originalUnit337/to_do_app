@@ -30,7 +30,7 @@ class InfoNoteScreenBloc
     if (response.data ?? false) {
       emit(InfoNoteLoaded(event.note, isUpdated: true));
     } else {
-      emit(InfoNoteError(Exception('Something went wrong')));
+      emit(const InfoNoteError(InfoNoteErrorType.saveFailed));
     }
   }
 
@@ -43,7 +43,7 @@ class InfoNoteScreenBloc
     if (response.data != null) {
       emit(InfoNoteLoaded(response.data!, isUpdated: true));
     } else {
-      emit(InfoNoteError(Exception('Something went wrong')));
+      emit(const InfoNoteError(InfoNoteErrorType.saveFailed));
     }
   }
 
@@ -54,6 +54,8 @@ class InfoNoteScreenBloc
     final response = await _deleteNoteUseCase(params: event.note);
     if (response.data ?? false) {
       emit(InfoNoteDeleted(event.note));
+    } else {
+      emit(const InfoNoteError(InfoNoteErrorType.deleteFailed));
     }
   }
 }

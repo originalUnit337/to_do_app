@@ -24,16 +24,16 @@ class _ImportanceDropdownState extends State<ImportanceDropdown> {
     super.didChangeDependencies();
     dropdownMenuEntries = [
       DropdownMenuEntry(
-        label: AppLocalizations.of(context)?.no ?? 'no',
-        value: 'no',
+        label: AppLocalizations.of(context)?.no ?? 'No',
+        value: 'No',
       ),
       DropdownMenuEntry(
-        label: AppLocalizations.of(context)?.low ?? 'low',
-        value: 'low',
+        label: AppLocalizations.of(context)?.low ?? 'Low',
+        value: 'Low',
       ),
       DropdownMenuEntry(
-        label: AppLocalizations.of(context)?.high ?? 'high',
-        value: 'high',
+        label: AppLocalizations.of(context)?.high ?? 'High',
+        value: 'High',
       ),
     ];
     currentPalette = AppPalette.of(context);

@@ -41,7 +41,7 @@ class NoteRepositoryImpl implements NoteRepository {
     try {
       final httpResponse = await _noteApiService.updateNote(
         note.id.split('/').last,
-        note.toJson(),
+        NoteMapper.toModel(note),
       );
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return const DataSuccess(true);
@@ -63,7 +63,10 @@ class NoteRepositoryImpl implements NoteRepository {
   @override
   Future<DataState<NoteEntity>> createNote(NoteEntity note) async {
     try {
-      final httpResponse = await _noteApiService.createNote('', note.toJson());
+      final httpResponse = await _noteApiService.createNote(
+        '',
+        NoteMapper.toModel(note),
+      );
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return DataSuccess(NoteMapper.toEntity(httpResponse.data.fields));
       } else {

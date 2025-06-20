@@ -49,9 +49,18 @@ class _InfoNoteScreenState extends State<InfoNoteScreen> {
                 note: state.note,
                 textNoteController: _textNoteController,
               ),
-              InfoNoteError() => Center(
-                child: Text(state.exception.toString()),
-              ),
+              InfoNoteError() => switch (state.exception) {
+                InfoNoteErrorType.unknown => const Center(
+                  child: Text('Unknown error'),
+                ),
+                InfoNoteErrorType.saveFailed => const Center(
+                  child: Text('Save failed'),
+                ),
+                InfoNoteErrorType.deleteFailed => const Center(
+                  child: Text('Delete failed'),
+                ),
+              },
+
               InfoNoteDeleted() => const Center(
                 child: CircularProgressIndicator(),
               ),
