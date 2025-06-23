@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:go_router/go_router.dart';
+import 'package:to_do_app/core/common/enums/importance.dart';
 import 'package:to_do_app/domain/entities/note.dart';
 import 'package:to_do_app/navigation/app_routes.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_bloc.dart';
@@ -149,7 +150,7 @@ class NotesList extends StatelessWidget {
                         ),
                         title: Row(
                           children: [
-                            if (noteItems[index].importance == 'high')
+                            if (noteItems[index].importance == Importance.high)
                               Text(
                                 '!! ',
                                 style: TextStyle(
@@ -157,7 +158,7 @@ class NotesList extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            if (noteItems[index].importance == 'low')
+                            if (noteItems[index].importance == Importance.low)
                               Text(
                                 '↓ ',
                                 style: TextStyle(
@@ -193,7 +194,7 @@ class NotesList extends StatelessWidget {
                           },
                           side: BorderSide(
                             color:
-                                noteItems[index].importance == '2'
+                                noteItems[index].importance == Importance.high
                                     ? currentPalette.colorRed
                                     : currentPalette.supportSeparator,
                             width: 2,

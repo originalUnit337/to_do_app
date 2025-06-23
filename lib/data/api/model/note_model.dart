@@ -1,4 +1,5 @@
 import 'package:to_do_app/core/base_model/base_api_model.dart.dart';
+import 'package:to_do_app/core/common/enums/importance.dart';
 import 'package:to_do_app/domain/entities/note.dart';
 
 class NoteModel extends NoteEntity implements BaseApiModel {
@@ -14,8 +15,9 @@ class NoteModel extends NoteEntity implements BaseApiModel {
       id: map['name'].toString(),
       textNote:
           (map['textNote'] as Map<String, dynamic>)['stringValue'] as String,
-      importance:
-          (map['importance'] as Map<String, dynamic>)['stringValue'] as String,
+      importance: ImportanceExtension.fromString(
+        (map['importance'] as Map<String, dynamic>)['stringValue'] as String,
+      ),
       makeBefore:
           (map['makeBefore'] as Map<String, dynamic>?)?['stringValue']
               as String?,

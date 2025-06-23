@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:to_do_app/core/common/enums/importance.dart';
 
 class NoteEntity extends Equatable {
   final String id;
   final String textNote;
   // enum
-  final String importance;
+  final Importance importance;
   // datetime
   final String? makeBefore;
   final bool isCompleted;
@@ -36,7 +37,7 @@ class NoteEntity extends Equatable {
     return NoteEntity(
       id: json['id'] as String,
       textNote: json['textNote'] as String,
-      importance: json['importance'] as String,
+      importance: ImportanceExtension.fromString(json['importance'] as String),
       makeBefore: json['makeBefore'] as String,
       isCompleted: json['isCompleted'] as bool,
     );
@@ -48,7 +49,7 @@ class NoteEntity extends Equatable {
   NoteEntity copyWith({
     String? id,
     String? textNote,
-    String? importance,
+    Importance? importance,
     String? makeBefore,
     bool? isCompleted,
   }) {

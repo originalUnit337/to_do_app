@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:go_router/go_router.dart';
+import 'package:to_do_app/core/common/enums/importance.dart';
 import 'package:to_do_app/domain/entities/note.dart';
 import 'package:to_do_app/presentation/screens/info_note_screen/bloc/info_note_screen_bloc.dart';
 import 'package:to_do_app/presentation/screens/info_note_screen/bloc/info_note_screen_event.dart';
@@ -13,7 +14,7 @@ import 'package:to_do_app/presentation/widgets/switch_data_picker.dart';
 
 class InfoNoteWidget extends StatelessWidget {
   final TextEditingController textNoteController;
-  final ValueNotifier<String?> selectedImportanceNotifier;
+  final ValueNotifier<Importance?> selectedImportanceNotifier;
   final ValueNotifier<DateTime?> selectedDateNotifier;
   final NoteEntity? note;
 
@@ -21,14 +22,14 @@ class InfoNoteWidget extends StatelessWidget {
     required this.textNoteController,
     this.note,
     ValueNotifier<DateTime?>? selectedDateNotifier,
-    ValueNotifier<String?>? selectedImportanceNotifier,
+    ValueNotifier<Importance?>? selectedImportanceNotifier,
     super.key,
   }) : selectedDateNotifier =
            selectedDateNotifier ??
            ValueNotifier<DateTime?>(DateTime.tryParse(note?.makeBefore ?? '')),
        selectedImportanceNotifier =
            selectedImportanceNotifier ??
-           ValueNotifier<String?>(note?.importance);
+           ValueNotifier<Importance?>(note?.importance);
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +71,8 @@ class InfoNoteWidget extends StatelessWidget {
                     SaveNoteEvent(
                       NoteEntity(
                         id: note!.id,
-                        importance: selectedImportanceNotifier.value ?? 'No',
+                        importance:
+                            selectedImportanceNotifier.value ?? Importance.no,
                         makeBefore:
                             selectedDateNotifier.value?.toIso8601String(),
                         textNote: textNoteController.text,
@@ -86,7 +88,8 @@ class InfoNoteWidget extends StatelessWidget {
                       NoteEntity(
                         id: '',
                         textNote: textNoteController.text,
-                        importance: selectedImportanceNotifier.value ?? 'No',
+                        importance:
+                            selectedImportanceNotifier.value ?? Importance.no,
                         makeBefore:
                             selectedDateNotifier.value?.toIso8601String(),
                       ),

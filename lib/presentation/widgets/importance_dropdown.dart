@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
+import 'package:to_do_app/core/common/enums/importance.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/app_palette.dart';
 import 'package:to_do_app/presentation/ui_kit/palette/palette.dart';
 
 class ImportanceDropdown extends StatefulWidget {
-  final ValueNotifier<String?> selectedImportanceNotifier;
+  final ValueNotifier<Importance?> selectedImportanceNotifier;
   const ImportanceDropdown({
     required this.selectedImportanceNotifier,
     super.key,
@@ -15,9 +16,15 @@ class ImportanceDropdown extends StatefulWidget {
 }
 
 class _ImportanceDropdownState extends State<ImportanceDropdown> {
-  String? selectedValue;
-  late List<DropdownMenuEntry<String>> dropdownMenuEntries;
+  Importance? selectedValue;
+  late List<DropdownMenuEntry<Importance>> dropdownMenuEntries;
   late Palette currentPalette;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedValue = widget.selectedImportanceNotifier.value;
+  }
 
   @override
   void didChangeDependencies() {
@@ -25,15 +32,15 @@ class _ImportanceDropdownState extends State<ImportanceDropdown> {
     dropdownMenuEntries = [
       DropdownMenuEntry(
         label: AppLocalizations.of(context)?.no ?? 'No',
-        value: 'No',
+        value: Importance.no,
       ),
       DropdownMenuEntry(
         label: AppLocalizations.of(context)?.low ?? 'Low',
-        value: 'Low',
+        value: Importance.low,
       ),
       DropdownMenuEntry(
         label: AppLocalizations.of(context)?.high ?? 'High',
-        value: 'High',
+        value: Importance.high,
       ),
     ];
     currentPalette = AppPalette.of(context);
