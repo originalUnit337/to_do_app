@@ -1,14 +1,16 @@
-enum Importance { no, low, high }
+enum Importance {
+  no,
+  low,
+  high;
 
-extension ImportanceExtension on Importance {
   String get label {
     switch (this) {
       case Importance.no:
-        return 'No';
+        return 'no';
       case Importance.low:
-        return 'Low';
+        return 'low';
       case Importance.high:
-        return 'High';
+        return 'high';
     }
   }
 

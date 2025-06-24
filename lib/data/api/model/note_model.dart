@@ -15,7 +15,7 @@ class NoteModel extends NoteEntity implements BaseApiModel {
       id: map['name'].toString(),
       textNote:
           (map['textNote'] as Map<String, dynamic>)['stringValue'] as String,
-      importance: ImportanceExtension.fromString(
+      importance: Importance.fromString(
         (map['importance'] as Map<String, dynamic>)['stringValue'] as String,
       ),
       makeBefore:
@@ -32,7 +32,7 @@ class NoteModel extends NoteEntity implements BaseApiModel {
       'name': id,
       'fields': {
         'textNote': {'stringValue': textNote},
-        'importance': {'stringValue': importance},
+        'importance': {'stringValue': importance.label},
         'makeBefore':
             makeBefore != null
                 ? {'stringValue': makeBefore}

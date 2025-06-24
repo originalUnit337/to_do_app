@@ -37,7 +37,7 @@ class NoteEntity extends Equatable {
     return NoteEntity(
       id: json['id'] as String,
       textNote: json['textNote'] as String,
-      importance: ImportanceExtension.fromString(json['importance'] as String),
+      importance: Importance.fromString(json['importance'] as String),
       makeBefore: json['makeBefore'] as String,
       isCompleted: json['isCompleted'] as bool,
     );
