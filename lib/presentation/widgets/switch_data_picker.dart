@@ -56,7 +56,7 @@ class SwitchDataPicker extends StatelessWidget {
         ValueListenableBuilder<DateTime?>(
           valueListenable: selectedDate,
           builder: (context, value, child) {
-            return Text(value == null ? 'nothing' : value.toLocal().toString());
+            return Text(value == null ? 'nothing' : value.toIso8601String());
           },
         ),
       ],
