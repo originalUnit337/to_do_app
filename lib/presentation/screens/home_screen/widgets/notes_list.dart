@@ -44,6 +44,16 @@ class NotesList extends StatelessWidget {
             );
 
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          } else if (state.isSync != null) {
+            final snackBar = SnackBar(
+              content: Text(
+                state.isSync == true
+                    ? 'Successfully scynronized'
+                    : 'Sync failed',
+              ),
+              duration: const Duration(seconds: 2),
+              action: SnackBarAction(label: 'Close', onPressed: () {}),
+            );
           }
         }
       },

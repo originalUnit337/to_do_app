@@ -65,6 +65,17 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _updateTimeMeta = const VerificationMeta(
+    'updateTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updateTime = GeneratedColumn<DateTime>(
+    'update_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -72,6 +83,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     importance,
     makeBefore,
     isCompleted,
+    updateTime,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -121,6 +133,14 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
         ),
       );
     }
+    if (data.containsKey('update_time')) {
+      context.handle(
+        _updateTimeMeta,
+        updateTime.isAcceptableOrUnknown(data['update_time']!, _updateTimeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updateTimeMeta);
+    }
     return context;
   }
 
@@ -154,6 +174,11 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
             DriftSqlType.bool,
             data['${effectivePrefix}is_completed'],
           )!,
+      updateTime:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}update_time'],
+          )!,
     );
   }
 
@@ -169,12 +194,14 @@ class Note extends DataClass implements Insertable<Note> {
   final String importance;
   final String? makeBefore;
   final bool isCompleted;
+  final DateTime updateTime;
   const Note({
     required this.id,
     required this.textNote,
     required this.importance,
     this.makeBefore,
     required this.isCompleted,
+    required this.updateTime,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -186,6 +213,7 @@ class Note extends DataClass implements Insertable<Note> {
       map['make_before'] = Variable<String>(makeBefore);
     }
     map['is_completed'] = Variable<bool>(isCompleted);
+    map['update_time'] = Variable<DateTime>(updateTime);
     return map;
   }
 
@@ -199,6 +227,7 @@ class Note extends DataClass implements Insertable<Note> {
               ? const Value.absent()
               : Value(makeBefore),
       isCompleted: Value(isCompleted),
+      updateTime: Value(updateTime),
     );
   }
 
@@ -213,6 +242,7 @@ class Note extends DataClass implements Insertable<Note> {
       importance: serializer.fromJson<String>(json['importance']),
       makeBefore: serializer.fromJson<String?>(json['makeBefore']),
       isCompleted: serializer.fromJson<bool>(json['isCompleted']),
+      updateTime: serializer.fromJson<DateTime>(json['updateTime']),
     );
   }
   @override
@@ -224,6 +254,7 @@ class Note extends DataClass implements Insertable<Note> {
       'importance': serializer.toJson<String>(importance),
       'makeBefore': serializer.toJson<String?>(makeBefore),
       'isCompleted': serializer.toJson<bool>(isCompleted),
+      'updateTime': serializer.toJson<DateTime>(updateTime),
     };
   }
 
@@ -233,12 +264,14 @@ class Note extends DataClass implements Insertable<Note> {
     String? importance,
     Value<String?> makeBefore = const Value.absent(),
     bool? isCompleted,
+    DateTime? updateTime,
   }) => Note(
     id: id ?? this.id,
     textNote: textNote ?? this.textNote,
     importance: importance ?? this.importance,
     makeBefore: makeBefore.present ? makeBefore.value : this.makeBefore,
     isCompleted: isCompleted ?? this.isCompleted,
+    updateTime: updateTime ?? this.updateTime,
   );
   Note copyWithCompanion(NotesCompanion data) {
     return Note(
@@ -250,6 +283,8 @@ class Note extends DataClass implements Insertable<Note> {
           data.makeBefore.present ? data.makeBefore.value : this.makeBefore,
       isCompleted:
           data.isCompleted.present ? data.isCompleted.value : this.isCompleted,
+      updateTime:
+          data.updateTime.present ? data.updateTime.value : this.updateTime,
     );
   }
 
@@ -260,14 +295,21 @@ class Note extends DataClass implements Insertable<Note> {
           ..write('textNote: $textNote, ')
           ..write('importance: $importance, ')
           ..write('makeBefore: $makeBefore, ')
-          ..write('isCompleted: $isCompleted')
+          ..write('isCompleted: $isCompleted, ')
+          ..write('updateTime: $updateTime')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, textNote, importance, makeBefore, isCompleted);
+  int get hashCode => Object.hash(
+    id,
+    textNote,
+    importance,
+    makeBefore,
+    isCompleted,
+    updateTime,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -276,7 +318,8 @@ class Note extends DataClass implements Insertable<Note> {
           other.textNote == this.textNote &&
           other.importance == this.importance &&
           other.makeBefore == this.makeBefore &&
-          other.isCompleted == this.isCompleted);
+          other.isCompleted == this.isCompleted &&
+          other.updateTime == this.updateTime);
 }
 
 class NotesCompanion extends UpdateCompanion<Note> {
@@ -285,6 +328,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
   final Value<String> importance;
   final Value<String?> makeBefore;
   final Value<bool> isCompleted;
+  final Value<DateTime> updateTime;
   final Value<int> rowid;
   const NotesCompanion({
     this.id = const Value.absent(),
@@ -292,6 +336,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.importance = const Value.absent(),
     this.makeBefore = const Value.absent(),
     this.isCompleted = const Value.absent(),
+    this.updateTime = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   NotesCompanion.insert({
@@ -300,16 +345,19 @@ class NotesCompanion extends UpdateCompanion<Note> {
     required String importance,
     this.makeBefore = const Value.absent(),
     this.isCompleted = const Value.absent(),
+    required DateTime updateTime,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        textNote = Value(textNote),
-       importance = Value(importance);
+       importance = Value(importance),
+       updateTime = Value(updateTime);
   static Insertable<Note> custom({
     Expression<String>? id,
     Expression<String>? textNote,
     Expression<String>? importance,
     Expression<String>? makeBefore,
     Expression<bool>? isCompleted,
+    Expression<DateTime>? updateTime,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -318,6 +366,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
       if (importance != null) 'importance': importance,
       if (makeBefore != null) 'make_before': makeBefore,
       if (isCompleted != null) 'is_completed': isCompleted,
+      if (updateTime != null) 'update_time': updateTime,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -328,6 +377,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     Value<String>? importance,
     Value<String?>? makeBefore,
     Value<bool>? isCompleted,
+    Value<DateTime>? updateTime,
     Value<int>? rowid,
   }) {
     return NotesCompanion(
@@ -336,6 +386,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
       importance: importance ?? this.importance,
       makeBefore: makeBefore ?? this.makeBefore,
       isCompleted: isCompleted ?? this.isCompleted,
+      updateTime: updateTime ?? this.updateTime,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -358,6 +409,9 @@ class NotesCompanion extends UpdateCompanion<Note> {
     if (isCompleted.present) {
       map['is_completed'] = Variable<bool>(isCompleted.value);
     }
+    if (updateTime.present) {
+      map['update_time'] = Variable<DateTime>(updateTime.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -372,6 +426,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
           ..write('importance: $importance, ')
           ..write('makeBefore: $makeBefore, ')
           ..write('isCompleted: $isCompleted, ')
+          ..write('updateTime: $updateTime, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -396,6 +451,7 @@ typedef $$NotesTableCreateCompanionBuilder =
       required String importance,
       Value<String?> makeBefore,
       Value<bool> isCompleted,
+      required DateTime updateTime,
       Value<int> rowid,
     });
 typedef $$NotesTableUpdateCompanionBuilder =
@@ -405,6 +461,7 @@ typedef $$NotesTableUpdateCompanionBuilder =
       Value<String> importance,
       Value<String?> makeBefore,
       Value<bool> isCompleted,
+      Value<DateTime> updateTime,
       Value<int> rowid,
     });
 
@@ -439,6 +496,11 @@ class $$NotesTableFilterComposer
 
   ColumnFilters<bool> get isCompleted => $composableBuilder(
     column: $table.isCompleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updateTime => $composableBuilder(
+    column: $table.updateTime,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -476,6 +538,11 @@ class $$NotesTableOrderingComposer
     column: $table.isCompleted,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get updateTime => $composableBuilder(
+    column: $table.updateTime,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$NotesTableAnnotationComposer
@@ -505,6 +572,11 @@ class $$NotesTableAnnotationComposer
 
   GeneratedColumn<bool> get isCompleted => $composableBuilder(
     column: $table.isCompleted,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updateTime => $composableBuilder(
+    column: $table.updateTime,
     builder: (column) => column,
   );
 }
@@ -542,6 +614,7 @@ class $$NotesTableTableManager
                 Value<String> importance = const Value.absent(),
                 Value<String?> makeBefore = const Value.absent(),
                 Value<bool> isCompleted = const Value.absent(),
+                Value<DateTime> updateTime = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => NotesCompanion(
                 id: id,
@@ -549,6 +622,7 @@ class $$NotesTableTableManager
                 importance: importance,
                 makeBefore: makeBefore,
                 isCompleted: isCompleted,
+                updateTime: updateTime,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -558,6 +632,7 @@ class $$NotesTableTableManager
                 required String importance,
                 Value<String?> makeBefore = const Value.absent(),
                 Value<bool> isCompleted = const Value.absent(),
+                required DateTime updateTime,
                 Value<int> rowid = const Value.absent(),
               }) => NotesCompanion.insert(
                 id: id,
@@ -565,6 +640,7 @@ class $$NotesTableTableManager
                 importance: importance,
                 makeBefore: makeBefore,
                 isCompleted: isCompleted,
+                updateTime: updateTime,
                 rowid: rowid,
               ),
           withReferenceMapper:

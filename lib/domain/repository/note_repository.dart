@@ -6,4 +6,5 @@ abstract class NoteRepository {
   Future<DataState<bool>> updateNote(NoteEntity note);
   Future<DataState<NoteEntity>> createNote(NoteEntity note);
   Future<DataState<bool>> deleteNote(NoteEntity note);
+  Future<DataState<bool>> syncNotes();
 }

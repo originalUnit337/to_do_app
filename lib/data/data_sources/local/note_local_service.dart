@@ -11,6 +11,7 @@ class Notes extends Table {
   TextColumn get importance => text()();
   TextColumn get makeBefore => text().nullable()();
   BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get updateTime => dateTime()();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -34,12 +35,15 @@ class NoteLocalService extends _$NoteLocalService {
   }
 
   Future<List<Note>> getAllNotes() async => select(notes).get();
+
   Future<bool> updateNote(Note entry) async {
-    return update(notes).replace(entry);
+    final updatedNote = entry.copyWith(updateTime: DateTime.now());
+    return update(notes).replace(updatedNote);
   }
 
   Future<int> createNote(Note entry) async {
-    return into(notes).insert(entry);
+    final createdNote = entry.copyWith(updateTime: DateTime.now());
+    return into(notes).insert(createdNote);
   }
 
   Future<bool> deleteNote(Note entry) async {

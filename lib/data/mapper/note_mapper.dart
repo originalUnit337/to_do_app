@@ -26,7 +26,7 @@ class NoteMapper {
 
   static NoteEntity fromLocalToEntity(Note note) {
     return NoteEntity(
-      id: note.id,
+      id: '',
       textNote: note.textNote,
       importance: Importance.fromString(note.importance),
       isCompleted: note.isCompleted,
@@ -41,6 +41,7 @@ class NoteMapper {
       importance: entity.importance.label,
       isCompleted: entity.isCompleted,
       makeBefore: entity.makeBefore?.toIso8601String(),
+      updateTime: DateTime.now(),
     );
   }
 }
