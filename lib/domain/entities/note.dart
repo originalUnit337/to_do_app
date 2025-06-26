@@ -6,7 +6,6 @@ class NoteEntity extends Equatable {
   final String textNote;
   // enum
   final Importance importance;
-  // datetime
   final DateTime? makeBefore;
   final bool isCompleted;
 
