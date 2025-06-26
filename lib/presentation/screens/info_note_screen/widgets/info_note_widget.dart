@@ -25,8 +25,7 @@ class InfoNoteWidget extends StatelessWidget {
     ValueNotifier<Importance?>? selectedImportanceNotifier,
     super.key,
   }) : selectedDateNotifier =
-           selectedDateNotifier ??
-           ValueNotifier<DateTime?>(DateTime.tryParse(note?.makeBefore ?? '')),
+           selectedDateNotifier ?? ValueNotifier<DateTime?>(note?.makeBefore),
        selectedImportanceNotifier =
            selectedImportanceNotifier ??
            ValueNotifier<Importance?>(note?.importance);
@@ -73,8 +72,7 @@ class InfoNoteWidget extends StatelessWidget {
                         id: note!.id,
                         importance:
                             selectedImportanceNotifier.value ?? Importance.no,
-                        makeBefore:
-                            selectedDateNotifier.value?.toIso8601String(),
+                        makeBefore: selectedDateNotifier.value,
                         textNote: textNoteController.text,
                         isCompleted: note?.isCompleted ?? false,
                       ),
@@ -90,8 +88,7 @@ class InfoNoteWidget extends StatelessWidget {
                         textNote: textNoteController.text,
                         importance:
                             selectedImportanceNotifier.value ?? Importance.no,
-                        makeBefore:
-                            selectedDateNotifier.value?.toIso8601String(),
+                        makeBefore: selectedDateNotifier.value,
                       ),
                     ),
                   );

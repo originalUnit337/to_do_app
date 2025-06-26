@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider<HomeScreenBloc>(
       create:
           (context) =>
-              HomeScreenBloc(getIt(), getIt(), getIt())
+              HomeScreenBloc(getIt(), getIt(), getIt(), getIt())
                 ..add(const GetAllNotesEvent()),
       child: Builder(
         builder: (context) {

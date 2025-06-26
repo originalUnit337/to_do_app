@@ -27,10 +27,12 @@ class NotesLoading extends HomeScreenState {
 
 class NotesLoaded extends HomeScreenState {
   final bool? isUpdated;
+  final bool? isSync;
   const NotesLoaded(
     List<NoteEntity> notes, {
     super.showCompleted,
     this.isUpdated,
+    this.isSync,
   }) : super(notes: notes);
 
   @override
@@ -40,3 +42,8 @@ class NotesLoaded extends HomeScreenState {
 class NotesError extends HomeScreenState {
   const NotesError(DioException exception) : super(exception: exception);
 }
+
+// class InternetStatusChanged extends HomeScreenState {
+//   final bool isConnected;
+//   const InternetStatusChanged({required this.isConnected});
+// }

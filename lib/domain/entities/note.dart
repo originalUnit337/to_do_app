@@ -6,8 +6,7 @@ class NoteEntity extends Equatable {
   final String textNote;
   // enum
   final Importance importance;
-  // datetime
-  final String? makeBefore;
+  final DateTime? makeBefore;
   final bool isCompleted;
 
   const NoteEntity({
@@ -38,7 +37,7 @@ class NoteEntity extends Equatable {
       id: json['id'] as String,
       textNote: json['textNote'] as String,
       importance: Importance.fromString(json['importance'] as String),
-      makeBefore: json['makeBefore'] as String,
+      makeBefore: json['makeBefore'] as DateTime,
       isCompleted: json['isCompleted'] as bool,
     );
   }
@@ -50,7 +49,7 @@ class NoteEntity extends Equatable {
     String? id,
     String? textNote,
     Importance? importance,
-    String? makeBefore,
+    DateTime? makeBefore,
     bool? isCompleted,
   }) {
     return NoteEntity(

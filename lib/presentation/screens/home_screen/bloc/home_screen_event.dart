@@ -29,3 +29,7 @@ class DeleteNoteEvent extends HomeScreenEvent {
 
   const DeleteNoteEvent(this.note);
 }
+
+class InternetConnectedEvent extends HomeScreenEvent {}
+
+class InternetDisconnectedEvent extends HomeScreenEvent {}

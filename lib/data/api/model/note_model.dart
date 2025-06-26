@@ -18,9 +18,11 @@ class NoteModel extends NoteEntity implements BaseApiModel {
       importance: Importance.fromString(
         (map['importance'] as Map<String, dynamic>)['stringValue'] as String,
       ),
-      makeBefore:
-          (map['makeBefore'] as Map<String, dynamic>?)?['stringValue']
-              as String?,
+      makeBefore: DateTime.tryParse(
+        (map['makeBefore'] as Map<String, dynamic>?)?['stringValue']
+                as String? ??
+            '',
+      ),
       isCompleted:
           (map['isCompleted'] as Map<String, dynamic>?)?['booleanValue']
               as bool,
@@ -35,7 +37,7 @@ class NoteModel extends NoteEntity implements BaseApiModel {
         'importance': {'stringValue': importance.label},
         'makeBefore':
             makeBefore != null
-                ? {'stringValue': makeBefore}
+                ? {'stringValue': makeBefore?.toIso8601String()}
                 : {'nullValue': 'NULL_VALUE'},
         'isCompleted': {'booleanValue': isCompleted},
       },
