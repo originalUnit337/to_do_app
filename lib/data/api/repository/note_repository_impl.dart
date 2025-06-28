@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:to_do_app/core/constants/constants.dart';
 import 'package:to_do_app/core/resources/data_state.dart';
+import 'package:to_do_app/data/api/model/database_version_model.dart';
 import 'package:to_do_app/data/api/model/document_model.dart';
 import 'package:to_do_app/data/api/model/note_model.dart';
 import 'package:to_do_app/data/data_sources/local/note_local_service.dart';
@@ -44,8 +46,8 @@ class NoteRepositoryImpl implements NoteRepository {
       try {
         final notes = await _noteLocalService.getAllNotes();
         return DataSuccess(notes.map(NoteMapper.fromLocalToEntity).toList());
-      } on DioException catch (e) {
-        return DataFailed(e);
+      } on Exception catch (e) {
+        rethrow;
       }
     }
   }
@@ -59,6 +61,10 @@ class NoteRepositoryImpl implements NoteRepository {
           NoteMapper.toModel(note),
         );
         if (httpResponse.response.statusCode == HttpStatus.ok) {
+          await _noteApiService.updateDatabaseVersion(
+            databaseVersionId,
+            DatabaseVersionModel(DateTime.now(), databaseVersionId),
+          );
           return const DataSuccess(true);
         } else {
           return DataFailed(
@@ -95,6 +101,10 @@ class NoteRepositoryImpl implements NoteRepository {
           NoteMapper.toModel(note),
         );
         if (httpResponse.response.statusCode == HttpStatus.ok) {
+          await _noteApiService.updateDatabaseVersion(
+            databaseVersionId,
+            DatabaseVersionModel(DateTime.now(), databaseVersionId),
+          );
           return DataSuccess(NoteMapper.toEntity(httpResponse.data.fields));
         } else {
           return DataFailed(
@@ -133,6 +143,10 @@ class NoteRepositoryImpl implements NoteRepository {
           note.id.split('/').last,
         );
         if (httpResponse.response.statusCode == HttpStatus.ok) {
+          await _noteApiService.updateDatabaseVersion(
+            databaseVersionId,
+            DatabaseVersionModel(DateTime.now(), databaseVersionId),
+          );
           return const DataSuccess(true);
         } else {
           return DataFailed(
@@ -166,6 +180,13 @@ class NoteRepositoryImpl implements NoteRepository {
       try {
         final localNotes = await _noteLocalService.getAllNotes();
 
+        final localDatabaseVersion =
+            await _noteLocalService.getDatabaseVersion();
+
+        final remoteVersionResponse =
+            await _noteApiService.getDatabaseVersion();
+        DatabaseVersionModel remoteDatabaseVersion;
+
         final httpResponse = await _noteApiService.getAllNotes();
         var remoteNotes = <DocumentModel<NoteModel>>[];
 
@@ -173,67 +194,83 @@ class NoteRepositoryImpl implements NoteRepository {
           remoteNotes = httpResponse.data.documents;
         }
 
-        if (localNotes.isEmpty && remoteNotes.isEmpty) {
-          return const DataSuccess(true);
-        }
+        if (remoteVersionResponse.response.statusCode == HttpStatus.ok) {
+          if (localNotes.isEmpty && remoteNotes.isEmpty) {
+            return const DataSuccess(true);
+          }
 
-        if (localNotes.isEmpty) {
-          for (final remoteNote in remoteNotes) {
-            try {
+          if (localNotes.isEmpty) {
+            for (final remoteNote in remoteNotes) {
+              try {
+                await _noteLocalService.createNote(
+                  NoteMapper.toLocal(remoteNote.fields),
+                );
+              } on Exception catch (e) {
+                rethrow;
+              }
+            }
+            return const DataSuccess(true);
+          }
+
+          if (remoteNotes.isEmpty) {
+            for (final localNote in localNotes) {
+              await _noteApiService.createNote(
+                '',
+                NoteMapper.toModel(
+                  NoteMapper.fromLocalToEntity(localNote.copyWith(id: '')),
+                ),
+              );
+            }
+            return const DataSuccess(true);
+          }
+          remoteDatabaseVersion =
+              remoteVersionResponse.data.documents.first.fields;
+
+          // ! local_db newer
+          if (localDatabaseVersion.version.isAfter(
+            remoteDatabaseVersion.version,
+          )) {
+            for (final e in remoteNotes) {
+              await _noteApiService.deleteNote(e.fields.id.split('/').last);
+            }
+            for (final localNote in localNotes) {
+              await _noteApiService.createNote(
+                '',
+                NoteMapper.toModel(
+                  NoteMapper.fromLocalToEntity(localNote.copyWith(id: '')),
+                ),
+              );
+            }
+            await _noteApiService.updateDatabaseVersion(
+              databaseVersionId,
+              DatabaseVersionModel(
+                localDatabaseVersion.version,
+                databaseVersionId,
+              ),
+            );
+            // ! remote_db newer
+          } else if (remoteDatabaseVersion.version.isAfter(
+            localDatabaseVersion.version,
+          )) {
+            for (final e in localNotes) {
+              await _noteLocalService.deleteNote(e);
+            }
+            for (final remoteNote in remoteNotes) {
               await _noteLocalService.createNote(
                 NoteMapper.toLocal(remoteNote.fields),
               );
-            } on Exception catch (e) {
-              rethrow;
             }
-          }
-          return const DataSuccess(true);
-        }
-
-        if (remoteNotes.isEmpty) {
-          for (final localNote in localNotes) {
-            await _noteApiService.createNote(
-              '',
-              NoteMapper.toModel(NoteMapper.fromLocalToEntity(localNote)),
-            );
-          }
-          return const DataSuccess(true);
-        }
-
-        final lastLocalUpdate = localNotes
-            .map((note) => note.updateTime)
-            .reduce((a, b) => a.isAfter(b) ? a : b);
-
-        final lastRemoteUpdate = remoteNotes
-            .map((note) => DateTime.parse(note.updateTime))
-            .reduce((a, b) => a.isAfter(b) ? a : b);
-
-        if (lastLocalUpdate.isAfter(lastRemoteUpdate)) {
-          // Если локальная база была обновлена позже, копируем локальные заметки в удалённую
-          for (final e in remoteNotes) {
-            await _noteApiService.deleteNote(e.fields.id.split('/').last);
-          }
-          for (final localNote in localNotes) {
-            await _noteApiService.createNote(
-              '',
-              NoteMapper.toModel(NoteMapper.fromLocalToEntity(localNote)),
-            );
-          }
-        } else if (lastRemoteUpdate.isAfter(lastLocalUpdate)) {
-          // Если удалённая база была обновлена позже, копируем удалённые заметки в локальную
-          for (final e in localNotes) {
-            await _noteLocalService.deleteNote(e);
-          }
-          for (final remoteNote in remoteNotes) {
-            await _noteLocalService.createNote(
-              NoteMapper.toLocal(remoteNote.fields),
+            await _noteLocalService.setDatabaseVersion(
+              remoteDatabaseVersion.version,
             );
           }
         }
 
         return const DataSuccess(true);
-      } on DioException catch (e) {
-        return DataFailed(e);
+      } catch (e) {
+        // ignore: avoid_print
+        print(e);
+        rethrow;
       }
     } else {
       return const DataSuccess(false);

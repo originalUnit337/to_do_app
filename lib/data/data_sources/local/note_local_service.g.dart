@@ -433,15 +433,213 @@ class NotesCompanion extends UpdateCompanion<Note> {
   }
 }
 
+class $DatabaseVersionsTable extends DatabaseVersions
+    with TableInfo<$DatabaseVersionsTable, DatabaseVersion> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DatabaseVersionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<DateTime> version = GeneratedColumn<DateTime>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, version];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'database_versions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DatabaseVersion> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_versionMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DatabaseVersion map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DatabaseVersion(
+      id:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}id'],
+          )!,
+      version:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}version'],
+          )!,
+    );
+  }
+
+  @override
+  $DatabaseVersionsTable createAlias(String alias) {
+    return $DatabaseVersionsTable(attachedDatabase, alias);
+  }
+}
+
+class DatabaseVersion extends DataClass implements Insertable<DatabaseVersion> {
+  final int id;
+  final DateTime version;
+  const DatabaseVersion({required this.id, required this.version});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['version'] = Variable<DateTime>(version);
+    return map;
+  }
+
+  DatabaseVersionsCompanion toCompanion(bool nullToAbsent) {
+    return DatabaseVersionsCompanion(id: Value(id), version: Value(version));
+  }
+
+  factory DatabaseVersion.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DatabaseVersion(
+      id: serializer.fromJson<int>(json['id']),
+      version: serializer.fromJson<DateTime>(json['version']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'version': serializer.toJson<DateTime>(version),
+    };
+  }
+
+  DatabaseVersion copyWith({int? id, DateTime? version}) =>
+      DatabaseVersion(id: id ?? this.id, version: version ?? this.version);
+  DatabaseVersion copyWithCompanion(DatabaseVersionsCompanion data) {
+    return DatabaseVersion(
+      id: data.id.present ? data.id.value : this.id,
+      version: data.version.present ? data.version.value : this.version,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DatabaseVersion(')
+          ..write('id: $id, ')
+          ..write('version: $version')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, version);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DatabaseVersion &&
+          other.id == this.id &&
+          other.version == this.version);
+}
+
+class DatabaseVersionsCompanion extends UpdateCompanion<DatabaseVersion> {
+  final Value<int> id;
+  final Value<DateTime> version;
+  const DatabaseVersionsCompanion({
+    this.id = const Value.absent(),
+    this.version = const Value.absent(),
+  });
+  DatabaseVersionsCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime version,
+  }) : version = Value(version);
+  static Insertable<DatabaseVersion> custom({
+    Expression<int>? id,
+    Expression<DateTime>? version,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (version != null) 'version': version,
+    });
+  }
+
+  DatabaseVersionsCompanion copyWith({
+    Value<int>? id,
+    Value<DateTime>? version,
+  }) {
+    return DatabaseVersionsCompanion(
+      id: id ?? this.id,
+      version: version ?? this.version,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<DateTime>(version.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DatabaseVersionsCompanion(')
+          ..write('id: $id, ')
+          ..write('version: $version')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$NoteLocalService extends GeneratedDatabase {
   _$NoteLocalService(QueryExecutor e) : super(e);
   $NoteLocalServiceManager get managers => $NoteLocalServiceManager(this);
   late final $NotesTable notes = $NotesTable(this);
+  late final $DatabaseVersionsTable databaseVersions = $DatabaseVersionsTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [notes];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [notes, databaseVersions];
 }
 
 typedef $$NotesTableCreateCompanionBuilder =
@@ -672,10 +870,167 @@ typedef $$NotesTableProcessedTableManager =
       Note,
       PrefetchHooks Function()
     >;
+typedef $$DatabaseVersionsTableCreateCompanionBuilder =
+    DatabaseVersionsCompanion Function({
+      Value<int> id,
+      required DateTime version,
+    });
+typedef $$DatabaseVersionsTableUpdateCompanionBuilder =
+    DatabaseVersionsCompanion Function({
+      Value<int> id,
+      Value<DateTime> version,
+    });
+
+class $$DatabaseVersionsTableFilterComposer
+    extends Composer<_$NoteLocalService, $DatabaseVersionsTable> {
+  $$DatabaseVersionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$DatabaseVersionsTableOrderingComposer
+    extends Composer<_$NoteLocalService, $DatabaseVersionsTable> {
+  $$DatabaseVersionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DatabaseVersionsTableAnnotationComposer
+    extends Composer<_$NoteLocalService, $DatabaseVersionsTable> {
+  $$DatabaseVersionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+}
+
+class $$DatabaseVersionsTableTableManager
+    extends
+        RootTableManager<
+          _$NoteLocalService,
+          $DatabaseVersionsTable,
+          DatabaseVersion,
+          $$DatabaseVersionsTableFilterComposer,
+          $$DatabaseVersionsTableOrderingComposer,
+          $$DatabaseVersionsTableAnnotationComposer,
+          $$DatabaseVersionsTableCreateCompanionBuilder,
+          $$DatabaseVersionsTableUpdateCompanionBuilder,
+          (
+            DatabaseVersion,
+            BaseReferences<
+              _$NoteLocalService,
+              $DatabaseVersionsTable,
+              DatabaseVersion
+            >,
+          ),
+          DatabaseVersion,
+          PrefetchHooks Function()
+        > {
+  $$DatabaseVersionsTableTableManager(
+    _$NoteLocalService db,
+    $DatabaseVersionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer:
+              () =>
+                  $$DatabaseVersionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () => $$DatabaseVersionsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer:
+              () => $$DatabaseVersionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<DateTime> version = const Value.absent(),
+              }) => DatabaseVersionsCompanion(id: id, version: version),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required DateTime version,
+              }) => DatabaseVersionsCompanion.insert(id: id, version: version),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          BaseReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$DatabaseVersionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$NoteLocalService,
+      $DatabaseVersionsTable,
+      DatabaseVersion,
+      $$DatabaseVersionsTableFilterComposer,
+      $$DatabaseVersionsTableOrderingComposer,
+      $$DatabaseVersionsTableAnnotationComposer,
+      $$DatabaseVersionsTableCreateCompanionBuilder,
+      $$DatabaseVersionsTableUpdateCompanionBuilder,
+      (
+        DatabaseVersion,
+        BaseReferences<
+          _$NoteLocalService,
+          $DatabaseVersionsTable,
+          DatabaseVersion
+        >,
+      ),
+      DatabaseVersion,
+      PrefetchHooks Function()
+    >;
 
 class $NoteLocalServiceManager {
   final _$NoteLocalService _db;
   $NoteLocalServiceManager(this._db);
   $$NotesTableTableManager get notes =>
       $$NotesTableTableManager(_db, _db.notes);
+  $$DatabaseVersionsTableTableManager get databaseVersions =>
+      $$DatabaseVersionsTableTableManager(_db, _db.databaseVersions);
 }

@@ -82,9 +82,13 @@ class _NoteApiService implements NoteApiService {
     String collectionId,
     NoteModel note, {
     String? apiKey = apiKey,
+    String? documentId,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'key': apiKey};
+    final queryParameters = <String, dynamic>{
+      r'key': apiKey,
+      r'documentId': documentId,
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
@@ -126,6 +130,131 @@ class _NoteApiService implements NoteApiService {
           .compose(
             _dio.options,
             'projects/to-do-app-7c9ee/databases/(default)/documents/notes/${id}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<void>(_options);
+    final httpResponse = HttpResponse(null, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<CollectionModel<DatabaseVersionModel>>>
+  getDatabaseVersion({String? apiKey = apiKey}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'key': apiKey};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<
+      HttpResponse<CollectionModel<DatabaseVersionModel>>
+    >(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'projects/to-do-app-7c9ee/databases/(default)/documents/db_version',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late CollectionModel<DatabaseVersionModel> _value;
+    try {
+      _value = CollectionModel<DatabaseVersionModel>.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<void>> updateDatabaseVersion(
+    String id,
+    DatabaseVersionModel databaseModel, {
+    String? apiKey = apiKey,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'key': apiKey};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(databaseModel.toJson());
+    final _options = _setStreamType<HttpResponse<void>>(
+      Options(method: 'PATCH', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'projects/to-do-app-7c9ee/databases/(default)/documents/db_version/${id}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<void>(_options);
+    final httpResponse = HttpResponse(null, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<DocumentModel<DatabaseVersionModel>>>
+  createDataBaseVersion(
+    String collectionId,
+    DatabaseVersionModel databaseVersion, {
+    String? apiKey = apiKey,
+    String? documentId,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'key': apiKey,
+      r'documentId': documentId,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(databaseVersion.toJson());
+    final _options = _setStreamType<
+      HttpResponse<DocumentModel<DatabaseVersionModel>>
+    >(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'projects/to-do-app-7c9ee/databases/(default)/documents/db_version/${collectionId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late DocumentModel<DatabaseVersionModel> _value;
+    try {
+      _value = DocumentModel<DatabaseVersionModel>.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<void>> deleteDatabaseVersion(
+    String id, {
+    String? apiKey = apiKey,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'key': apiKey};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HttpResponse<void>>(
+      Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'projects/to-do-app-7c9ee/databases/(default)/documents/db_version/${id}',
             queryParameters: queryParameters,
             data: _data,
           )

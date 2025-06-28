@@ -17,13 +17,31 @@ class Notes extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DriftDatabase(tables: [Notes])
+@DataClassName('DatabaseVersion')
+class DatabaseVersions extends Table {
+  IntColumn get id => integer()();
+  DateTimeColumn get version => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DriftDatabase(tables: [Notes, DatabaseVersions])
 class NoteLocalService extends _$NoteLocalService {
   NoteLocalService([QueryExecutor? executor])
     : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.createTable(databaseVersions);
+      }
+    },
+  );
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
@@ -38,16 +56,41 @@ class NoteLocalService extends _$NoteLocalService {
 
   Future<bool> updateNote(Note entry) async {
     final updatedNote = entry.copyWith(updateTime: DateTime.now());
-    return update(notes).replace(updatedNote);
+    final result = await update(notes).replace(updatedNote);
+    if (result) {
+      await setDatabaseVersion(DateTime.now());
+    }
+    return result;
   }
 
   Future<int> createNote(Note entry) async {
     final createdNote = entry.copyWith(updateTime: DateTime.now());
-    return into(notes).insert(createdNote);
+    final result = await into(notes).insert(createdNote);
+    await setDatabaseVersion(DateTime.now());
+    return result;
   }
 
   Future<bool> deleteNote(Note entry) async {
     final count = await delete(notes).delete(entry);
+    if (count > 0) {
+      await setDatabaseVersion(DateTime.now());
+    }
     return count > 0;
   }
+
+  Future<void> setDatabaseVersion(DateTime version) async {
+    try {
+      await (delete(databaseVersions)..where((v) => v.id.equals(1))).go();
+      await into(
+        databaseVersions,
+      ).insert(DatabaseVersion(id: 1, version: version));
+    } on Exception catch (e) {
+      await into(
+        databaseVersions,
+      ).insert(DatabaseVersion(id: 1, version: version));
+    }
+  }
+
+  Future<DatabaseVersion> getDatabaseVersion() async =>
+      select(databaseVersions).getSingle();
 }

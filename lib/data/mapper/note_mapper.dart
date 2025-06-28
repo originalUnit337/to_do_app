@@ -26,7 +26,7 @@ class NoteMapper {
 
   static NoteEntity fromLocalToEntity(Note note) {
     return NoteEntity(
-      id: '',
+      id: note.id,
       textNote: note.textNote,
       importance: Importance.fromString(note.importance),
       isCompleted: note.isCompleted,
