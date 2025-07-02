@@ -27,9 +27,9 @@ class DocumentModel<T extends BaseApiModel> {
   Map<String, dynamic> toJson() => _$DocumentModelToJson(this);
 
   static T _dataFromJson<T>(Map<String, dynamic> json) {
-    if (json.containsKey('textNote') && json.containsKey('importance')) {
+    if ((json['name'] as String).contains('/notes/')) {
       return NoteModel.fromJson(json) as T;
-    } else if (json.containsKey('version')) {
+    } else if ((json['name'] as String).contains('/db_version/')) {
       return DatabaseVersionModel.fromJson(json) as T;
     } else {
       throw Exception('Not supported type');

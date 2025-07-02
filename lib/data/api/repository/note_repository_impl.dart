@@ -46,10 +46,23 @@ class NoteRepositoryImpl implements NoteRepository {
       try {
         final notes = await _noteLocalService.getAllNotes();
         return DataSuccess(notes.map(NoteMapper.fromLocalToEntity).toList());
-      } on Exception catch (e) {
-        rethrow;
+      } on Exception {
+        return DataFailed(
+          DioException(
+            requestOptions: RequestOptions(),
+            message:
+                'Local DB getAllNotes exception: something went wrong, note_repository_impl.dart',
+          ),
+        );
       }
     }
+  }
+
+  Future<void> _updateDatabaseVersion() async {
+    await _noteApiService.updateDatabaseVersion(
+      databaseVersionId,
+      DatabaseVersionModel(DateTime.now(), databaseVersionId),
+    );
   }
 
   @override
@@ -61,10 +74,7 @@ class NoteRepositoryImpl implements NoteRepository {
           NoteMapper.toModel(note),
         );
         if (httpResponse.response.statusCode == HttpStatus.ok) {
-          await _noteApiService.updateDatabaseVersion(
-            databaseVersionId,
-            DatabaseVersionModel(DateTime.now(), databaseVersionId),
-          );
+          await _updateDatabaseVersion();
           return const DataSuccess(true);
         } else {
           return DataFailed(
@@ -101,10 +111,8 @@ class NoteRepositoryImpl implements NoteRepository {
           NoteMapper.toModel(note),
         );
         if (httpResponse.response.statusCode == HttpStatus.ok) {
-          await _noteApiService.updateDatabaseVersion(
-            databaseVersionId,
-            DatabaseVersionModel(DateTime.now(), databaseVersionId),
-          );
+          await _updateDatabaseVersion();
+
           return DataSuccess(NoteMapper.toEntity(httpResponse.data.fields));
         } else {
           return DataFailed(
@@ -143,10 +151,8 @@ class NoteRepositoryImpl implements NoteRepository {
           note.id.split('/').last,
         );
         if (httpResponse.response.statusCode == HttpStatus.ok) {
-          await _noteApiService.updateDatabaseVersion(
-            databaseVersionId,
-            DatabaseVersionModel(DateTime.now(), databaseVersionId),
-          );
+          await _updateDatabaseVersion();
+
           return const DataSuccess(true);
         } else {
           return DataFailed(
@@ -179,9 +185,11 @@ class NoteRepositoryImpl implements NoteRepository {
     if (await InternetConnection().hasInternetAccess) {
       try {
         final localNotes = await _noteLocalService.getAllNotes();
+        var localDatabaseVersion = DatabaseVersion(id: 1, version: DateTime(0));
 
-        final localDatabaseVersion =
-            await _noteLocalService.getDatabaseVersion();
+        try {
+          localDatabaseVersion = await _noteLocalService.getDatabaseVersion();
+        } on StateError {}
 
         final remoteVersionResponse =
             await _noteApiService.getDatabaseVersion();

@@ -84,7 +84,7 @@ class NoteLocalService extends _$NoteLocalService {
       await into(
         databaseVersions,
       ).insert(DatabaseVersion(id: 1, version: version));
-    } on Exception catch (e) {
+    } on Exception {
       await into(
         databaseVersions,
       ).insert(DatabaseVersion(id: 1, version: version));
