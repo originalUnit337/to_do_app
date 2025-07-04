@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:to_do_app/data/api/repository/note_repository_impl.dart';
@@ -11,7 +12,8 @@ import 'package:to_do_app/domain/usecases/update_note.dart';
 final getIt = GetIt.instance;
 
 void initializeDependencies() {
-  getIt.registerSingleton<Dio>(Dio());
+  getIt..registerSingleton<Dio>(Dio())
+  ..registerSingleton<AppLinks>(AppLinks());
   _initServices();
   _initRepositories();
   _initUseCases();
