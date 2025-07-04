@@ -58,10 +58,10 @@ class NoteRepositoryImpl implements NoteRepository {
     }
   }
 
-  Future<void> _updateDatabaseVersion() async {
+  Future<void> _updateDatabaseVersion({DateTime? version}) async {
     await _noteApiService.updateDatabaseVersion(
       databaseVersionId,
-      DatabaseVersionModel(DateTime.now(), databaseVersionId),
+      DatabaseVersionModel(version ?? DateTime.now(), databaseVersionId),
     );
   }
 
@@ -138,7 +138,13 @@ class NoteRepositoryImpl implements NoteRepository {
           throw Exception('Something went wrong');
         }
       } catch (e) {
-        rethrow;
+        return DataFailed(
+          DioException(
+            requestOptions: RequestOptions(),
+            message:
+                'Something went wrong: error during creating new note in locale db',
+          ),
+        );
       }
     }
   }
@@ -187,9 +193,7 @@ class NoteRepositoryImpl implements NoteRepository {
         final localNotes = await _noteLocalService.getAllNotes();
         var localDatabaseVersion = DatabaseVersion(id: 1, version: DateTime(0));
 
-        try {
-          localDatabaseVersion = await _noteLocalService.getDatabaseVersion();
-        } on StateError {}
+        localDatabaseVersion = await _noteLocalService.getDatabaseVersion();
 
         final remoteVersionResponse =
             await _noteApiService.getDatabaseVersion();
@@ -249,13 +253,7 @@ class NoteRepositoryImpl implements NoteRepository {
                 ),
               );
             }
-            await _noteApiService.updateDatabaseVersion(
-              databaseVersionId,
-              DatabaseVersionModel(
-                localDatabaseVersion.version,
-                databaseVersionId,
-              ),
-            );
+            await _updateDatabaseVersion(version: localDatabaseVersion.version);
             // ! remote_db newer
           } else if (remoteDatabaseVersion.version.isAfter(
             localDatabaseVersion.version,
@@ -276,9 +274,7 @@ class NoteRepositoryImpl implements NoteRepository {
 
         return const DataSuccess(true);
       } catch (e) {
-        // ignore: avoid_print
-        print(e);
-        rethrow;
+        return DataFailed(DioException(requestOptions: RequestOptions(), message: 'Something went wrong: error during syncronization'));
       }
     } else {
       return const DataSuccess(false);

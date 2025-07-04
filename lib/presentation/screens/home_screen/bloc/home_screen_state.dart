@@ -42,8 +42,3 @@ class NotesLoaded extends HomeScreenState {
 class NotesError extends HomeScreenState {
   const NotesError(DioException exception) : super(exception: exception);
 }
-
-// class InternetStatusChanged extends HomeScreenState {
-//   final bool isConnected;
-//   const InternetStatusChanged({required this.isConnected});
-// }
