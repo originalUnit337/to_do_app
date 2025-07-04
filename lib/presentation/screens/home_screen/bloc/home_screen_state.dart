@@ -27,10 +27,12 @@ class NotesLoading extends HomeScreenState {
 
 class NotesLoaded extends HomeScreenState {
   final bool? isUpdated;
+  final bool? isSync;
   const NotesLoaded(
     List<NoteEntity> notes, {
     super.showCompleted,
     this.isUpdated,
+    this.isSync,
   }) : super(notes: notes);
 
   @override

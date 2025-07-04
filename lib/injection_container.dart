@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:to_do_app/data/api/repository/note_repository_impl.dart';
+import 'package:to_do_app/data/data_sources/local/note_local_service.dart';
 import 'package:to_do_app/data/data_sources/remote/note_api_service.dart';
 import 'package:to_do_app/domain/repository/note_repository.dart';
 import 'package:to_do_app/domain/usecases/create_note.dart';
 import 'package:to_do_app/domain/usecases/delete_note.dart';
 import 'package:to_do_app/domain/usecases/get_all_notes.dart';
+import 'package:to_do_app/domain/usecases/sync_note.dart';
 import 'package:to_do_app/domain/usecases/update_note.dart';
 
 final getIt = GetIt.instance;
@@ -18,11 +20,13 @@ void initializeDependencies() {
 }
 
 void _initServices() {
-  getIt.registerSingleton<NoteApiService>(NoteApiService(getIt()));
+  getIt
+    ..registerSingleton<NoteApiService>(NoteApiService(getIt()))
+    ..registerSingleton<NoteLocalService>(NoteLocalService());
 }
 
 void _initRepositories() {
-  getIt.registerSingleton<NoteRepository>(NoteRepositoryImpl(getIt()));
+  getIt.registerSingleton<NoteRepository>(NoteRepositoryImpl(getIt(), getIt()));
 }
 
 void _initUseCases() {
@@ -30,5 +34,6 @@ void _initUseCases() {
     ..registerSingleton<GetAllNotesUseCase>(GetAllNotesUseCase(getIt()))
     ..registerSingleton<UpdateNoteUseCase>(UpdateNoteUseCase(getIt()))
     ..registerSingleton<CreateNoteUseCase>(CreateNoteUseCase(getIt()))
-    ..registerSingleton<DeleteNoteUseCase>(DeleteNoteUseCase(getIt()));
+    ..registerSingleton<DeleteNoteUseCase>(DeleteNoteUseCase(getIt()))
+    ..registerSingleton<SyncNoteUseCase>(SyncNoteUseCase(getIt()));
 }

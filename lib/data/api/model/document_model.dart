@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:to_do_app/core/base_model/base_api_model.dart.dart';
+import 'package:to_do_app/data/api/model/database_version_model.dart';
 import 'package:to_do_app/data/api/model/note_model.dart';
 
 part 'document_model.g.dart';
@@ -26,8 +27,10 @@ class DocumentModel<T extends BaseApiModel> {
   Map<String, dynamic> toJson() => _$DocumentModelToJson(this);
 
   static T _dataFromJson<T>(Map<String, dynamic> json) {
-    if (json.containsKey('textNote') && json.containsKey('importance')) {
+    if ((json['name'] as String).contains('/notes/')) {
       return NoteModel.fromJson(json) as T;
+    } else if ((json['name'] as String).contains('/db_version/')) {
+      return DatabaseVersionModel.fromJson(json) as T;
     } else {
       throw Exception('Not supported type');
     }

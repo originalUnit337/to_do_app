@@ -33,17 +33,39 @@ class NotesList extends StatelessWidget {
         if (state is NotesLoaded) {
           if (state.isUpdated != null) {
             final snackBar = SnackBar(
-              //TODO Add localization
               content: Text(
                 state.isUpdated == true
-                    ? 'Successfully updated'
+                    ? AppLocalizations.of(context)?.data_updated ??
+                        'Successfully updated'
                     : 'Something went wrong',
               ),
               duration: const Duration(seconds: 2),
-              action: SnackBarAction(label: 'Close', onPressed: () {}),
+              action: SnackBarAction(
+                label: 'Close',
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+              ),
             );
 
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          } else if (state.isSync != null) {
+            final snackBar = SnackBar(
+              content: Text(
+                state.isSync == true
+                    ? AppLocalizations.of(context)?.sync_success ??
+                        'Successfully syncronized'
+                    : AppLocalizations.of(context)?.sync_failed ??
+                        'Syncronization failed',
+              ),
+              duration: const Duration(seconds: 2),
+              action: SnackBarAction(
+                label: 'Close',
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+              ),
+            );
           }
         }
       },
