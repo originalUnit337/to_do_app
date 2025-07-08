@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get_it/get_it.dart';
 import 'package:to_do_app/data/api/repository/note_repository_impl.dart';
 import 'package:to_do_app/data/data_sources/local/note_local_service.dart';
@@ -13,7 +14,9 @@ import 'package:to_do_app/domain/usecases/update_note.dart';
 final getIt = GetIt.instance;
 
 void initializeDependencies() {
-  getIt.registerSingleton<Dio>(Dio());
+  getIt
+    ..registerSingleton<Dio>(Dio())
+    ..registerSingleton(FirebaseRemoteConfig.instance);
   _initServices();
   _initRepositories();
   _initUseCases();

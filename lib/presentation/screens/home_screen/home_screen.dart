@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,8 @@ class HomeScreen extends StatelessWidget {
                 ..add(const GetAllNotesEvent()),
       child: Builder(
         builder: (context) {
+          final floatActionButtonColor = getIt<FirebaseRemoteConfig>()
+              .getString('floatActionButtonColour');
           return Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             floatingActionButton: FloatingActionButton(
@@ -31,7 +34,7 @@ class HomeScreen extends StatelessWidget {
                 }
               },
               child: Icon(Icons.add, color: currentPalette.colorWhite),
-              backgroundColor: currentPalette.colorBlue,
+              backgroundColor: Color(int.parse(floatActionButtonColor)),
             ),
             body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
               builder: (context, state) {
