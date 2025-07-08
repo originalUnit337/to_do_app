@@ -21,7 +21,7 @@
               android:resource="@style/NormalTheme"
               />
             <!-- disable default flutter deep link -->
-            <meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
+            <!-- <meta-data android:name="flutter_deeplinking_enabled" android:value="false" /> -->
             <!-- App Link sample -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
