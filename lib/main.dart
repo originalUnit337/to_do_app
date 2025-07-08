@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:to_do_app/firebase_options.dart';
@@ -11,16 +10,7 @@ import 'package:to_do_app/presentation/theme/app_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  initializeDependencies();
-  final remoteConfig = getIt<FirebaseRemoteConfig>();
-  await remoteConfig.setConfigSettings(
-    RemoteConfigSettings(
-      fetchTimeout: const Duration(minutes: 1),
-      minimumFetchInterval: const Duration(hours: 1),
-    ),
-  );
-  await remoteConfig.setDefaults({'floatActionButtonColour': '0xFF007AFF'});
-  await remoteConfig.fetchAndActivate();
+  await initializeDependencies();
   runApp(const MainApp());
 }
 
