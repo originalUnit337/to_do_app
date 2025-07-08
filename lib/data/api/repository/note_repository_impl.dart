@@ -193,7 +193,10 @@ class NoteRepositoryImpl implements NoteRepository {
         final localNotes = await _noteLocalService.getAllNotes();
         var localDatabaseVersion = DatabaseVersion(id: 1, version: DateTime(0));
 
-        localDatabaseVersion = await _noteLocalService.getDatabaseVersion();
+        // on case if there is (in local db) no row
+        try {
+          localDatabaseVersion = await _noteLocalService.getDatabaseVersion();
+        } on StateError catch (e) {}
 
         final remoteVersionResponse =
             await _noteApiService.getDatabaseVersion();
@@ -274,7 +277,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
         return const DataSuccess(true);
       } catch (e) {
-        return DataFailed(DioException(requestOptions: RequestOptions(), message: 'Something went wrong: error during syncronization'));
+        return DataFailed(
+          DioException(
+            requestOptions: RequestOptions(),
+            message: 'Something went wrong: error during syncronization',
+          ),
+        );
       }
     } else {
       return const DataSuccess(false);
