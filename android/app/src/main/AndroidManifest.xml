@@ -28,6 +28,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" android:host="to_do_app.com"/>
+                <data android:path="/info_note" />
             </intent-filter>
             <!-- Deep Link sample -->
             <intent-filter>

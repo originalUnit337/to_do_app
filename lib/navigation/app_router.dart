@@ -13,14 +13,16 @@ class AppRouter {
         builder: (context, state) {
           return const HomeScreen();
         },
-      ),
-      GoRoute(
-        path: AppRoutes.infoNote.path,
-        name: AppRoutes.infoNote.name,
-        builder: (context, state) {
-          final note = state.extra as NoteEntity?;
-          return InfoNoteScreen(note: note);
-        },
+        routes: [
+          GoRoute(
+            path: AppRoutes.infoNote.path,
+            name: AppRoutes.infoNote.name,
+            builder: (context, state) {
+              final note = state.extra as NoteEntity?;
+              return InfoNoteScreen(note: note);
+            },
+          ),
+        ],
       ),
     ],
   );
