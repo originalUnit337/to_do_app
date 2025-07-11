@@ -23,6 +23,8 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     this._deleteNoteUseCase,
     this._syncNoteUseCase,
   ) : super(const NotesInitial()) {
+    // ignore: avoid_print
+    print('\n\n\nСоздание HomeScreenBloc\n\n\n');
     _startListeningToInternt();
     on<InternetConnectedEvent>(_internetConnected);
     on<InternetDisconnectedEvent>(_internetDisconnected);

@@ -14,26 +14,25 @@ import 'package:to_do_app/domain/usecases/update_note.dart';
 final getIt = GetIt.instance;
 
 Future<void> initializeDependencies() async {
-  getIt
-    ..registerSingleton<Dio>(Dio())
-    ..registerSingleton(FirebaseRemoteConfig.instance);
+  getIt.registerSingleton<Dio>(Dio());
   _initServices();
   _initRepositories();
   _initUseCases();
 
-  await _initRemoteConfig();
+  getIt.registerSingleton<FirebaseRemoteConfig>(await _initRemoteConfig());
 }
 
-Future<void> _initRemoteConfig() async {
-  final remoteConfig = getIt<FirebaseRemoteConfig>();
+Future<FirebaseRemoteConfig> _initRemoteConfig() async {
+  final remoteConfig = FirebaseRemoteConfig.instance;
   await remoteConfig.setConfigSettings(
     RemoteConfigSettings(
       fetchTimeout: const Duration(minutes: 1),
-      minimumFetchInterval: const Duration(hours: 1),
+      minimumFetchInterval: const Duration(seconds: 1),
     ),
   );
   await remoteConfig.setDefaults({'floatActionButtonColour': '0xFF007AFF'});
   await remoteConfig.fetchAndActivate();
+  return remoteConfig;
 }
 
 void _initServices() {
