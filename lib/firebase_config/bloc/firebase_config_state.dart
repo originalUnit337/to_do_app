@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 sealed class FirebaseConfigState {
   const FirebaseConfigState();
 }
@@ -11,5 +13,6 @@ class FirebaseConfigRefreshing extends FirebaseConfigState {
 }
 
 class FirebaseConfigRefreshed extends FirebaseConfigState {
-  const FirebaseConfigRefreshed();
+  final Color? floatActionButtonColor;
+  const FirebaseConfigRefreshed({this.floatActionButtonColor});
 }

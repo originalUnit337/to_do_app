@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get_it/get_it.dart';
 import 'package:to_do_app/data/api/repository/note_repository_impl.dart';
 import 'package:to_do_app/data/data_sources/local/note_local_service.dart';
@@ -19,7 +20,11 @@ Future<void> initializeDependencies() async {
   _initRepositories();
   _initUseCases();
 
-  getIt.registerSingleton<FirebaseRemoteConfig>(await _initRemoteConfig());
+  try {
+    getIt.registerSingleton<FirebaseRemoteConfig>(await _initRemoteConfig());
+  } on Exception catch (e) {
+    debugPrint(e.toString());
+  }
 }
 
 Future<FirebaseRemoteConfig> _initRemoteConfig() async {
@@ -30,7 +35,7 @@ Future<FirebaseRemoteConfig> _initRemoteConfig() async {
       minimumFetchInterval: const Duration(seconds: 1),
     ),
   );
-  await remoteConfig.setDefaults({'floatActionButtonColour': '0xFF007AFF'});
+  await remoteConfig.setDefaults({'floatActionButtonColour': '#007AFF'});
   await remoteConfig.fetchAndActivate();
   return remoteConfig;
 }

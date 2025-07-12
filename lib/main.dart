@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
+import 'package:to_do_app/firebase_config/bloc/firebase_config_bloc.dart';
+import 'package:to_do_app/firebase_config/bloc/firebase_config_state.dart';
 import 'package:to_do_app/firebase_options.dart';
 import 'package:to_do_app/injection_container.dart';
 import 'package:to_do_app/localization/l10n/l10n.dart';
@@ -19,12 +22,19 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      supportedLocales: L10n.all,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      theme: AppTheme.lightAppTheme,
-      darkTheme: AppTheme.darkAppTheme,
-      routerConfig: AppRouter.router,
+    return BlocProvider<FirebaseConfigBloc>(
+      create: (_) => FirebaseConfigBloc(),
+      child: BlocBuilder<FirebaseConfigBloc, FirebaseConfigState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            supportedLocales: L10n.all,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            theme: AppTheme.lightAppTheme,
+            darkTheme: AppTheme.darkAppTheme,
+            routerConfig: AppRouter.router,
+          );
+        },
+      ),
     );
   }
 }
