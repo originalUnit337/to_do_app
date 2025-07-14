@@ -12,7 +12,7 @@ import 'package:to_do_app/presentation/theme/app_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await initializeDependencies();
+  initializeDependencies();
   runApp(const MainApp());
 }
 

@@ -12,8 +12,8 @@ class FirebaseConfigBloc
   final FirebaseRemoteConfig _remoteConfig;
   Timer? _timer;
 
-  FirebaseConfigBloc({FirebaseRemoteConfig? remoteConfig})
-    : _remoteConfig = remoteConfig ?? FirebaseRemoteConfig.instance,
+  FirebaseConfigBloc()
+    : _remoteConfig = FirebaseRemoteConfig.instance,
       super(const FirebaseConfigState()) {
     _init();
     on<RefreshFirebaseConfigEvent>(_refreshFirebaseConfig);
@@ -21,7 +21,19 @@ class FirebaseConfigBloc
 
   void _init() {
     debugPrint('\n\n\nСоздание FirebaseConfigBloc\n\n\n');
-    _remoteConfig.setDefaults({'floatActionButtonColour': '#007AFF'});
+    _remoteConfig
+      ..setDefaults({'floatActionButtonColour': '#007AFF'})
+      ..setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(minutes: 1),
+          minimumFetchInterval: const Duration(seconds: 1),
+        ),
+      );
+    try {
+      _remoteConfig.fetchAndActivate();
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       add(const RefreshFirebaseConfigEvent());
     });
