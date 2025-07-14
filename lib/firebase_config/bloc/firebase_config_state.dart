@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class FirebaseConfigRefreshed extends Equatable {
+class FirebaseConfigState extends Equatable {
   final Color? floatActionButtonColor;
-  const FirebaseConfigRefreshed({this.floatActionButtonColor});
+  const FirebaseConfigState({this.floatActionButtonColor});
 
   @override
   List<Object?> get props => [floatActionButtonColor];
 
-  FirebaseConfigRefreshed copyWith({Color? floatActionButtonColor}) {
-    return FirebaseConfigRefreshed(
+  FirebaseConfigState copyWith({Color? floatActionButtonColor}) {
+    return FirebaseConfigState(
       floatActionButtonColor:
           floatActionButtonColor ?? this.floatActionButtonColor,
     );

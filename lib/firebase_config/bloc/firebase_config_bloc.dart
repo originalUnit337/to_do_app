@@ -8,13 +8,13 @@ import 'package:to_do_app/firebase_config/bloc/firebase_config_event.dart';
 import 'package:to_do_app/firebase_config/bloc/firebase_config_state.dart';
 
 class FirebaseConfigBloc
-    extends Bloc<FirebaseConfigEvent, FirebaseConfigRefreshed> {
+    extends Bloc<FirebaseConfigEvent, FirebaseConfigState> {
   final FirebaseRemoteConfig _remoteConfig;
   Timer? _timer;
 
   FirebaseConfigBloc({FirebaseRemoteConfig? remoteConfig})
     : _remoteConfig = remoteConfig ?? FirebaseRemoteConfig.instance,
-      super(const FirebaseConfigRefreshed()) {
+      super(const FirebaseConfigState()) {
     _init();
     on<RefreshFirebaseConfigEvent>(_refreshFirebaseConfig);
   }
@@ -29,37 +29,32 @@ class FirebaseConfigBloc
 
   FutureOr<void> _refreshFirebaseConfig(
     RefreshFirebaseConfigEvent event,
-    Emitter<FirebaseConfigRefreshed> emit,
+    Emitter<FirebaseConfigState> emit,
   ) {
+    debugPrint('fetching...');
     try {
-      debugPrint('fetching...');
-      try {
-        unawaited(
-          _remoteConfig.fetchAndActivate().then((result) {
-            if (result) {
-              debugPrint('Success');
-              final floatActionButtonColor = _remoteConfig.getString(
-                'floatActionButtonColour',
-              );
-              debugPrint(floatActionButtonColor);
-            } else {
-              debugPrint('Failed');
-            }
-          }, onError: (e) => debugPrint(e.toString())),
-        );
-        debugPrint('Emitting...');
-        emit(
-          FirebaseConfigRefreshed(
-            floatActionButtonColor: ColorExt.fromHex(
-              _remoteConfig.getString('floatActionButtonColour'),
-            ),
+      unawaited(
+        _remoteConfig.fetchAndActivate().then((result) {
+          if (result) {
+            debugPrint('Success');
+            final floatActionButtonColor = _remoteConfig.getString(
+              'floatActionButtonColour',
+            );
+            debugPrint(floatActionButtonColor);
+          } else {
+            debugPrint('Failed');
+          }
+        }, onError: (e) => debugPrint(e.toString())),
+      );
+      debugPrint('Emitting...');
+      emit(
+        FirebaseConfigState(
+          floatActionButtonColor: ColorExt.fromHex(
+            _remoteConfig.getString('floatActionButtonColour'),
           ),
-        );
-      } on Exception catch (e) {
-        debugPrint(e.toString());
-      }
-      //GetIt.I.registerSingleton<FirebaseRemoteConfig>(_remoteConfig);
-    } catch (e) {
+        ),
+      );
+    } on Exception catch (e) {
       debugPrint(e.toString());
     }
   }

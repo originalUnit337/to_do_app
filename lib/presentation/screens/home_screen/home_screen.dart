@@ -22,45 +22,44 @@ class HomeScreen extends StatelessWidget {
           (_) =>
               HomeScreenBloc(getIt(), getIt(), getIt(), getIt())
                 ..add(const GetAllNotesEvent()),
-      child: BlocBuilder<FirebaseConfigBloc, FirebaseConfigRefreshed>(
-        builder: (context, state) {
-          return switch (state) {
-            FirebaseConfigRefreshed() => Scaffold(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              floatingActionButton: FloatingActionButton(
-                onPressed: () async {
-                  await GoRouter.of(context).pushNamed(AppRoutes.infoNote.name);
-                  if (context.mounted) {
-                    context.read<HomeScreenBloc>().add(
-                      const GetAllNotesEvent(),
-                    );
-                  }
-                },
-                child: Icon(Icons.add, color: currentPalette.colorWhite),
-                backgroundColor:
-                    state.floatActionButtonColor ?? currentPalette.colorBlue,
-              ),
-              body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
-                builder: (context, state) {
-                  return switch (state) {
-                    NotesInitial() => const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    NotesLoading() => const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    NotesLoaded() => NotesList(
-                      noteItems: state.notes ?? [],
-                      showCompleted: state.showCompleted,
-                    ),
-                    NotesError() => Center(
-                      child: Text(state.exception?.message ?? 'Error'),
-                    ),
-                  };
-                },
-              ),
+      child: BlocSelector<FirebaseConfigBloc, FirebaseConfigState, Color?>(
+        selector: (state) {
+          return state.floatActionButtonColor;
+        },
+        builder: (context, floatActionButtonColor) {
+          return Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                await GoRouter.of(context).pushNamed(AppRoutes.infoNote.name);
+                if (context.mounted) {
+                  context.read<HomeScreenBloc>().add(const GetAllNotesEvent());
+                }
+              },
+              child: Icon(Icons.add, color: currentPalette.colorWhite),
+              backgroundColor:
+                  floatActionButtonColor ?? currentPalette.colorBlue,
             ),
-          };
+            body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
+              builder: (context, state) {
+                return switch (state) {
+                  NotesInitial() => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  NotesLoading() => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  NotesLoaded() => NotesList(
+                    noteItems: state.notes ?? [],
+                    showCompleted: state.showCompleted,
+                  ),
+                  NotesError() => Center(
+                    child: Text(state.exception?.message ?? 'Error'),
+                  ),
+                };
+              },
+            ),
+          );
         },
       ),
     );

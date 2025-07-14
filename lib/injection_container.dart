@@ -19,26 +19,7 @@ Future<void> initializeDependencies() async {
   _initServices();
   _initRepositories();
   _initUseCases();
-
-  // try {
-  //   getIt.registerSingleton<FirebaseRemoteConfig>(await _initRemoteConfig());
-  // } on Exception catch (e) {
-  //   debugPrint(e.toString());
-  // }
 }
-
-// Future<FirebaseRemoteConfig> _initRemoteConfig() async {
-//   final remoteConfig = FirebaseRemoteConfig.instance;
-//   await remoteConfig.setConfigSettings(
-//     RemoteConfigSettings(
-//       fetchTimeout: const Duration(minutes: 1),
-//       minimumFetchInterval: const Duration(seconds: 1),
-//     ),
-//   );
-//   await remoteConfig.setDefaults({'floatActionButtonColour': '#007AFF'});
-//   await remoteConfig.fetchAndActivate();
-//   return remoteConfig;
-// }
 
 void _initServices() {
   getIt
