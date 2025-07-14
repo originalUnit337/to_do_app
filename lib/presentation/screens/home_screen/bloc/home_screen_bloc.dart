@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:to_do_app/core/resources/data_state.dart';
@@ -23,8 +24,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     this._deleteNoteUseCase,
     this._syncNoteUseCase,
   ) : super(const NotesInitial()) {
-    // ignore: avoid_print
-    print('\n\n\nСоздание HomeScreenBloc\n\n\n');
+    debugPrint('\n\n\nСоздание HomeScreenBloc\n\n\n');
     _startListeningToInternt();
     on<InternetConnectedEvent>(_internetConnected);
     on<InternetDisconnectedEvent>(_internetDisconnected);

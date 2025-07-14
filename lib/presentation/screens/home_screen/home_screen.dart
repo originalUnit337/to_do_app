@@ -22,21 +22,9 @@ class HomeScreen extends StatelessWidget {
           (_) =>
               HomeScreenBloc(getIt(), getIt(), getIt(), getIt())
                 ..add(const GetAllNotesEvent()),
-      child: BlocBuilder<FirebaseConfigBloc, FirebaseConfigState>(
+      child: BlocBuilder<FirebaseConfigBloc, FirebaseConfigRefreshed>(
         builder: (context, state) {
           return switch (state) {
-            FirebaseConfigInitial() => const Column(
-              children: [
-                Text('firebase config state initial...'),
-                CircularProgressIndicator(),
-              ],
-            ),
-            FirebaseConfigRefreshing() => const Column(
-              children: [
-                Text('firebase config state REFRESHING...'),
-                CircularProgressIndicator(),
-              ],
-            ),
             FirebaseConfigRefreshed() => Scaffold(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               floatingActionButton: FloatingActionButton(
