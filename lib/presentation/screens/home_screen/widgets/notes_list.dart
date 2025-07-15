@@ -66,6 +66,7 @@ class NotesList extends StatelessWidget {
                 },
               ),
             );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         }
       },
