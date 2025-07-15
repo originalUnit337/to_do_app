@@ -1,6 +1,9 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:to_do_app/firebase_config/bloc/firebase_config_bloc.dart';
+import 'package:to_do_app/firebase_config/bloc/firebase_config_state.dart';
 import 'package:to_do_app/injection_container.dart' show getIt;
 import 'package:to_do_app/navigation/app_routes.dart';
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_bloc.dart';
@@ -16,11 +19,14 @@ class HomeScreen extends StatelessWidget {
     final currentPalette = AppPalette.of(context);
     return BlocProvider<HomeScreenBloc>(
       create:
-          (context) =>
+          (_) =>
               HomeScreenBloc(getIt(), getIt(), getIt(), getIt())
                 ..add(const GetAllNotesEvent()),
-      child: Builder(
-        builder: (context) {
+      child: BlocSelector<FirebaseConfigBloc, FirebaseConfigState, Color?>(
+        selector: (state) {
+          return state.floatActionButtonColor;
+        },
+        builder: (context, floatActionButtonColor) {
           return Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             floatingActionButton: FloatingActionButton(
@@ -31,7 +37,8 @@ class HomeScreen extends StatelessWidget {
                 }
               },
               child: Icon(Icons.add, color: currentPalette.colorWhite),
-              backgroundColor: currentPalette.colorBlue,
+              backgroundColor:
+                  floatActionButtonColor ?? currentPalette.colorBlue,
             ),
             body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
               builder: (context, state) {
