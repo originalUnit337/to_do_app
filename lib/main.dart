@@ -22,6 +22,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FirebaseConfigBloc>(
+      lazy: false,
       create: (_) => FirebaseConfigBloc(),
       child: MaterialApp.router(
         supportedLocales: L10n.all,

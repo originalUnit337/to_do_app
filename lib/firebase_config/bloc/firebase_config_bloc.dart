@@ -19,18 +19,18 @@ class FirebaseConfigBloc
     on<RefreshFirebaseConfigEvent>(_refreshFirebaseConfig);
   }
 
-  void _init() {
+  Future<void> _init() async {
     debugPrint('\n\n\nСоздание FirebaseConfigBloc\n\n\n');
-    _remoteConfig
-      ..setDefaults({'floatActionButtonColour': '#007AFF'})
-      ..setConfigSettings(
-        RemoteConfigSettings(
-          fetchTimeout: const Duration(minutes: 1),
-          minimumFetchInterval: const Duration(seconds: 1),
-        ),
-      );
+    await _remoteConfig.setDefaults({'floatActionButtonColour': '#007AFF'});
+    await _remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(minutes: 1),
+        minimumFetchInterval: const Duration(seconds: 1),
+      ),
+    );
     try {
-      _remoteConfig.fetchAndActivate();
+      await _remoteConfig.fetchAndActivate();
+      add(const RefreshFirebaseConfigEvent());
     } on Exception catch (e) {
       debugPrint(e.toString());
     }
