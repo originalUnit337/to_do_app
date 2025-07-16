@@ -18,7 +18,7 @@ import 'package:to_do_app/domain/repository/note_repository.dart';
 class NoteRepositoryImpl implements NoteRepository {
   final NoteApiService _noteApiService;
   final NoteLocalService _noteLocalService;
-  final Talker talker = Talker(settings: TalkerSettings());
+  final Talker _talker = Talker(settings: TalkerSettings());
   NoteRepositoryImpl(this._noteApiService, this._noteLocalService);
   @override
   Future<DataState<List<NoteEntity>>> getAllNotes() async {
@@ -43,17 +43,17 @@ class NoteRepositoryImpl implements NoteRepository {
           );
         }
       } on DioException catch (e) {
-        talker.handle(e);
+        _talker.handle(e);
         return DataFailed(e);
       }
     } else {
-      talker.debug('Trying to get notes from local db...');
+      _talker.debug('Trying to get notes from local db...');
       try {
         final notes = await _noteLocalService.getAllNotes();
-        talker.logCustom(GoodLog('Successfully get all notes from locale db'));
+        _talker.logCustom(GoodLog('Successfully get all notes from locale db'));
         return DataSuccess(notes.map(NoteMapper.fromLocalToEntity).toList());
       } on Exception catch (e, stacktrace) {
-        talker.handle(e, stacktrace);
+        _talker.handle(e, stacktrace);
         return DataFailed(
           DioException(
             requestOptions: RequestOptions(),
@@ -66,7 +66,7 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   Future<void> _updateDatabaseVersion({DateTime? version}) async {
-    talker.debug('Enter updateDatabaseVersion method...');
+    _talker.debug('Enter updateDatabaseVersion method...');
     await _noteApiService.updateDatabaseVersion(
       databaseVersionId,
       DatabaseVersionModel(version ?? DateTime.now(), databaseVersionId),
@@ -95,21 +95,21 @@ class NoteRepositoryImpl implements NoteRepository {
           );
         }
       } on DioException catch (e, st) {
-        talker.handle(e, st);
+        _talker.handle(e, st);
         return DataFailed(e);
       }
     } else {
-      talker.debug('Trying to update local db note...');
+      _talker.debug('Trying to update local db note...');
       try {
         if (await _noteLocalService.updateNote(NoteMapper.toLocal(note))) {
-          talker.logCustom(GoodLog('Successfully locale note updated'));
+          _talker.logCustom(GoodLog('Successfully locale note updated'));
           return const DataSuccess(true);
         } else {
-          talker.error("Note didn't updated");
+          _talker.error("Note didn't updated");
           return const DataSuccess(false);
         }
       } on DioException catch (e) {
-        talker.handle(e);
+        _talker.handle(e);
         return DataFailed(e);
       }
     }
@@ -117,7 +117,7 @@ class NoteRepositoryImpl implements NoteRepository {
 
   @override
   Future<DataState<NoteEntity>> createNote(NoteEntity note) async {
-    talker.debug('Enter createNote method');
+    _talker.debug('Enter createNote method');
     if (await InternetConnection().hasInternetAccess) {
       try {
         final httpResponse = await _noteApiService.createNote(
@@ -142,20 +142,20 @@ class NoteRepositoryImpl implements NoteRepository {
         return DataFailed(e);
       }
     } else {
-      talker.debug('Trying to create new local note...');
+      _talker.debug('Trying to create new local note...');
       try {
         final createdNote = NoteMapper.toLocal(
           note,
         ).copyWith(id: DateTime.now().toIso8601String());
         if (await _noteLocalService.createNote(createdNote) > 0) {
-          talker.logCustom(GoodLog('Successfully locale note created'));
+          _talker.logCustom(GoodLog('Successfully locale note created'));
           return DataSuccess(NoteMapper.fromLocalToEntity(createdNote));
         } else {
-          talker.error('error during creating new note in locale db');
+          _talker.error('error during creating new note in locale db');
           throw Exception('Something went wrong');
         }
       } catch (e) {
-        talker.error('error during creating new note in locale db');
+        _talker.error('error during creating new note in locale db');
         return DataFailed(
           DioException(
             requestOptions: RequestOptions(),
@@ -196,11 +196,11 @@ class NoteRepositoryImpl implements NoteRepository {
         if (await _noteLocalService.deleteNote(NoteMapper.toLocal(note))) {
           return const DataSuccess(true);
         } else {
-          talker.error("Note didn't deleted");
+          _talker.error("Note didn't deleted");
           return const DataSuccess(false);
         }
       } on DioException catch (e) {
-        talker.error('error during creating new note in locale db');
+        _talker.error('error during creating new note in locale db');
         return DataFailed(e);
       }
     }
@@ -208,10 +208,10 @@ class NoteRepositoryImpl implements NoteRepository {
 
   @override
   Future<DataState<bool>> syncNotes() async {
-    talker.log('Entering sync method...');
+    _talker.log('Entering syncNotes method...');
     if (await InternetConnection().hasInternetAccess) {
       try {
-        talker.warning('Trying to syncronized remote and locale db');
+        _talker.warning('Trying to syncronized remote and locale db');
         final localNotes = await _noteLocalService.getAllNotes();
         var localDatabaseVersion = DatabaseVersion(id: 1, version: DateTime(0));
 
@@ -219,7 +219,7 @@ class NoteRepositoryImpl implements NoteRepository {
         try {
           localDatabaseVersion = await _noteLocalService.getDatabaseVersion();
         } on StateError catch (e) {
-          talker.handle(e);
+          _talker.handle(e);
         }
 
         final remoteVersionResponse =
@@ -263,7 +263,7 @@ class NoteRepositoryImpl implements NoteRepository {
           }
           remoteDatabaseVersion =
               remoteVersionResponse.data.documents.first.fields;
-          talker
+          _talker
             ..log(
               'Local db version: ${localDatabaseVersion.version.toIso8601String()}',
             )
@@ -275,7 +275,7 @@ class NoteRepositoryImpl implements NoteRepository {
           if (localDatabaseVersion.version.isAfter(
             remoteDatabaseVersion.version,
           )) {
-            talker.warning('Local db newer');
+            _talker.warning('Local db newer');
             for (final e in remoteNotes) {
               await _noteApiService.deleteNote(e.fields.id.split('/').last);
             }
@@ -292,7 +292,7 @@ class NoteRepositoryImpl implements NoteRepository {
           } else if (remoteDatabaseVersion.version.isAfter(
             localDatabaseVersion.version,
           )) {
-            talker.warning('Remote db newer');
+            _talker.warning('Remote db newer');
             for (final e in localNotes) {
               await _noteLocalService.deleteNote(e);
             }
@@ -309,7 +309,7 @@ class NoteRepositoryImpl implements NoteRepository {
 
         return const DataSuccess(true);
       } catch (e) {
-        talker.error('Error during syncronization: $e');
+        _talker.error('Error during syncronization: $e');
         return DataFailed(
           DioException(
             requestOptions: RequestOptions(),
@@ -318,7 +318,7 @@ class NoteRepositoryImpl implements NoteRepository {
         );
       }
     } else {
-      talker.warning('Syncronization failed: no internet connection');
+      _talker.warning('Syncronization failed: no internet connection');
       return const DataSuccess(false);
     }
   }

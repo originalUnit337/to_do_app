@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:talker/talker.dart';
+import 'package:to_do_app/core/common/log/good_log.dart';
 import 'package:to_do_app/core/resources/data_state.dart';
 import 'package:to_do_app/domain/usecases/delete_note.dart';
 import 'package:to_do_app/domain/usecases/get_all_notes.dart';
@@ -13,6 +15,8 @@ import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_even
 import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_state.dart';
 
 class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final Talker _talker = Talker(settings: TalkerSettings());
   final GetAllNotesUseCase _getAllNotesUseCase;
   final UpdateNoteUseCase _updateNoteUseCase;
   final DeleteNoteUseCase _deleteNoteUseCase;
@@ -24,7 +28,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     this._deleteNoteUseCase,
     this._syncNoteUseCase,
   ) : super(const NotesInitial()) {
-    debugPrint('\n\n\nСоздание HomeScreenBloc\n\n\n');
+    _talker.log('Creating HomeScreenBloc');
     _startListeningToInternt();
     on<InternetConnectedEvent>(_internetConnected);
     on<InternetDisconnectedEvent>(_internetDisconnected);
@@ -36,13 +40,20 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   }
 
   void _startListeningToInternt() {
+    _talker.log('Start listening to InternetConnection stream...');
     _internetStatusSubscription = InternetConnection().onStatusChange.listen((
       status,
     ) {
       switch (status) {
         case InternetStatus.connected:
+          _talker.warning(
+            'Internet connected. Emiting InternetConnectionEvent',
+          );
           add(InternetConnectedEvent());
         case InternetStatus.disconnected:
+          _talker.warning(
+            'Internet disconnected. Emiting InternetDisconnectedEvent',
+          );
           add(InternetDisconnectedEvent());
       }
     });
@@ -58,13 +69,19 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     GetAllNotesEvent event,
     Emitter<HomeScreenState> emit,
   ) async {
+    _talker.log('[HOME_SCREEN_BLOC EVENT HANDLER] Geting All Notes...');
+    unawaited(analytics.logEvent(name: 'bloc_getAllNotes'));
     final notesData = await _getAllNotesUseCase();
     emit(const NotesLoading());
-    final syncResult = await _syncNoteUseCase();
+    // ? final syncResult = await _syncNoteUseCase();
     if (notesData is DataSuccess && notesData.data != null) {
+      _talker.logCustom(
+        GoodLog('[HOME_SCREEN_BLOC EVENT HANDLER] SUCCESS Geting all notes'),
+      );
       emit(NotesLoaded(notesData.data!));
     } else {
       if (notesData is DataFailed) {
+        _talker.error('[HOME_SCREEN_HNALDER] ERROR getting all notes');
         emit(NotesError(notesData.exception!));
       }
     }
@@ -74,6 +91,8 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     ToggleNoteCompletion event,
     Emitter<HomeScreenState> emit,
   ) async {
+    _talker.log('[HOME_SCREEN_BLOC EVENT HANDLER] Toggling note completion...');
+    unawaited(analytics.logEvent(name: 'bloc_toggleNoteCompletion'));
     final currentState = state;
     if (currentState is NotesLoaded) {
       final response = await _updateNoteUseCase(
@@ -88,6 +107,11 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
               return note;
             }).toList();
         if (updatedNotes != null) {
+          _talker.logCustom(
+            GoodLog(
+              '[HOME_SCREEN_BLOC EVENT HANDLER] SUCCESS togling note completion',
+            ),
+          );
           emit(
             NotesLoaded(
               updatedNotes,
@@ -97,6 +121,9 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
           );
         }
       } else {
+        _talker.error(
+          '[HOME_SCREEN_BLOC EVENT HANDLER] ERROR toggling note completion',
+        );
         emit(
           NotesError(
             response.exception ??
@@ -114,6 +141,8 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     ToggleShowCompleted event,
     Emitter<HomeScreenState> emit,
   ) {
+    _talker.log('[HOME_SCREEN_BLOC EVENT HANDLER] Toggling show completed...');
+    analytics.logEvent(name: 'bloc_toggleShowCompleted');
     if (state is NotesLoaded) {
       emit(NotesLoaded(state.notes ?? [], showCompleted: !state.showCompleted));
     }
@@ -123,6 +152,8 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     RefreshNotesEvent event,
     Emitter<HomeScreenState> emit,
   ) {
+    _talker.log('[HOME_SCREEN_BLOC EVENT HANDLER] Refresh note event...');
+    analytics.logEvent(name: 'bloc_refreshNoteEvent');
     if (state is NotesLoaded) {
       emit(const NotesLoading());
       emit(NotesLoaded(event.notes, showCompleted: state.showCompleted));
@@ -133,6 +164,8 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     DeleteNoteEvent event,
     Emitter<HomeScreenState> emit,
   ) async {
+    _talker.log('[HOME_SCREEN_BLOC EVENT HANDLER] Deleting note...');
+    unawaited(analytics.logEvent(name: 'bloc_deleteNote'));
     final currentState = state;
     if (currentState is NotesLoaded) {
       final response = await _deleteNoteUseCase(params: event.note);
@@ -140,6 +173,9 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
         currentState.notes?.remove(event.note);
         final updatedNotes = currentState.notes;
         if (updatedNotes != null) {
+          _talker.logCustom(
+            GoodLog('[HOME_SCREEN_BLOC EVENT HANDLER] SUCCESS Deleting note'),
+          );
           emit(
             NotesLoaded(
               updatedNotes,
@@ -149,6 +185,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
           );
         }
       } else {
+        _talker.error('[HOME_SCREEN_BLOC EVENT HANDLER] ERROR Deleting note');
         emit(
           NotesError(
             response.exception ??
@@ -166,10 +203,16 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     InternetConnectedEvent event,
     Emitter<HomeScreenState> emit,
   ) async {
+    _talker.log('[HOME_SCREEN_BLOC EVENT HANDLER] Internet connected...');
+    unawaited(analytics.logEvent(name: 'bloc_internetConnected'));
     final syncResult = await _syncNoteUseCase();
     if (syncResult.data ?? false) {
+      _talker.logCustom(
+        GoodLog('[HOME_SCREEN_BLOC EVENT HANDLER] SUCCESS data syncronized '),
+      );
       emit(NotesLoaded(state.notes ?? [], isSync: true));
     } else {
+      _talker.error('[HOME_SCREEN_BLOC EVENT HANDLER] FAILED syncronization');
       emit(NotesLoaded(state.notes ?? [], isSync: false));
     }
   }
@@ -178,6 +221,8 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     InternetDisconnectedEvent event,
     Emitter<HomeScreenState> emit,
   ) async {
+    _talker.log('[HOME_SCREEN_BLOC EVENT HANDLER] Internet Disconnected');
+    unawaited(analytics.logEvent(name: 'bloc_internetDisconnected'));
     emit(NotesLoaded(state.notes ?? [], isSync: false));
   }
 }
