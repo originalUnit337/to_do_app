@@ -36,7 +36,13 @@ class NotesLoaded extends HomeScreenState {
   }) : super(notes: notes);
 
   @override
-  List<Object?> get props => [notes, showCompleted, exception, isUpdated];
+  List<Object?> get props => [
+    notes,
+    showCompleted,
+    exception,
+    isUpdated,
+    isSync,
+  ];
 }
 
 class NotesError extends HomeScreenState {
