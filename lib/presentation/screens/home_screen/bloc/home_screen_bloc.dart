@@ -73,15 +73,25 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     unawaited(analytics.logEvent(name: 'bloc_getAllNotes'));
     final notesData = await _getAllNotesUseCase();
     emit(const NotesLoading());
-    // ? final syncResult = await _syncNoteUseCase();
+    final syncResult = await _syncNoteUseCase();
     if (notesData is DataSuccess && notesData.data != null) {
       _talker.logCustom(
         GoodLog('[HOME_SCREEN_BLOC EVENT HANDLER] SUCCESS Geting all notes'),
       );
-      emit(NotesLoaded(notesData.data!));
+      if (syncResult.data ?? false) {
+        _talker.logCustom(
+          GoodLog('[HOME_SCREEN_BLOC EVENT HANDLER] SUCCESS Syncing all notes'),
+        );
+        emit(NotesLoaded(notesData.data!, isSync: true));
+      } else {
+        _talker.warning(
+          '[HOME_SCREEN_HANDLER] Failed syncing notes between local and remote databases',
+        );
+        emit(NotesLoaded(notesData.data!, isSync: false));
+      }
     } else {
       if (notesData is DataFailed) {
-        _talker.error('[HOME_SCREEN_HNALDER] ERROR getting all notes');
+        _talker.error('[HOME_SCREEN_HANDLER] ERROR getting all notes');
         emit(NotesError(notesData.exception!));
       }
     }

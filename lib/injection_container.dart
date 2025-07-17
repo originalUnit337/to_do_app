@@ -21,6 +21,7 @@ final getIt = GetIt.instance;
 final _talker = Talker(settings: TalkerSettings());
 
 void initializeDependencies() {
+  getIt.registerSingleton<Talker>(Talker(settings: TalkerSettings()));
   _talker.log('Registering Dio...');
   getIt.registerSingleton<Dio>(
     Dio()

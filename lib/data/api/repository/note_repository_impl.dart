@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:talker/talker.dart';
 import 'package:to_do_app/core/common/log/good_log.dart';
@@ -18,7 +19,7 @@ import 'package:to_do_app/domain/repository/note_repository.dart';
 class NoteRepositoryImpl implements NoteRepository {
   final NoteApiService _noteApiService;
   final NoteLocalService _noteLocalService;
-  final Talker _talker = Talker(settings: TalkerSettings());
+  final Talker _talker = GetIt.I<Talker>();
   NoteRepositoryImpl(this._noteApiService, this._noteLocalService);
   @override
   Future<DataState<List<NoteEntity>>> getAllNotes() async {

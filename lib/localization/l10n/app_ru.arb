@@ -43,9 +43,13 @@
     "@completed": {
         "description": "Используется в home_screen"
     },
-    "data_updated": "Успешно обновлено",
-    "@data_updated": {
+    "data_update_success": "Успешно обновлено",
+    "@data_update_success": {
         "description": "Заметка обновлена уведомление"
+    },
+    "data_update_failed": "Не успешное обновление",
+    "@data_update_failed": {
+        "description": "Не успешное обновление"
     },
     "sync_success": "Успешно синхронизировано",
     "@sync_success": {

@@ -35,9 +35,10 @@ class NotesList extends StatelessWidget {
             final snackBar = SnackBar(
               content: Text(
                 state.isUpdated == true
-                    ? AppLocalizations.of(context)?.data_updated ??
+                    ? AppLocalizations.of(context)?.data_update_success ??
                         'Successfully updated'
-                    : 'Something went wrong',
+                    : AppLocalizations.of(context)?.data_update_failed ??
+                        'Something went wrong',
               ),
               duration: const Duration(seconds: 2),
               action: SnackBarAction(

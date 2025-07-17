@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:talker/talker.dart';
 import 'package:to_do_app/domain/entities/note.dart';
@@ -8,10 +9,9 @@ import 'package:to_do_app/presentation/screens/info_note_screen/info_note_screen
 
 class AppRouter {
   static final Talker _talker = Talker(settings: TalkerSettings());
-  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(
-    analytics: analytics,
-  );
+  static FirebaseAnalytics analytics = GetIt.I<FirebaseAnalytics>();
+  static FirebaseAnalyticsObserver observer =
+      GetIt.I<FirebaseAnalyticsObserver>();
   static final GoRouter router = GoRouter(
     observers: [observer],
     routes: [
