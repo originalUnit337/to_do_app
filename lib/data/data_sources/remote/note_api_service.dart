@@ -20,7 +20,7 @@ abstract class NoteApiService {
   });
 
   @PATCH('$notesCollection/{id}')
-  Future<HttpResponse<void>> updateNote(
+  Future<HttpResponse<DocumentModel<NoteModel>>> updateNote(
     @Path('id') String id,
     @Body() NoteModel note, {
     @Query('key') String? apiKey = apiKey,

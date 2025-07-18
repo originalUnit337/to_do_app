@@ -8,6 +8,7 @@ import 'package:to_do_app/core/common/enums/importance.dart';
 import 'package:to_do_app/data/api/model/document_model.dart';
 import 'package:to_do_app/data/api/model/note_model.dart';
 import 'package:to_do_app/data/data_sources/remote/note_api_service.dart';
+import 'package:to_do_app/data/mapper/note_mapper.dart';
 
 import 'note_api_service_test.mocks.dart';
 
@@ -54,16 +55,45 @@ void main() {
 
       // Assert
       expect(result.data.documents, isA<List<DocumentModel<NoteModel>>>());
-      expect(
-        result.data.documents.length,
-        equals(randomNotes.length),
-      ); // Check the length
+      expect(result.data.documents.length, equals(randomNotes.length));
     });
 
     test('update_note_success', () async {
+      // Arrange
       final randomNote = generateRandomNote();
+      final time = DateTime.now();
 
-      when(noteApiService.updateNote(randomNote.id, randomNote));
+      final valueModel = NoteModel(
+        id: randomNote.id,
+        textNote: 'This note (${randomNote.id}) has been updated',
+        importance: randomNote.importance,
+      );
+
+      final valueMap = <String, dynamic>{
+        'name': valueModel.id,
+        'fields': <String, dynamic>{
+          'textNote': {'stringValue': valueModel.textNote},
+          'importance': {'stringValue': valueModel.importance.label},
+          'makeBefore':
+              valueModel.makeBefore != null
+                  ? {'stringValue': valueModel.makeBefore?.toIso8601String()}
+                  : {'nullValue': 'NULL_VALUE'},
+          'isCompleted': {'booleanValue': valueModel.isCompleted},
+        },
+        'createTime': time.toIso8601String(),
+        'updateTime': time.toIso8601String(),
+      };
+
+      when(mockDio.fetch<Map<String, dynamic>>(any)).thenAnswer(
+        (_) async => Response(data: valueMap, requestOptions: RequestOptions()),
+      );
+
+      // Act
+      final result = await noteApiService.updateNote(randomNote.id, valueModel);
+
+      // Assert
+      expect(result.data, isA<DocumentModel<NoteModel>>());
+      expect(result.data.fields, equals(valueModel));
     });
   });
 }
