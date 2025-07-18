@@ -95,6 +95,64 @@ void main() {
       expect(result.data, isA<DocumentModel<NoteModel>>());
       expect(result.data.fields, equals(valueModel));
     });
+
+    test('create_note_success', () async {
+      // Arrange
+      final randomNote = generateRandomNote();
+      final time = DateTime.now();
+
+      final valueModel = NoteModel(
+        id: randomNote.id,
+        textNote: 'This note (${randomNote.id}) has been created',
+        importance: randomNote.importance,
+      );
+
+      final valueMap = <String, dynamic>{
+        'name': valueModel.id,
+        'fields': <String, dynamic>{
+          'textNote': {'stringValue': valueModel.textNote},
+          'importance': {'stringValue': valueModel.importance.label},
+          'makeBefore':
+              valueModel.makeBefore != null
+                  ? {'stringValue': valueModel.makeBefore?.toIso8601String()}
+                  : {'nullValue': 'NULL_VALUE'},
+          'isCompleted': {'booleanValue': valueModel.isCompleted},
+        },
+        'createTime': time.toIso8601String(),
+        'updateTime': time.toIso8601String(),
+      };
+
+      when(mockDio.fetch<Map<String, dynamic>>(any)).thenAnswer(
+        (_) async => Response(data: valueMap, requestOptions: RequestOptions()),
+      );
+
+      // Act
+      final result = await noteApiService.createNote(
+        'your_collection',
+        valueModel,
+      );
+
+      // Assert
+      expect(result.data, isA<DocumentModel<NoteModel>>());
+      expect(result.data.fields, equals(valueModel));
+    });
+
+    test('delete_note_success', () async {
+      when(mockDio.fetch<void>(any)).thenAnswer(
+        (_) async => Response(
+          data: null,
+          requestOptions: RequestOptions(),
+          statusCode: 200,
+          statusMessage: 'OK',
+        ),
+      );
+
+      // Act
+      final result = await noteApiService.deleteNote('id');
+
+      // Assert
+      expect(result.response.statusCode, equals(200));
+    });
   });
 }
 
