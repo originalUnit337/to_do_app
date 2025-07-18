@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:talker/talker.dart';
 import 'package:to_do_app/core/common/helpers/extensions/color_ext.dart';
 import 'package:to_do_app/core/common/log/good_log.dart';
@@ -11,7 +12,7 @@ import 'package:to_do_app/firebase_config/bloc/firebase_config_state.dart';
 class FirebaseConfigBloc
     extends Bloc<FirebaseConfigEvent, FirebaseConfigState> {
   final FirebaseRemoteConfig _remoteConfig;
-  final Talker _talker = Talker(settings: TalkerSettings());
+  final Talker _talker = GetIt.I<Talker>();
   Timer? _timer;
 
   FirebaseConfigBloc()

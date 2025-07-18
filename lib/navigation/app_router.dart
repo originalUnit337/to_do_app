@@ -8,7 +8,7 @@ import 'package:to_do_app/presentation/screens/home_screen/home_screen.dart';
 import 'package:to_do_app/presentation/screens/info_note_screen/info_note_screen.dart';
 
 class AppRouter {
-  static final Talker _talker = Talker(settings: TalkerSettings());
+  static final Talker _talker = GetIt.I<Talker>();
   static FirebaseAnalytics analytics = GetIt.I<FirebaseAnalytics>();
   static FirebaseAnalyticsObserver observer =
       GetIt.I<FirebaseAnalyticsObserver>();
