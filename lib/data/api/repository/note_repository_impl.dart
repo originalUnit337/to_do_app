@@ -19,8 +19,12 @@ import 'package:to_do_app/domain/repository/note_repository.dart';
 class NoteRepositoryImpl implements NoteRepository {
   final NoteApiService _noteApiService;
   final NoteLocalService _noteLocalService;
-  final Talker _talker = GetIt.I<Talker>();
-  NoteRepositoryImpl(this._noteApiService, this._noteLocalService);
+  final Talker _talker;
+  NoteRepositoryImpl(
+    this._noteApiService,
+    this._noteLocalService,
+    this._talker,
+  );
   @override
   Future<DataState<List<NoteEntity>>> getAllNotes() async {
     if (await InternetConnection().hasInternetAccess) {

@@ -21,7 +21,7 @@ final getIt = GetIt.instance;
 final _talker = Talker(settings: TalkerSettings());
 
 void initializeDependencies() {
-  getIt.registerSingleton<Talker>(Talker(settings: TalkerSettings()));
+  getIt.registerSingleton(_talker);
   _talker.log('Registering Dio...');
   getIt.registerSingleton<Dio>(
     Dio()
@@ -75,7 +75,9 @@ void _initServices() {
 }
 
 void _initRepositories() {
-  getIt.registerSingleton<NoteRepository>(NoteRepositoryImpl(getIt(), getIt()));
+  getIt.registerSingleton<NoteRepository>(
+    NoteRepositoryImpl(getIt(), getIt(), getIt()),
+  );
 }
 
 void _initUseCases() {
