@@ -9,7 +9,6 @@ import 'package:to_do_app/data/api/model/database_version_model.dart';
 import 'package:to_do_app/data/api/model/document_model.dart';
 import 'package:to_do_app/data/api/model/note_model.dart';
 import 'package:to_do_app/data/data_sources/remote/note_api_service.dart';
-import 'package:to_do_app/data/mapper/note_mapper.dart';
 
 import 'note_api_service_test.mocks.dart';
 

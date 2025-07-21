@@ -31,6 +31,8 @@ class NoteLocalService extends _$NoteLocalService {
   NoteLocalService([QueryExecutor? executor])
     : super(executor ?? _openConnection());
 
+  NoteLocalService.forTesting(super.e);
+
   @override
   int get schemaVersion => 2;
 
