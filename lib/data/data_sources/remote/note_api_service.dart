@@ -48,7 +48,8 @@ abstract class NoteApiService {
   getDatabaseVersion({@Query('key') String? apiKey = apiKey});
 
   @PATCH('$databaseVersionCollection/{id}')
-  Future<HttpResponse<void>> updateDatabaseVersion(
+  Future<HttpResponse<DocumentModel<DatabaseVersionModel>>>
+  updateDatabaseVersion(
     @Path('id') String id,
     @Body() DatabaseVersionModel databaseModel, {
     @Query('key') String? apiKey = apiKey,

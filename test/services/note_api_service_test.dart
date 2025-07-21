@@ -5,6 +5,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:to_do_app/core/common/enums/importance.dart';
+import 'package:to_do_app/data/api/model/database_version_model.dart';
 import 'package:to_do_app/data/api/model/document_model.dart';
 import 'package:to_do_app/data/api/model/note_model.dart';
 import 'package:to_do_app/data/data_sources/remote/note_api_service.dart';
@@ -149,6 +150,111 @@ void main() {
 
       // Act
       final result = await noteApiService.deleteNote('id');
+
+      // Assert
+      expect(result.response.statusCode, equals(200));
+    });
+
+    test('get_database_version success', () async {
+      // Arrange
+      final time = DateTime.now();
+      final databaseVersion = DatabaseVersionModel(time, 'id');
+      final returnValue = {
+        'documents': <Map<String, dynamic>>[
+          {
+            'name': '${databaseVersion.id}/db_version/',
+            'fields': <String, dynamic>{
+              'version': {
+                'stringValue': databaseVersion.version.toIso8601String(),
+              },
+            },
+            'createTime': time.toIso8601String(),
+            'updateTime': time.toIso8601String(),
+          },
+        ],
+      };
+      when(mockDio.fetch<Map<String, dynamic>>(any)).thenAnswer(
+        (_) async =>
+            Response(data: returnValue, requestOptions: RequestOptions()),
+      );
+
+      // Act
+      final result = await noteApiService.getDatabaseVersion();
+
+      // Assert
+      expect(
+        result.data.documents,
+        isA<List<DocumentModel<DatabaseVersionModel>>>(),
+      );
+    });
+
+    test('update_database_version success', () async {
+      // Arrange
+      final time = DateTime.now();
+      final databaseVersion = DatabaseVersionModel(time, 'id');
+      final returnValue = <String, dynamic>{
+        'name': '${databaseVersion.id}/db_version/',
+        'fields': <String, dynamic>{
+          'version': {'stringValue': databaseVersion.version.toIso8601String()},
+        },
+        'createTime': time.toIso8601String(),
+        'updateTime': time.toIso8601String(),
+      };
+      when(mockDio.fetch<Map<String, dynamic>>(any)).thenAnswer(
+        (_) async =>
+            Response(data: returnValue, requestOptions: RequestOptions()),
+      );
+
+      // Act
+      final result = await noteApiService.updateDatabaseVersion(
+        databaseVersion.id,
+        databaseVersion,
+      );
+
+      // Assert
+      expect(result.data, isA<DocumentModel<DatabaseVersionModel>>());
+    });
+
+    test('create_database_version success', () async {
+      // Arrange
+      final time = DateTime.now();
+      final databaseVersion = DatabaseVersionModel(time, 'id');
+      final returnValue = <String, dynamic>{
+        'name': '${databaseVersion.id}/db_version/',
+        'fields': <String, dynamic>{
+          'version': {'stringValue': databaseVersion.version.toIso8601String()},
+        },
+        'createTime': time.toIso8601String(),
+        'updateTime': time.toIso8601String(),
+      };
+      when(mockDio.fetch<Map<String, dynamic>>(any)).thenAnswer(
+        (_) async =>
+            Response(data: returnValue, requestOptions: RequestOptions()),
+      );
+
+      // Act
+      final result = await noteApiService.createDataBaseVersion(
+        'collection_id',
+        databaseVersion,
+      );
+
+      // Assert
+      expect(result.data, isA<DocumentModel<DatabaseVersionModel>>());
+    });
+
+    test('delete_data_base_version success', () async {
+      // Arrange
+
+      when(mockDio.fetch<Map<String, dynamic>>(any)).thenAnswer(
+        (_) async => Response(
+          data: null,
+          requestOptions: RequestOptions(),
+          statusCode: 200,
+        ),
+      );
+
+      // Act
+      final result = await noteApiService.deleteDatabaseVersion('database_id');
 
       // Assert
       expect(result.response.statusCode, equals(200));
