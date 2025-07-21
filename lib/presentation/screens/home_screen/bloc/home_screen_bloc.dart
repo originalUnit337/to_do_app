@@ -62,7 +62,11 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     emit(const NotesLoading());
     final syncResult = await _syncNoteUseCase();
     if (notesData is DataSuccess && notesData.data != null) {
-      emit(NotesLoaded(notesData.data!));
+      if (syncResult.data ?? false) {
+        emit(NotesLoaded(notesData.data!, isSync: true));
+      } else {
+        emit(NotesLoaded(notesData.data!));
+      }
     } else {
       if (notesData is DataFailed) {
         emit(NotesError(notesData.exception!));
