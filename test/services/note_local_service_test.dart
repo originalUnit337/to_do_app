@@ -9,7 +9,7 @@ void main() {
 
     setUp(() {
       TestWidgetsFlutterBinding.ensureInitialized();
-      noteLocalService = NoteLocalService.forTesting(NativeDatabase.memory());
+      noteLocalService = NoteLocalService(NativeDatabase.memory());
     });
 
     tearDown(() async {
