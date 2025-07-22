@@ -6,7 +6,7 @@ part of 'note_api_service.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
 
 class _NoteApiService implements NoteApiService {
   _NoteApiService(this._dio, {this.baseUrl, this.errorLogger}) {
@@ -51,7 +51,7 @@ class _NoteApiService implements NoteApiService {
   }
 
   @override
-  Future<HttpResponse<void>> updateNote(
+  Future<HttpResponse<DocumentModel<NoteModel>>> updateNote(
     String id,
     NoteModel note, {
     String? apiKey = apiKey,
@@ -62,7 +62,7 @@ class _NoteApiService implements NoteApiService {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(note.toJson());
-    final _options = _setStreamType<HttpResponse<void>>(
+    final _options = _setStreamType<HttpResponse<DocumentModel<NoteModel>>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -72,8 +72,15 @@ class _NoteApiService implements NoteApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<void>(_options);
-    final httpResponse = HttpResponse(null, _result);
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late DocumentModel<NoteModel> _value;
+    try {
+      _value = DocumentModel<NoteModel>.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
@@ -173,7 +180,8 @@ class _NoteApiService implements NoteApiService {
   }
 
   @override
-  Future<HttpResponse<void>> updateDatabaseVersion(
+  Future<HttpResponse<DocumentModel<DatabaseVersionModel>>>
+  updateDatabaseVersion(
     String id,
     DatabaseVersionModel databaseModel, {
     String? apiKey = apiKey,
@@ -184,7 +192,9 @@ class _NoteApiService implements NoteApiService {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(databaseModel.toJson());
-    final _options = _setStreamType<HttpResponse<void>>(
+    final _options = _setStreamType<
+      HttpResponse<DocumentModel<DatabaseVersionModel>>
+    >(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -194,8 +204,15 @@ class _NoteApiService implements NoteApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<void>(_options);
-    final httpResponse = HttpResponse(null, _result);
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late DocumentModel<DatabaseVersionModel> _value;
+    try {
+      _value = DocumentModel<DatabaseVersionModel>.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
