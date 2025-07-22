@@ -1,13 +1,10 @@
 import 'dart:ui';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
-import 'package:get_it/get_it.dart';
-import 'package:talker/talker.dart';
 import 'package:to_do_app/firebase_config/bloc/firebase_config_bloc.dart';
 import 'package:to_do_app/firebase_options.dart';
 import 'package:to_do_app/injection_container.dart';
@@ -36,7 +33,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<FirebaseConfigBloc>(
       lazy: false,
-      create: (_) => FirebaseConfigBloc(talker: GetIt.I<Talker>()),
+      create: (_) => FirebaseConfigBloc(talker: getIt()),
       child: MaterialApp.router(
         supportedLocales: L10n.all,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -44,9 +41,9 @@ class MainApp extends StatelessWidget {
         darkTheme: AppTheme.darkAppTheme,
         routerConfig:
             AppRouter(
-              analytics: GetIt.I<FirebaseAnalytics>(),
-              observer: GetIt.I<FirebaseAnalyticsObserver>(),
-              talker: GetIt.I<Talker>(),
+              analytics: getIt(),
+              observer: getIt(),
+              talker: getIt(),
             ).router,
       ),
     );
