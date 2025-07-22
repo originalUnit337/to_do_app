@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:talker/talker.dart';
 import 'package:to_do_app/core/common/log/good_log.dart';
@@ -17,7 +16,7 @@ import 'package:to_do_app/presentation/screens/home_screen/bloc/home_screen_stat
 
 class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final Talker _talker = GetIt.I<Talker>();
+  final Talker _talker;
   final GetAllNotesUseCase _getAllNotesUseCase;
   final UpdateNoteUseCase _updateNoteUseCase;
   final DeleteNoteUseCase _deleteNoteUseCase;
@@ -28,6 +27,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     this._updateNoteUseCase,
     this._deleteNoteUseCase,
     this._syncNoteUseCase,
+    this._talker,
   ) : super(const NotesInitial()) {
     _talker.log('Creating HomeScreenBloc');
     _startListeningToInternt();

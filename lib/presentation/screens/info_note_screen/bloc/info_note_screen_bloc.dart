@@ -11,7 +11,7 @@ import 'package:to_do_app/presentation/screens/info_note_screen/bloc/info_note_s
 
 class InfoNoteScreenBloc
     extends Bloc<InfoNoteScreenEvent, InfoNoteScreenState> {
-  final Talker _talker = Talker(settings: TalkerSettings());
+  final Talker _talker;
   final UpdateNoteUseCase _updateNoteUseCase;
   final CreateNoteUseCase _createNoteUseCase;
   final DeleteNoteUseCase _deleteNoteUseCase;
@@ -19,6 +19,7 @@ class InfoNoteScreenBloc
     this._updateNoteUseCase,
     this._createNoteUseCase,
     this._deleteNoteUseCase,
+    this._talker,
   ) : super(const InfoNoteInitial()) {
     _talker.log('Creating InfoNoteScreenBloc...');
     on<SaveNoteEvent>(_saveNote);
