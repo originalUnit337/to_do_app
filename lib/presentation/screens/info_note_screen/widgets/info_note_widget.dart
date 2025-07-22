@@ -38,11 +38,12 @@ class InfoNoteWidget extends StatelessWidget {
         if (state is InfoNoteLoaded) {
           if (state.isUpdated) {
             final snackBar = SnackBar(
-              //TODO Add localization
               content: Text(
                 state.isUpdated
-                    ? 'Successfully updated'
-                    : 'Something went wrong',
+                    ? AppLocalizations.of(context)?.data_update_success ??
+                        'Successfully updated'
+                    : AppLocalizations.of(context)?.data_update_failed ??
+                        'Something went wrong',
               ),
               duration: const Duration(seconds: 2),
               action: SnackBarAction(label: 'Close', onPressed: () {}),

@@ -32,7 +32,8 @@ class _InfoNoteScreenState extends State<InfoNoteScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<InfoNoteScreenBloc>(
-      create: (context) => InfoNoteScreenBloc(getIt(), getIt(), getIt()),
+      create:
+          (context) => InfoNoteScreenBloc(getIt(), getIt(), getIt(), getIt()),
       child: BlocBuilder<InfoNoteScreenBloc, InfoNoteScreenState>(
         builder: (context, state) {
           return Scaffold(

@@ -23,13 +23,18 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<FirebaseConfigBloc>(
       lazy: false,
-      create: (_) => FirebaseConfigBloc(),
+      create: (_) => FirebaseConfigBloc(talker: getIt()),
       child: MaterialApp.router(
         supportedLocales: L10n.all,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         theme: AppTheme.lightAppTheme,
         darkTheme: AppTheme.darkAppTheme,
-        routerConfig: AppRouter.router,
+        routerConfig:
+            AppRouter(
+              analytics: getIt(),
+              observer: getIt(),
+              talker: getIt(),
+            ).router,
       ),
     );
   }

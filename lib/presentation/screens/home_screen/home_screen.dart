@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider<HomeScreenBloc>(
       create:
           (_) =>
-              HomeScreenBloc(getIt(), getIt(), getIt(), getIt())
+              HomeScreenBloc(getIt(), getIt(), getIt(), getIt(), getIt())
                 ..add(const GetAllNotesEvent()),
       child: BlocSelector<FirebaseConfigBloc, FirebaseConfigState, Color?>(
         selector: (state) {
