@@ -15,7 +15,7 @@ abstract class NoteApiService {
   // ! notes methods
 
   @GET(notesCollection)
-  Future<HttpResponse<CollectionModel<NoteModel>>> getAllNotes({
+  Future<HttpResponse<CollectionModel<NoteModel>?>> getAllNotes({
     @Query('key') String? apiKey = apiKey,
   });
 
