@@ -247,7 +247,7 @@ class NoteRepositoryImpl implements NoteRepository {
                 await _noteLocalService.createNote(
                   NoteMapper.toLocal(remoteNote.fields),
                 );
-              } on Exception catch (e) {
+              } on Exception catch (_) {
                 rethrow;
               }
             }

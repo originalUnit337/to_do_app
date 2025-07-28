@@ -12,7 +12,8 @@ class FirebaseConfigBloc
     extends Bloc<FirebaseConfigEvent, FirebaseConfigState> {
   final FirebaseRemoteConfig _remoteConfig;
   final Talker talker;
-  Timer? _timer;
+  // ignore: unused_field
+  late Timer? _timer;
 
   FirebaseConfigBloc({required this.talker})
     : _remoteConfig = FirebaseRemoteConfig.instance,
