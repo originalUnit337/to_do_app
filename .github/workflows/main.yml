@@ -48,9 +48,14 @@ jobs:
         name: app-release.apk
         path: build/app/outputs/flutter-apk/app-release.apk
 
+    - name: Download Artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: app-release.apk
+
     - uses: nickwph/firebase-app-distribution-action@v1
       with:
-        file: app-release.apk
+        file: build/app/outputs/flutter-apk/app-release.apk
         app: ${{ secrets.FIREBASE_APP_ID }}
         credentials: ${{ secrets.FIREBASE_CREDENTIALS }}
         release-notes: "Release notes..."
