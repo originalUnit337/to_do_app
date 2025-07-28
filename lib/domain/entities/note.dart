@@ -43,7 +43,13 @@ class NoteEntity extends Equatable {
   }
 
   @override
-  List<Object?> get props => [textNote, importance, makeBefore, isCompleted];
+  List<Object?> get props => [
+    id,
+    textNote,
+    importance,
+    makeBefore,
+    isCompleted,
+  ];
 
   NoteEntity copyWith({
     String? id,
