@@ -55,8 +55,8 @@ jobs:
 
     - uses: nickwph/firebase-app-distribution-action@v1
       with:
-        file: build/app/outputs/flutter-apk/app-release.apk
+        file: app-release.apk
         app: ${{ secrets.FIREBASE_APP_ID }}
-        credentials: ${{ secrets.FIREBASE_CREDENTIALS }}
+        credentials-file: ${{ secrets.FIREBASE_CREDENTIALS }}
         release-notes: "Release notes..."
         groups: "testers"
