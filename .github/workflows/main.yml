@@ -47,3 +47,11 @@ jobs:
       with:
         name: app-release.apk
         path: build/app/outputs/flutter-apk/app-release.apk
+
+    - uses: nickwph/firebase-app-distribution-action@v1
+      with:
+        file: app-debug.apk
+        app: secrets.FIREBASE_APP_ID
+        credentials: secrets.FIREBASE_CREDENTIALS
+        release-notes: "Release notes..."
+        groups: "testers"
