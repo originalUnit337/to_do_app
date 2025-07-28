@@ -53,10 +53,9 @@ jobs:
       with:
         name: app-release.apk
 
-    - uses: nickwph/firebase-app-distribution-action@v1
+    - uses: wzieba/Firebase-Distribution-Github-Action@v1
       with:
+        appId: ${{ secrets.FIREBASE_APP_ID }}
+        serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS }}
+        groups: testers
         file: app-release.apk
-        app: ${{ secrets.FIREBASE_APP_ID }}
-        credentials-file: ${{ secrets.FIREBASE_CREDENTIALS }}
-        release-notes: "Release notes..."
-        groups: "testers"
