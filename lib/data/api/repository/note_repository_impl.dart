@@ -158,7 +158,8 @@ class NoteRepositoryImpl implements NoteRepository {
           _talker.error('error during creating new note in locale db');
           throw Exception('Something went wrong');
         }
-      } catch (e) {
+        // ignore: avoid_catches_without_on_clauses
+      } catch (_) {
         _talker.error('error during creating new note in locale db');
         return DataFailed(
           DioException(
@@ -222,7 +223,8 @@ class NoteRepositoryImpl implements NoteRepository {
         // on case if there is (in local db) no row
         try {
           localDatabaseVersion = await _noteLocalService.getDatabaseVersion();
-        } on StateError catch (e) {
+          // ignore: avoid_catches_without_on_clauses
+        } catch (e) {
           _talker.handle(e);
         }
 
@@ -312,6 +314,7 @@ class NoteRepositoryImpl implements NoteRepository {
         }
 
         return const DataSuccess(true);
+        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         _talker.error('Error during syncronization: $e');
         return DataFailed(

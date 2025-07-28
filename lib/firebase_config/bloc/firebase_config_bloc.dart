@@ -61,6 +61,7 @@ class FirebaseConfigBloc
           } else {
             talker.warning('FAILED: Firebase config fetching.');
           }
+          // ignore: require_trailing_commas
         }, onError: (e) => talker.handle(e.toString())),
       );
       talker.log('Emitting FirebaseConfigState...');

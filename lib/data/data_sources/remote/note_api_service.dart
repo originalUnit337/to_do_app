@@ -41,7 +41,6 @@ abstract class NoteApiService {
   });
 
   // ! db_version methods
-  // TODO: replace db_version methods to another file (e.g. database_version_service.dart)
 
   @GET(databaseVersionCollection)
   Future<HttpResponse<CollectionModel<DatabaseVersionModel>>>

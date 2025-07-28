@@ -140,7 +140,6 @@ void main() {
     test('delete_note_success', () async {
       when(mockDio.fetch<void>(any)).thenAnswer(
         (_) async => Response(
-          data: null,
           requestOptions: RequestOptions(),
           statusCode: 200,
           statusMessage: 'OK',
@@ -245,11 +244,8 @@ void main() {
       // Arrange
 
       when(mockDio.fetch<Map<String, dynamic>>(any)).thenAnswer(
-        (_) async => Response(
-          data: null,
-          requestOptions: RequestOptions(),
-          statusCode: 200,
-        ),
+        (_) async =>
+            Response(requestOptions: RequestOptions(), statusCode: 200),
       );
 
       // Act
