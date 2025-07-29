@@ -36,7 +36,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     on<GetAllNotesEvent>(_getAllNotes);
     on<ToggleNoteCompletion>(_toggleNoteCompletion);
     on<ToggleShowCompleted>(_toggleShowCompleted);
-    on<RefreshNotesEvent>(_refreshNoteEvent);
+    on<RefreshNotesEvent>(_refreshNotesEvent);
     on<DeleteNoteEvent>(_deleteNote);
   }
 
@@ -159,7 +159,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     }
   }
 
-  FutureOr<void> _refreshNoteEvent(
+  FutureOr<void> _refreshNotesEvent(
     RefreshNotesEvent event,
     Emitter<HomeScreenState> emit,
   ) {

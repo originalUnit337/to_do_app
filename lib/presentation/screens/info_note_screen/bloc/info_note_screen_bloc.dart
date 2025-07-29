@@ -49,7 +49,7 @@ class InfoNoteScreenBloc
     Emitter<InfoNoteScreenState> emit,
   ) async {
     _talker.log('[BLOC EVENT HANDLER] Creating note...');
-    emit(const InfoNoteLoading());
+    //emit(const InfoNoteLoading());
     final response = await _createNoteUseCase(params: event.note);
     if (response.data != null) {
       _talker.logCustom(
