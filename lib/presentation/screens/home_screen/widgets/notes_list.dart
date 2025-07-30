@@ -239,9 +239,6 @@ class NotesList extends StatelessWidget {
                               context.read<HomeScreenBloc>().add(
                                 RefreshNotesEvent(noteItems),
                               );
-                              // context.read<HomeScreenBloc>().add(
-                              //   const GetAllNotesEvent(),
-                              // );
                             }
                           }
                         },
