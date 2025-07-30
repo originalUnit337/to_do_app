@@ -32,10 +32,10 @@ class NoteRepositoryImpl implements NoteRepository {
 
         if (httpResponse.response.statusCode == HttpStatus.ok) {
           final notes =
-              httpResponse.data.documents
-                  .map((doc) => NoteMapper.toEntity(doc.fields))
+              httpResponse.data?.documents
+                  ?.map((doc) => NoteMapper.toEntity(doc.fields))
                   .toList();
-          return DataSuccess(notes);
+          return DataSuccess(notes ?? []);
         } else {
           return DataFailed(
             DioException(
@@ -69,7 +69,7 @@ class NoteRepositoryImpl implements NoteRepository {
     }
   }
 
-  Future<void> _updateDatabaseVersion({DateTime? version}) async {
+  Future<void> _updateRemoteDatabaseVersion({DateTime? version}) async {
     _talker.debug('Enter updateDatabaseVersion method...');
     await _noteApiService.updateDatabaseVersion(
       databaseVersionId,
@@ -86,7 +86,7 @@ class NoteRepositoryImpl implements NoteRepository {
           NoteMapper.toModel(note),
         );
         if (httpResponse.response.statusCode == HttpStatus.ok) {
-          await _updateDatabaseVersion();
+          await _updateRemoteDatabaseVersion();
           return const DataSuccess(true);
         } else {
           return DataFailed(
@@ -129,7 +129,7 @@ class NoteRepositoryImpl implements NoteRepository {
           NoteMapper.toModel(note),
         );
         if (httpResponse.response.statusCode == HttpStatus.ok) {
-          await _updateDatabaseVersion();
+          await _updateRemoteDatabaseVersion();
 
           return DataSuccess(NoteMapper.toEntity(httpResponse.data.fields));
         } else {
@@ -180,7 +180,7 @@ class NoteRepositoryImpl implements NoteRepository {
           note.id.split('/').last,
         );
         if (httpResponse.response.statusCode == HttpStatus.ok) {
-          await _updateDatabaseVersion();
+          await _updateRemoteDatabaseVersion();
 
           return const DataSuccess(true);
         } else {
@@ -236,7 +236,7 @@ class NoteRepositoryImpl implements NoteRepository {
         var remoteNotes = <DocumentModel<NoteModel>>[];
 
         if (httpResponse.response.statusCode == HttpStatus.ok) {
-          remoteNotes = httpResponse.data.documents;
+          remoteNotes = httpResponse.data?.documents ?? [];
         }
 
         if (remoteVersionResponse.response.statusCode == HttpStatus.ok) {
@@ -258,17 +258,16 @@ class NoteRepositoryImpl implements NoteRepository {
 
           if (remoteNotes.isEmpty) {
             for (final localNote in localNotes) {
-              await _noteApiService.createNote(
-                '',
-                NoteMapper.toModel(
-                  NoteMapper.fromLocalToEntity(localNote.copyWith(id: '')),
-                ),
+              await _noteApiService.updateNote(
+                localNote.id.split('/').last,
+                NoteMapper.toModel(NoteMapper.fromLocalToEntity(localNote)),
               );
             }
             return const DataSuccess(true);
           }
           remoteDatabaseVersion =
-              remoteVersionResponse.data.documents.first.fields;
+              remoteVersionResponse.data.documents?.first.fields ??
+              DatabaseVersionModel(DateTime(1), '!_database_version_id');
           _talker
             ..log(
               'Local db version: ${localDatabaseVersion.version.toIso8601String()}',
@@ -286,14 +285,14 @@ class NoteRepositoryImpl implements NoteRepository {
               await _noteApiService.deleteNote(e.fields.id.split('/').last);
             }
             for (final localNote in localNotes) {
-              await _noteApiService.createNote(
-                '',
-                NoteMapper.toModel(
-                  NoteMapper.fromLocalToEntity(localNote.copyWith(id: '')),
-                ),
+              await _noteApiService.updateNote(
+                localNote.id.split('/').last,
+                NoteMapper.toModel(NoteMapper.fromLocalToEntity(localNote)),
               );
             }
-            await _updateDatabaseVersion(version: localDatabaseVersion.version);
+            await _updateRemoteDatabaseVersion(
+              version: localDatabaseVersion.version,
+            );
             // ! remote_db newer
           } else if (remoteDatabaseVersion.version.isAfter(
             localDatabaseVersion.version,

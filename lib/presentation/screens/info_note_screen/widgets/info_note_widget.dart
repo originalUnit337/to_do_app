@@ -51,6 +51,7 @@ class InfoNoteWidget extends StatelessWidget {
 
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+          context.pop(state.note);
         } else if (state is InfoNoteDeleted) {
           context.pop(state.note);
         }
@@ -64,35 +65,61 @@ class InfoNoteWidget extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 // ! EDIT CURRENT NOTE
                 if (note != null) {
-                  context.read<InfoNoteScreenBloc>().add(
-                    SaveNoteEvent(
-                      NoteEntity(
-                        id: note!.id,
-                        importance:
-                            selectedImportanceNotifier.value ?? Importance.no,
-                        makeBefore: selectedDateNotifier.value,
-                        textNote: textNoteController.text,
-                        isCompleted: note?.isCompleted ?? false,
+                  if (textNoteController.text.isNotEmpty) {
+                    context.read<InfoNoteScreenBloc>().add(
+                      SaveNoteEvent(
+                        NoteEntity(
+                          id: note!.id,
+                          importance:
+                              selectedImportanceNotifier.value ?? Importance.no,
+                          makeBefore: selectedDateNotifier.value,
+                          textNote: textNoteController.text,
+                          isCompleted: note?.isCompleted ?? false,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          AppLocalizations.of(
+                                context,
+                              )?.text_field_empty_error ??
+                              'Error: text field is empty',
+                        ),
+                      ),
+                    );
+                  }
                 }
                 // ! CREATE NEW NOTE
                 else {
-                  context.read<InfoNoteScreenBloc>().add(
-                    CreateNoteEvent(
-                      NoteEntity(
-                        id: '',
-                        textNote: textNoteController.text,
-                        importance:
-                            selectedImportanceNotifier.value ?? Importance.no,
-                        makeBefore: selectedDateNotifier.value,
+                  if (textNoteController.text.isNotEmpty) {
+                    context.read<InfoNoteScreenBloc>().add(
+                      CreateNoteEvent(
+                        NoteEntity(
+                          id: '',
+                          textNote: textNoteController.text,
+                          importance:
+                              selectedImportanceNotifier.value ?? Importance.no,
+                          makeBefore: selectedDateNotifier.value,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          AppLocalizations.of(
+                                context,
+                              )?.text_field_empty_error ??
+                              'Error: text field is empty',
+                        ),
+                      ),
+                    );
+                  }
                 }
               },
               child: Text(

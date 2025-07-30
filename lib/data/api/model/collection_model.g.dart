@@ -10,8 +10,8 @@ CollectionModel<T> _$CollectionModelFromJson<T extends BaseApiModel>(
   Map<String, dynamic> json,
 ) => CollectionModel<T>(
   documents:
-      (json['documents'] as List<dynamic>)
-          .map((e) => DocumentModel<T>.fromJson(e as Map<String, dynamic>))
+      (json['documents'] as List<dynamic>?)
+          ?.map((e) => DocumentModel<T>.fromJson(e as Map<String, dynamic>))
           .toList(),
 );
 

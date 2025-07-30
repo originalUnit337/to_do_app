@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:to_do_app/domain/entities/note.dart';
 import 'package:to_do_app/firebase_config/bloc/firebase_config_bloc.dart';
 import 'package:to_do_app/firebase_config/bloc/firebase_config_state.dart';
 import 'package:to_do_app/injection_container.dart' show getIt;
@@ -28,16 +29,37 @@ class HomeScreen extends StatelessWidget {
         builder: (context, floatActionButtonColor) {
           return Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                await GoRouter.of(context).pushNamed(AppRoutes.infoNote.name);
-                if (context.mounted) {
-                  context.read<HomeScreenBloc>().add(const GetAllNotesEvent());
+            floatingActionButton: BlocSelector<
+              HomeScreenBloc,
+              HomeScreenState,
+              List<NoteEntity>?
+            >(
+              selector: (state) {
+                if (state is NotesLoaded) {
+                  return state.notes;
                 }
+                return null;
               },
-              child: Icon(Icons.add, color: currentPalette.colorWhite),
-              backgroundColor:
-                  floatActionButtonColor ?? currentPalette.colorBlue,
+              builder: (context, notes) {
+                return FloatingActionButton(
+                  onPressed: () async {
+                    final note =
+                        await GoRouter.of(
+                              context,
+                            ).pushNamed(AppRoutes.infoNote.name)
+                            as NoteEntity?;
+                    if (context.mounted && note != null) {
+                      notes?.add(note);
+                      context.read<HomeScreenBloc>().add(
+                        RefreshNotesEvent(notes ?? []),
+                      );
+                    }
+                  },
+                  child: Icon(Icons.add, color: currentPalette.colorWhite),
+                  backgroundColor:
+                      floatActionButtonColor ?? currentPalette.colorBlue,
+                );
+              },
             ),
             body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
               builder: (context, state) {
