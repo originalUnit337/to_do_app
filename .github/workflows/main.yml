@@ -38,7 +38,7 @@ jobs:
         mkdir -p lib/env
         echo "class Env {" > lib/env/env.dart
         echo "  static const String firebaseOptionsApiKey = '${{ secrets.FIREBASE_OPTIONS_API_KEY }}';" >> lib/env/env.dart
-        echo "  static const String firebaseApiKey = '${{ secrets.FIREBASE_FIRESTORE_API_KEY }}'" >> lib/env/env.dart
+        echo "  static const String firebaseApiKey = '${{ secrets.FIREBASE_FIRESTORE_API_KEY }}';" >> lib/env/env.dart
         echo "}" >> lib/env/env.dart
 
     - name: Check for lints
