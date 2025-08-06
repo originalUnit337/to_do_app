@@ -6,7 +6,7 @@ part 'collection_model.g.dart';
 
 @JsonSerializable()
 class CollectionModel<T extends BaseApiModel> {
-  final List<DocumentModel<T>> documents;
+  final List<DocumentModel<T>>? documents;
 
   CollectionModel({required this.documents});
 

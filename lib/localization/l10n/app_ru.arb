@@ -58,5 +58,9 @@
     "sync_failed": "Синхронизация неудачно",
     "@sync_failed": {
         "description": "Неудачная синхронизация"
+    },
+    "text_field_empty_error": "Ошибка: текстовое поле пустое",
+    "@text_field_empty_error": {
+        "description": "Ошибка: текстовое поле пустое"
     }
 }

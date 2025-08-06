@@ -5,6 +5,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:to_do_app/core/common/enums/importance.dart';
+import 'package:to_do_app/data/api/model/collection_model.dart';
 import 'package:to_do_app/data/api/model/database_version_model.dart';
 import 'package:to_do_app/data/api/model/document_model.dart';
 import 'package:to_do_app/data/api/model/note_model.dart';
@@ -23,7 +24,7 @@ void main() {
       when(mockDio.options).thenReturn(BaseOptions());
       noteApiService = NoteApiService(mockDio);
     });
-    test('getAllNotes returns CollectionModel<NoteModel>', () async {
+    test('getAllNotes returns CollectionModel<NoteModel>?', () async {
       // Arrange
       final randomNotes = List.generate(5, (_) => generateRandomNote());
       final time = DateTime.now();
@@ -54,8 +55,9 @@ void main() {
       final result = await noteApiService.getAllNotes();
 
       // Assert
-      expect(result.data.documents, isA<List<DocumentModel<NoteModel>>>());
-      expect(result.data.documents.length, equals(randomNotes.length));
+      expect(result.data, isA<CollectionModel<NoteModel>?>());
+      expect(result.data!.documents, isA<List<DocumentModel<NoteModel>>?>());
+      expect(result.data!.documents!.length, equals(randomNotes.length));
     });
 
     test('update_note_success', () async {
